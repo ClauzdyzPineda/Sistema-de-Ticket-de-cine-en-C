@@ -3,10 +3,11 @@
 
 //Definir la estructura a utilizar
 typedef struct{
-	int codigo;
+	int codigoPeli;
 	char tituloPeliculas[100];
 	char generoPelicula[100];
 	char fechaProgramada[10];
+	int nSalas, capacidadSalas;
 	struct Nodo *sgte;
 }Nodo;
 
@@ -81,22 +82,22 @@ int main(int argc, char *argv[])
 	            		break;
 	            	case 2:
 	            		system("cls");
-	            		printf("\nEditar Administrador\n");
+	            		printf("\nModificar Administrador\n");
 	            		system("pause");
 	            		break;
 	            	case 3:
 	            		system("cls");
-	            		printf("\nEliminar Administrador\n");
+	            		printf("\nBuscar Administrador\n");
 	            		system("pause");
 	            		break;
 	            	case 4:
 	            		system("cls");
-	            		printf("\nBuscar Administrador\n");
+	            		printf("\nMostrar Administrador\n");
 	            		system("pause");
 	            		break;
 	            	case 5:
 	            		system("cls");
-	            		printf("\nMostrar Administrador\n");
+	            		printf("\nEliminar Administrador\n");
 	            		system("pause");
 	            		break;
 	            	default:
@@ -111,32 +112,32 @@ int main(int argc, char *argv[])
 	            	case 1:
 	            		system("cls");
 	            		printf("\nAgregar pelicula\n");
-	            		agregarNodo();
+	            		agregarPeliculas();
 	            		system("pause");
 	            		break;
 	            	case 2:
 	            		system("cls");
 	            		printf("\nModificar pelicula\n");
-	            		modificarNodo();
+	            		modificarPeliculas();
 	            		system("pause");
 	            		break;
 	            	
 	            	case 3:
 	            		system("cls");
 	            		printf("\nBuscar pelicula\n");
-	            		buscarNodo();
+	            		buscarPeliculas();
 	            		system("pause");
 	            		break;
 	            	case 4:
 	            		system("cls");
 	            		printf("\nMostrar pelicula\n");
-	            		mostrarNodo();
+	            		mostrarPeliculas();
 	            		system("pause");
 	            		break;
 	            	case 5:
 	            		system("cls");
 	            		printf("\nEliminar pelicula\n");
-	            		eliminarNodo();
+	            		eliminarPelicula();
 	            		system("pause");
 	            		break;
 	            
@@ -156,22 +157,22 @@ int main(int argc, char *argv[])
 	            		break;
 	            	case 2:
 	            		system("cls");
-	            		printf("\nEditar clientes\n");
+	            		printf("\nModificar clientes\n");
 	            		system("pause");
 	            		break;
 	            	case 3:
 	            		system("cls");
-	            		printf("\nEliminar clientes\n");
+	            		printf("\nBuscar clientes\n");
 	            		system("pause");
 	            		break;
 	            	case 4:
 	            		system("cls");
-	            		printf("\nBuscar clientes\n");
+	            		printf("\nMostrar clientes\n");
 	            		system("pause");
 	            		break;
 	            	case 5:
 	            		system("cls");
-	            		printf("\nMostrar clientes\n");
+	            		printf("\nEliminar clientes\n");
 	            		system("pause");
 	            		break;
 	            	default:
@@ -191,22 +192,22 @@ int main(int argc, char *argv[])
 	            		break;
 	            	case 2:
 	            		system("cls");
-	            		printf("\nEditar Tickets\n");
+	            		printf("\nModificar Tickets\n");
 	            		system("pause");
 	            		break;
 	            	case 3:
 	            		system("cls");
-	            		printf("\nEliminar Tickets\n");
+	            		printf("\nBuscar Tickets\n");
 	            		system("pause");
 	            		break;
 	            	case 4:
 	            		system("cls");
-	            		printf("\nBuscar Tickets\n");
+	            		printf("\nMostrar Tickets\n");
 	            		system("pause");
 	            		break;
 	            	case 5:
 	            		system("cls");
-	            		printf("\nMostrar Tickets\n");
+	            		printf("\nEliminar Tickets\n");
 	            		system("pause");
 	            		break;
 	            	default:
@@ -222,26 +223,31 @@ int main(int argc, char *argv[])
 	            	case 1:
 	            		system("cls");
 	            		printf("\nAgregar Salas\n");
+	            		agregarSalas();
 	            		system("pause");
 	            		break;
 	            	case 2:
 	            		system("cls");
-	            		printf("\nEditar Salas\n");
+	            		printf("\nModificar Salas\n");
+	            		modificarSalas();
 	            		system("pause");
 	            		break;
 	            	case 3:
 	            		system("cls");
-	            		printf("\nEliminar Salas\n");
+	            		printf("\nBuscar Salas\n");
+	            		buscarSalas();
 	            		system("pause");
 	            		break;
 	            	case 4:
 	            		system("cls");
-	            		printf("\nBuscar Salas\n");
+	            		printf("\nMostrar Salas\n");
+	            		mostrarSalas();
 	            		system("pause");
 	            		break;
 	            	case 5:
 	            		system("cls");
-	            		printf("\nMostrar Salas\n");
+	            		printf("\nEliminar Salas\n");
+	            		eliminarSalas();
 	            		system("pause");
 	            		break;
 	            	default:
@@ -264,8 +270,8 @@ int main(int argc, char *argv[])
   return 0;
 }
 
-//Funcion para agregar elementos a la lista
-void agregarNodo(void){
+//Funcion para agregar elementos a PELICULAS
+void agregarPeliculas(void){
 	//Reservar en memoria el nuevo nodo
 	Nodo *nodo = malloc(sizeof(Nodo));
 	//Limpiar pantalla
@@ -275,7 +281,7 @@ void agregarNodo(void){
 	printf("\nREGISTRO DE DATOS DE PELICULAS \n");
 	printf("\n**************************************\n");
 	printf("Digite codigo: ");		
-	scanf("%d", &nodo->codigo);
+	scanf("%d", &nodo->codigoPeli);
 	printf("Digite titulo de pelicula: ");	
 	scanf(" %[^\n]",nodo->tituloPeliculas);
 	printf("Digite genero de pelicula: "); 			
@@ -294,8 +300,8 @@ void agregarNodo(void){
 	}
 }
 
-//Funcion para mostrar nodos
-void mostrarNodo(void){
+//Funcion para mostrar PELICULAS
+void mostrarPeliculas(void){
 	//Limpiar pantalla
 	system("cls");
 	//Crear puntero centinela para el recorrido de la lista
@@ -308,11 +314,11 @@ void mostrarNodo(void){
 		
 		//RECORRIENDO LA LISTA
 		while(i != NULL){
-			printf("\nCodigo: %d",i->codigo);
+			printf("\nCodigo: %d",i->codigoPeli);
 			printf("\nTitulo de pelicula: %s",i->tituloPeliculas);
 			printf("\nGenero de pelicula: %s",i->generoPelicula);
 			printf("\nFecha de presentacion: %s",i->fechaProgramada);
-			printf("\n-------------------------------------\n");
+			printf("\n-------------------------------------\n\n");
 			
 			//Mover el valor de i al siguiente nodo
 			i = i->sgte;
@@ -323,8 +329,8 @@ void mostrarNodo(void){
 	system("pause");
 }//Fin de mostrarNodo
 
-//Funcion para modificar
-void modificarNodo(){
+//Funcion para modificar PELICULAS
+void modificarPeliculas(){
 	//Limpiar pantalla
 	system("cls");
 	//Crear puntero centinela para el recorrido de la lista
@@ -348,7 +354,7 @@ void modificarNodo(){
 			if(strcmp(i->tituloPeliculas,tituloPeliculas)==0){//Si es valor caracter
 			//if(i->codigo == descripcion){//Solo si es para valor numerico
 				printf("\nIngrese el nuevo codigo: ");
-				scanf("%d",&i->codigo);
+				scanf("%d",&i->codigoPeli);
 				printf("\nIngrese un el titulo de la pelicula a modificar: ");
 				scanf(" %[^\n]",i->tituloPeliculas);
 				printf("\nIngrese el genero de pelicula a modificar: ");
@@ -357,7 +363,7 @@ void modificarNodo(){
 				scanf("%s",i->fechaProgramada);
 				
 				printf("\n\nSu informacion actualizada es");
-				printf("\nCodigo: %d",i->codigo);
+				printf("\nCodigo: %d",i->codigoPeli);
 				printf("\nNombre: %s",i->tituloPeliculas);
 				printf("\nDireccion: %s",i->generoPelicula);
 				printf("\nFecha de nacimiento: %s",i->fechaProgramada);
@@ -375,8 +381,8 @@ void modificarNodo(){
 	}
 }
 
-//Funcion para buscar
-void buscarNodo(void){
+//Funcion para buscar PELICULAS
+void buscarPeliculas(void){
 	//Limpiar pantalla
 	system("cls");
 	//Crear puntero centinela para el recorrido de la lista
@@ -399,7 +405,7 @@ void buscarNodo(void){
 		while(i != NULL){
 			//Preguntar si son iguales los valores del nodo con el digitado
 			if(strcmp(i->tituloPeliculas,tituloPeliculas)==0){//Si es valor caracter
-				printf("\nCodigo: %d",i->codigo);
+				printf("\nCodigo: %d",i->codigoPeli);
 				printf("\nTitulo de peliculas: %s",i->tituloPeliculas);
 				printf("\nGenero de peliculas: %s",i->generoPelicula);
 				printf("\nFecha persentacion: %s",i->fechaProgramada);
@@ -420,8 +426,8 @@ void buscarNodo(void){
 	system("pause");
 }//Fin de buscarNodo
 
-//Funcion eliminar
-void eliminarNodo(void){
+//Funcion eliminar PELICULAS
+void eliminarPelicula(void){
 	//limpiar pantalla
 	system("cls");
 	//Variable local
@@ -460,5 +466,172 @@ void eliminarNodo(void){
 		printf("\n\n***NO HAY ELEMENTOS PARA ELIMINAR***\n");
 	system("pause");	
 }//Fin de eliminar
+
+
+
+//Funcion para agregar elementos a la lista de SALAS
+void agregarSalas(){
+	Nodo* nuevo = (Nodo*) malloc(sizeof(Nodo));
+	printf("Ingresar el numero de sala: ");
+	scanf("%d", &nuevo->nSalas);
+	printf("Ingresar la capacidad de la sala: ");
+	scanf("%d", &nuevo->capacidadSalas);
+	nuevo->sgte = primero;
+	primero = nuevo;	
+}
+
+
+//Funcion para mostrar SALAS
+void mostrarSalas(void){
+	
+	//Limpiar pantalla
+	system("cls");
+	//Crear puntero centinela para el recorrido de la lista
+	Nodo *i = primero;
+	//Preguntar si la lista esta vacia
+	if(i != NULL){
+	printf("\n**************************************\n");
+	printf("\n MOSTRAR  DATOS GENERALES DE SALA \n");
+	printf("\n**************************************\n");
+		
+		//RECORRIENDO LA LISTA
+		while(i != NULL){
+			printf("\nN de sala: %d",i->nSalas);
+			printf("\nCapacidad de sala: %d",i->capacidadSalas);
+			printf("\n-------------------------------------\n\n");
+			
+			//Mover el valor de i al siguiente nodo
+			i = i->sgte;
+		}//Fin de while
+	}else{
+		printf("\n\n***NO HAY ELEMENTOS PARA MOSTRAR***\n");
+	}
+	system("pause");
+}//Fin de mostrarNodo
+
+
+//Funcion para modificar SALAS
+void modificarSalas(){
+	Nodo* actual = (Nodo*) malloc(sizeof(Nodo));
+	actual = primero;
+	int nodoBuscado = 0, encontrado = 0;
+	if(primero != NULL){ 
+	printf(" Ingrese el numero de sala a buscar para modificar: ");
+	scanf("%d", &nodoBuscado);
+		while(actual != NULL){
+		
+		if(actual->nSalas == nodoBuscado){
+			printf("\n El numero de sala ( %d ) ha sido encontrado\n\n", nodoBuscado);
+			printf("\n Ingrese el nuevo numero de sala: ");
+			scanf("%d", &actual->nSalas);
+			printf(" Numero de sala modificado\n\n");
+			printf("\n La capacidadde la sala ( %d ) ha sido encontrado\n\n", nodoBuscado);
+			printf("\n Ingrese la nueva capacidad de la sala: ");
+			scanf("%d", &actual->capacidadSalas);
+			printf(" La capacidad de sala ha sido modificado\n\n");
+			encontrado = 1;
+		}
+		
+		actual = actual -> sgte;
+		}
+		if(encontrado == 0){
+			printf("\n Numero de sala no encontrado\n\n");
+		}
+	
+	}else{
+		printf("\n La lista de salas se encuentra vacia\n\n");
+	}
+}
+
+
+//Funcion para buscar SALAS
+void buscarSalas(void){
+	//Limpiar pantalla
+	system("cls");
+	//Crear puntero centinela para el recorrido de la lista
+	Nodo *i = primero;
+	//Variable local
+	int nSalas, capacidadSalas;
+	int  encontrado = 0;//Indicar si el nodo fue encontrado
+	
+	//Preguntar si la lista esta vacia
+	if(i != NULL){
+		printf("\n\n**************************************\n");
+		printf("\nBUSQUEDA DE SALAS\n");
+		printf("\n**************************************\n");
+		
+		//PEDIR el valor a buscar en la lista
+		printf("\nDigite el numero de sala a buscar: ");
+		scanf(" %d",&nSalas);
+		
+		//RECORRIENDO LA LISTA
+		while(i != NULL){
+			//Preguntar si son iguales los valores del nodo con el digitado
+		//	if(strcmp(i->tituloPeliculas,tituloPeliculas)==0){//Si es valor caracter
+		if(i->nSalas == nSalas){
+				printf("\nNumero de salas: %d",i->nSalas);
+				printf("\nCapacidad de sala: %d",i->capacidadSalas);
+				printf("\n-------------------------------------\n\n");
+				encontrado = 1;//Indicar que el nodo fue encontrado
+				break;	
+			}
+			
+			//Mover el valor de i al siguiente nodo
+			i = i->sgte;
+		}//Fin de while
+		
+		//Preguntar si nunca entro por el while
+		if(encontrado==0)
+			printf("\n<<REGISTRO DE SALAS NO ENCONTRADO>>\n");
+	}else{
+		printf("\n\n<<NO HAY ELEMENTOS PARA BUSCAR>>\n");
+	}
+	system("pause");
+}//Fin de buscarNodo
+
+
+//Funcion eliminar SALAS
+void eliminarSalas(){
+	Nodo* actual = (Nodo*) malloc(sizeof(Nodo));
+	actual = primero;
+	Nodo* anterior = (Nodo*) malloc(sizeof(Nodo));
+	anterior = NULL;
+	int nodoBuscado = 0, encontrado = 0;
+	printf(" Ingrese el numero de sala a buscar para eliminar: ");
+	scanf("%d", &nodoBuscado);
+	if(primero != NULL){ 
+		while(actual != NULL && encontrado != 1){
+		
+		if(actual->nSalas == nodoBuscado){
+		
+			if(actual == primero){
+				primero = primero -> sgte;	
+				}else{
+				anterior -> sgte = actual -> sgte;
+				}
+			printf("\n El numero de sala ha sido eliminado con exito");
+			printf("\n------------------------------------------------\n\n");
+			encontrado = 1;
+		}
+		anterior = actual;
+		actual = actual -> sgte;
+		}
+		if(encontrado == 0){
+			printf("\n Numero de sala no encontrado\n\n");
+		}else{
+			free(anterior);
+		}
+	
+	}else{
+		printf("\n La lista se encuentra vacia\n\n");
+	
+	}
+}
+
+
+
+
+
+
 
 
