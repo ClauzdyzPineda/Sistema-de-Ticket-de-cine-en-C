@@ -36,11 +36,12 @@ char usuario[LONGITUD + 1];
 	do {
 		i = 0;
 		system("cls");
-		printf("\n\t\t\tINICIO DE SESION\n");
-		printf("\t\t\t---------------\n");
-		printf("\n\tUSUARIO: ");
+		printf("\t\t\t=========================================");
+		printf("\n\t\t\t\tINICIO DE SESION\n");
+		printf("\t\t\t=========================================");
+		printf("\n\t\t\tUSUARIO: ");
 		gets(usuario);
-		printf("\tCLAVE: ");
+		printf("\t\t\tCLAVE: ");
 		while (caracter = getch()) {
 			if (caracter == 13) {
 				clave[i] = '\0';
