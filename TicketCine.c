@@ -1,12 +1,21 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#include <string.h> /* gets, strcmp */
+
+#define USUARIO "c"
+#define CLAVE "java"
+
+#define LONGITUD 80
+
 //Definir la estructura a utilizar
 typedef struct{
 	int codigoPeli;
 	char tituloPeliculas[100];
 	char generoPelicula[100];
 	char fechaProgramada[10];
+	char horario[10]; 
+	char duracionPeli[10];
 	int nSalas, capacidadSalas;
 	struct Nodo *sgte;
 }Nodo;
@@ -15,6 +24,63 @@ typedef struct{
 Nodo *primero = NULL;
 Nodo *ultimo = NULL;
 
+
+int inicio(){
+char usuario[LONGITUD + 1];
+	char clave[LONGITUD + 1];
+	int intento = 0;
+	int ingresa = 0;
+	char caracter;
+	int i = 0;
+	
+	do {
+		i = 0;
+		system("cls");
+		printf("\n\t\t\tINICIO DE SESION\n");
+		printf("\t\t\t---------------\n");
+		printf("\n\tUSUARIO: ");
+		gets(usuario);
+		printf("\tCLAVE: ");
+		while (caracter = getch()) {
+			if (caracter == 13) {
+				clave[i] = '\0';
+				break;
+				
+			} else if (caracter == 8) {
+				if (i > 0) {
+					i--;
+					printf("\b \b");
+				}
+				
+			} else {
+				if (i < LONGITUD) {
+					printf("*");
+					clave[i] = caracter;
+					i++;
+				}
+			}
+		}
+		
+		if (strcmp(usuario, USUARIO) == 0 && strcmp(clave, CLAVE) == 0) {
+			ingresa = 1;
+			
+		} else {
+			printf("\n\tUsuario y/o clave son incorrectos\n");
+			intento++;
+			getchar();
+		}
+		
+	} while (intento < 3 && ingresa == 0);
+	
+	if (ingresa == 1) {
+		printf("\n\tBienvenido al Sistema\n");
+		
+	} else {
+		printf("\n\tHa sobrepasado el numero maximo de intentos permitidos\n");
+	}
+	
+	return 0;
+	}
 
 void Menu(void){
      
@@ -61,7 +127,7 @@ void SubMenu(char *nameSubMenu){
 
 int main(int argc, char *argv[])
 {
-    
+    inicio();
     int sistemExit = 0;
     
     while(sistemExit == 0){
@@ -288,6 +354,10 @@ void agregarPeliculas(void){
 	scanf(" %[^\n]",nodo->generoPelicula);
 	printf("Digite fecha programada: ");	
 	scanf(" %s",nodo->fechaProgramada);
+	printf("Digite hora programada: ");	
+	scanf(" %[^\n]", nodo->horario);
+	printf("Digite duracion de la pelicula: ");	
+	scanf(" %[^\n]",nodo->duracionPeli);
 	//Apuntar a NULL el siguiente elemento de la lista
 	nodo->sgte = NULL;
 	//Preguntar si la lista esta vacia
@@ -318,7 +388,10 @@ void mostrarPeliculas(void){
 			printf("\nTitulo de pelicula: %s",i->tituloPeliculas);
 			printf("\nGenero de pelicula: %s",i->generoPelicula);
 			printf("\nFecha de presentacion: %s",i->fechaProgramada);
+				printf("\nHorario de pelicula: %s",i->horario);
+			printf("\nDuracion de pelicula: %s",i->duracionPeli);
 			printf("\n-------------------------------------\n\n");
+		
 			
 			//Mover el valor de i al siguiente nodo
 			i = i->sgte;
@@ -361,12 +434,19 @@ void modificarPeliculas(){
 				scanf(" %[^\n]",i->generoPelicula);
 				printf("\nIngrese la fecha de presentacion a modificar: ");
 				scanf("%s",i->fechaProgramada);
+				printf("\nIngrese el horario a modificar: ");
+				scanf("%s",i->horario);
+				printf("\nIngrese la duracion de pelicula a modificar: ");
+				scanf("%s",i->duracionPeli);
 				
 				printf("\n\nSu informacion actualizada es");
 				printf("\nCodigo: %d",i->codigoPeli);
 				printf("\nNombre: %s",i->tituloPeliculas);
 				printf("\nDireccion: %s",i->generoPelicula);
-				printf("\nFecha de nacimiento: %s",i->fechaProgramada);
+				printf("\nFecha de presentacion: %s",i->fechaProgramada);
+				printf("\nHorario: %s",i->horario);
+				printf("\nDuracion: %s",i->duracionPeli);
+				printf("\n\n=====================================\n");
 				printf("\n");
 				encontrado = 1;//Indicar que el nodo fue encontrado
 				break;	
@@ -409,6 +489,9 @@ void buscarPeliculas(void){
 				printf("\nTitulo de peliculas: %s",i->tituloPeliculas);
 				printf("\nGenero de peliculas: %s",i->generoPelicula);
 				printf("\nFecha persentacion: %s",i->fechaProgramada);
+				printf("\nHorario: %s",i->horario);
+				printf("\nDuracion: %s",i->duracionPeli);
+				printf("\n\n=====================================\n");
 				encontrado = 1;//Indicar que el nodo fue encontrado
 				break;	
 			}
@@ -627,11 +710,4 @@ void eliminarSalas(){
 	
 	}
 }
-
-
-
-
-
-
-
 
