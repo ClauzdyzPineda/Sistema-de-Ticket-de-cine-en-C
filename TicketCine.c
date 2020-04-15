@@ -36,12 +36,11 @@ char usuario[LONGITUD + 1];
 	do {
 		i = 0;
 		system("cls");
-		printf("\t\t\t=========================================");
-		printf("\n\t\t\t\tINICIO DE SESION\n");
-		printf("\t\t\t=========================================");
-		printf("\n\t\t\tUSUARIO: ");
+		printf("\n\t\t\tINICIO DE SESION\n");
+		printf("\t\t\t---------------\n");
+		printf("\n\tUSUARIO: ");
 		gets(usuario);
-		printf("\t\t\tCLAVE: ");
+		printf("\tCLAVE: ");
 		while (caracter = getch()) {
 			if (caracter == 13) {
 				clave[i] = '\0';
@@ -512,43 +511,49 @@ void buscarPeliculas(void){
 
 //Funcion eliminar PELICULAS
 void eliminarPelicula(void){
-	//limpiar pantalla
 	system("cls");
-	//Variable local
-	char tituloPeliculas[100];
-	Nodo *lista = primero;//Puntero auxiliar 
-	//Preguntar si la lista esta vacia
-	if(lista != NULL){
-		printf("\n\n**************************************\n");
-		printf("\nELIMINACION DE REGISTROS DE PELICULAS\n");
-		printf("\n**************************************\n");
-		printf("\nDigite titulo  de la pelicula: ");
-		scanf(" %[^\n]",&tituloPeliculas);
-		
-		//Puntero axuliar
-		Nodo *aux_borrar;
-		aux_borrar = lista;
-		Nodo *anterior = NULL;
-		//Recorrer la lista
-		while(aux_borrar !=NULL &&(strcmp(aux_borrar->tituloPeliculas,tituloPeliculas)!=0)){
-			anterior 	= aux_borrar;
-			aux_borrar 	= aux_borrar->sgte;
-		}//Fin de while
-		//Preguntar si fue encontrado el nodo a eliminar
-		if(aux_borrar == NULL){
-			printf("\n***DESCRIPCION DE PELICULA NO ENCONTRADA***\n");
-		}else if(anterior == NULL){
-			lista = lista->sgte;
-			free(aux_borrar);//Eliminar nodo
-			printf("\n\n***ELEMENTO ELIMINADO DE PELICULAS 2***\n");
-		}else{
-			anterior->sgte = aux_borrar->sgte;
-			free(aux_borrar);
-			printf("\n\n***ELEMENTO ELIMINADO DE LA PELICULA 3***\n");
+
+	Nodo* actual = (Nodo*)malloc(sizeof(Nodo));
+	actual = primero;
+	Nodo* anterior = (Nodo*)malloc(sizeof(Nodo));
+	anterior = NULL;
+	
+	int codigo_Peli, encontrado = 0;
+	
+	printf("************************************\n");
+	printf("*       Eliminar Registro          *\n");
+	printf("************************************\n");
+	
+	printf("\nIngrese el codigo del registro a eliminar: >_");
+	scanf("%d",&codigo_Peli);
+	if(primero!=NULL){
+		while(actual!=NULL && encontrado!=1){
+			if(actual->codigoPeli==codigo_Peli){
+				printf("\nEl registro eliminado es: %s",actual->tituloPeliculas);
+				if(actual == primero){
+					primero = primero->sgte;
+				}else if(actual == ultimo){
+					anterior->sgte = NULL;
+					ultimo = anterior;
+				}else{
+					anterior->sgte = actual->sgte;
+				}							
+				printf("\n\n<<EL REGISTRO SE HA ELIMINADO CON EXITO>>\n\n");
+				encontrado=1;
+			}
+			anterior = actual;
+			actual = actual->sgte;
 		}
-	}else
-		printf("\n\n***NO HAY ELEMENTOS PARA ELIMINAR***\n");
-	system("pause");	
+		if(encontrado==0){
+			printf("\n\n<<EL REGISTRO NO FUE ENCONTRADO>>\n\n");
+		}else{
+			free(anterior);
+		}
+	}else{
+		printf("\n\n<<NO HAY REGISTROS PARA ELIMINAR>>\n\n");
+	}
+	
+	system("pause");
 }//Fin de eliminar
 
 
