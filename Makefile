@@ -6,7 +6,7 @@
 C := gcc
 CFLAGS := -Wall
 SRC := main/src
-OBJECTS := $(SRC)/main.c
+OBJECTS := $(SRC)/main.c $(SRC)/menus.c
 
 all: $(OBJECTS)
 	rm -rf main/dist/main.exe main/dist/null && $(C) $(CFLAGS) $(OBJECTS) -o main/dist/main
