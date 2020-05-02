@@ -1,7 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "usuario.h"
 #include <windows.h>
+#include "usuario.h"
+#include "_define.h"
 
 void registro()
 {
@@ -19,6 +20,80 @@ void registro()
 
     fwrite(&Usuario, sizeof(Usuario), 1, file);
     fclose(file);
+}
+
+int inicioSesion()
+{
+    char correo[LENGTH];
+    char password[LENGTH];
+    int intento = 0;
+    int loginOk = 0;
+    char caracter;
+    int i = 0;
+
+    do
+    {
+        titulo();
+        cabeceraInicioSesion();
+        printf("\nCoreo: ");
+        gets(correo);
+        printf("Contrasenya: ");
+        while ((caracter = getch()))
+        {
+            if (caracter == ENTER)
+            {
+                password[i] = '\0';
+                break;
+            }
+            else if (caracter == BACKSPACE)
+            {
+                if (i > 0)
+                {
+                    i--;
+                    printf("\b \b");
+                }
+            }
+            else
+            {
+                if (i < LENGTH)
+                {
+                    printf("*");
+                    password[i] = caracter;
+                    i++;
+                }
+            }
+        }
+
+        if (
+            // Si es el super usuario quemado en el codigo
+            (strcmp(correo, SUPER_ADMIN_USUARIO) == 0 && strcmp(password, SUPER_ADMIN_USUARIO) == 0) ||
+            (validarUsuario(correo, password) == 0) // si es un usuario en la base de datos
+        )
+        {
+            loginOk = 1;
+        }
+        else
+        {
+            printf("\n\tCorreo y/o contrasenya son incorrectos\n");
+            intento++;
+            getchar();
+        }
+
+    } while (intento < 3 && loginOk == 0);
+
+    if (loginOk == 1)
+    {
+        getAcceso(correo);
+        printf("\n\tBienvenido al Sistema.. Aqui es donde tiene que ir la funcion. de usuario vs admin\n");
+        system("pause>null");
+    }
+    else
+    {
+        printf("\n\tHa sobrepasado el numero maximo de intentos permitidos\n");
+        system("pause>null");
+    }
+
+    return 0;
 }
 
 void mostrarUsuarios()
@@ -96,4 +171,26 @@ int validarUsuario(char *correo, char *password)
     // El correo no existe
     fclose(file);
     return 1;
+}
+
+int getAcceso(char *correo)
+{
+    FILE *file;
+    file = fopen("Record", "r");
+    int acceso;
+    while (!feof(file))
+    {
+        fread(&Usuario, sizeof(Usuario), 1, file);
+
+        if (strcmp(correo, Usuario.correo) == 0)
+        {
+            acceso = Usuario.acceso;
+            fclose(file);
+            return acceso;
+        }
+    }
+
+    // No deberia de llegar aqui.
+    fclose(file);
+    return -1;
 }

@@ -17,9 +17,11 @@ struct
 } Usuario;
 
 void registro();
+int inicioSesion();
 void mostrarUsuarios();
 int setId();
 int getCorreo(char *correo);
 int validarUsuario(char *correo, char *password);
+int getAcceso(char *correo);
 
 #endif // USUARIO

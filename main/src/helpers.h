@@ -9,6 +9,5 @@ int getch();
 void titulo();
 void cabeceraMenuPrincipal();
 void cabeceraInicioSesion();
-int inicioSesion();
 
 #endif // HELPERS
