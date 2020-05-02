@@ -10,7 +10,7 @@ Sistema para manejo de cine hecho en C.
 
 Este todo list, es del ensamblado final. Luego de recopilar todos los bloques de codigo y unirlos en una sola app.
 
-- [ ] Menu principal
+- [x] Menu principal
 - [ ] Modulo de inicio de sesion
 - [ ] Modulo de registro
 - [ ] Modulo de cartelera de las peliculas.

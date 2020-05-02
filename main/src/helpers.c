@@ -1,24 +1,34 @@
 #include <stdio.h>
+#include <stdbool.h>
+#include <windows.h>
 #include "helpers.h"
+#include "_define.h"
 
-void mainHeader()
+// Funcion para poder ocultar el cursor
+// Osea para que no parpade. establecer visible a false
+void estadoCursor(bool visible)
 {
-    system("cls");
-    puts("|------------------------------------------------------|");
-    puts("|     Administracion de sistema de tickets de cine     |");
-    puts("|------------------------------------------------------|");
+    CONSOLE_CURSOR_INFO *cursor = malloc(sizeof(CONSOLE_CURSOR_INFO));
+    HANDLE handler = GetStdHandle(STD_OUTPUT_HANDLE);
+
+    if (visible)
+    {
+        cursor->bVisible = TRUE;
+        cursor->dwSize = 0;
+    }
+    else
+    {
+        cursor->bVisible = FALSE;
+        cursor->dwSize = 1;
+    }
+
+    SetConsoleCursorInfo(handler, cursor);
 }
 
-void mainMenuHeader()
+// funcion para poder mostrar la flecha en que opcion esta ubicada
+void selector(int posicionReal, int posicionSelector)
 {
-    puts("|------------------------------------------------------|");
-    puts("|                    Menu principal                    |");
-    puts("|------------------------------------------------------|");
-}
-
-void showArrow(int realPosition, int arrowPosition)
-{
-    if (realPosition == arrowPosition)
+    if (posicionReal == posicionSelector)
     {
         printf(" > ");
     }
@@ -28,59 +38,70 @@ void showArrow(int realPosition, int arrowPosition)
     }
 }
 
-int mainMenu()
+// Funcion que permite que el menu se comporte como seleccion junto con la funcion de selector
+int seleccion(char *menu, char opcs[][20], int noOpcs)
 {
-    int position = 1;
-    int key = 0;
+    int posicion = 1;
+    int tecla = 0;
+    int i;
 
-    // key 13 = enter
-    while (key != 13)
+    // tecla 13 = enter
+    while (tecla != ENTER)
     {
-        mainHeader();
-        mainMenuHeader();
-
-        // Showing the arrows and the options all together
-        showArrow(1, position);
-        printf("Ver cartelera\n");
-
-        showArrow(2, position);
-        printf("Registrate\n");
-
-        showArrow(3, position);
-        printf("Iniciar sesion\n");
-
-        showArrow(4, position);
-        printf("Administrar Usuarios\n");
-
-        showArrow(5, position);
-        printf("Salir\n");
-
-        // listen to the key
-        key = getch(); // check if this could be replace for getChar()
-
-        // key 80 = keydown
-        // key 72 = keyup
-        if (key == 80 && position != 5)
+        titulo();
+        // titulo del menu
+        if (strcmp(menu, MENU_PRINCIPAL) == 0)
         {
-            position++;
+            cabeceraMenuPrincipal();
         }
-        else if (key == 80 && position == 5)
+
+        for (i = 0; i < noOpcs; i++)
         {
-            position = 1;
+            selector((i + 1), posicion);
+            printf("%s\n", opcs[i]);
         }
-        else if (key == 72 && position == 1)
+
+        // escuchando tecla
+        tecla = getch();
+
+        // tecla 80 = abajo
+        // tecla 72 = arriba
+        if (tecla == ARRIBA && posicion != noOpcs)
         {
-            position = 5;
+            posicion++;
         }
-        else if (key == 72 && position != 1)
+        else if (tecla == ARRIBA && posicion == noOpcs)
         {
-            position--;
+            posicion = 1;
+        }
+        else if (tecla == ABAJO && posicion == 1)
+        {
+            posicion = noOpcs;
+        }
+        else if (tecla == ABAJO && posicion != 1)
+        {
+            posicion--;
         }
         else
         {
-            position = position;
+            posicion = posicion;
         }
     }
 
-    return position;
+    return posicion;
+}
+
+void titulo()
+{
+    system("cls");
+    puts("|------------------------------------------------------|");
+    puts("|     Administracion de sistema de tickets de cine     |");
+    puts("|------------------------------------------------------|");
+}
+
+void cabeceraMenuPrincipal()
+{
+    puts("|------------------------------------------------------|");
+    puts("|                    Menu principal                    |");
+    puts("|------------------------------------------------------|");
 }

@@ -1,38 +1,38 @@
 #include <stdio.h>
 #include <windows.h>
+#include "helpers.h"
 #include "menus.h"
+#include "_define.h"
 
-// void menuPrincipal()
-// {
-//     int opcion;
-//     do
-//     {
-//         system("cls");
-//         puts("+----------------------------------------------+");
-//         puts("|          Sistema de Tickets de cine          |");
-//         puts("+----------------------------------------------+");
-//         puts("+----------------------------------------------+");
-//         puts("|                Menu principal                |");
-//         puts("+----------------------------------------------+");
-//         puts("1. Cartelera\n2. Registrate\n3. Iniciar sesion\n4. Salir");
-//         printf("Digite la opcion: ");
-//         scanf("%i", &opcion);
+void menuPrincipal()
+{
+    int opcion;
 
-//         switch (opcion)
-//         {
-//         case 1:
-//             puts("Seccion de la cartelera");
-//             system("pause>null");
-//             break;
-//         case 2:
-//             puts("Seccion de Registro");
-//             system("pause>null");
-//             break;
-//         case 3:
-//             puts("Seccion de Inicio de sesion");
-//             system("pause>null");
-//             break;
-//         }
+    char opciones[][20] = {
+        "Ver cartelera",
+        "Registrate",
+        "Iniciar sesion",
+        "Salir",
+    };
 
-//     } while (opcion != 4);
-// }
+    do
+    {
+        // estadoCursor(false);
+        opcion = seleccion(MENU_PRINCIPAL, opciones, 4);
+        switch (opcion)
+        {
+        case 1:
+            printf("\nSection ver cartelera\n");
+            system("pause>null"); // Si se borra, porfavor, eliminar windows
+            break;
+        case 2:
+            printf("\nSection registrate\n");
+            system("pause>null"); // Si se borra, porfavor, eliminar windows
+            break;
+        case 3:
+            printf("\nSection Iniciar sesion\n");
+            system("pause>null"); // Si se borra, porfavor, eliminar windows
+            break;
+        }
+    } while (opcion != 4);
+}
