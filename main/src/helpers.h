@@ -8,5 +8,7 @@ int seleccion(char *menu, char opcs[][20], int noOpcs);
 int getch();
 void titulo();
 void cabeceraMenuPrincipal();
+void cabeceraInicioSesion();
+int inicioSesion();
 
 #endif // HELPERS

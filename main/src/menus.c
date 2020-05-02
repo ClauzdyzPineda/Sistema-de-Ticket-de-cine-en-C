@@ -30,8 +30,7 @@ void menuPrincipal()
             system("pause>null"); // Si se borra, porfavor, eliminar windows
             break;
         case 3:
-            printf("\nSection Iniciar sesion\n");
-            system("pause>null"); // Si se borra, porfavor, eliminar windows
+            inicioSesion();
             break;
         }
     } while (opcion != 4);

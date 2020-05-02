@@ -105,3 +105,79 @@ void cabeceraMenuPrincipal()
     puts("|                    Menu principal                    |");
     puts("|------------------------------------------------------|");
 }
+
+void cabeceraInicioSesion()
+{
+    puts("|------------------------------------------------------|");
+    puts("|                   Inicio de sesion                   |");
+    puts("|------------------------------------------------------|");
+}
+
+int inicioSesion()
+{
+    char usuario[LONGITUD + 1];
+    char clave[LONGITUD + 1];
+    int intento = 0;
+    int ingresa = 0;
+    char caracter;
+    int i = 0;
+
+    do
+    {
+        titulo();
+        cabeceraInicioSesion();
+        printf("\nUSUARIO: ");
+        gets(usuario);
+        printf("CLAVE: ");
+        while ((caracter = getch()))
+        {
+            if (caracter == ENTER)
+            {
+                clave[i] = '\0';
+                break;
+            }
+            else if (caracter == BACKSPACE)
+            {
+                if (i > 0)
+                {
+                    i--;
+                    printf("\b \b");
+                }
+            }
+            else
+            {
+                if (i < LONGITUD)
+                {
+                    printf("*");
+                    clave[i] = caracter;
+                    i++;
+                }
+            }
+        }
+
+        if (strcmp(usuario, USUARIO) == 0 && strcmp(clave, CLAVE) == 0)
+        {
+            ingresa = 1;
+        }
+        else
+        {
+            printf("\n\tUsuario y/o clave son incorrectos\n");
+            intento++;
+            getchar();
+        }
+
+    } while (intento < 3 && ingresa == 0);
+
+    if (ingresa == 1)
+    {
+        printf("\n\tBienvenido al Sistema.. Aqui es donde tiene que ir la funcion. de usuario vs admin\n");
+        system("pause>null");
+    }
+    else
+    {
+        printf("\n\tHa sobrepasado el numero maximo de intentos permitidos\n");
+        system("pause>null");
+    }
+
+    return 0;
+}
