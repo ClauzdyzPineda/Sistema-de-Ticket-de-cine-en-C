@@ -40,7 +40,7 @@ void selector(int posicionReal, int posicionSelector)
 }
 
 // Funcion que permite que el menu se comporte como seleccion junto con la funcion de selector
-int seleccion(char *menu, char opcs[][20], int noOpcs)
+int seleccion(char *menu, char opcs[][LENGTH], int noOpcs)
 {
     int posicion = 1;
     int tecla = 0;
@@ -54,6 +54,10 @@ int seleccion(char *menu, char opcs[][20], int noOpcs)
         if (strcmp(menu, MENU_PRINCIPAL) == 0)
         {
             cabeceraMenuPrincipal();
+        }
+        if (strcmp(menu, MENU_PERFIL_ADMIN) == 0)
+        {
+            cabeceraMenuPerfilAdmin();
         }
 
         for (i = 0; i < noOpcs; i++)
@@ -111,5 +115,12 @@ void cabeceraInicioSesion()
 {
     puts("|------------------------------------------------------|");
     puts("|                   Inicio de sesion                   |");
+    puts("|------------------------------------------------------|");
+}
+
+void cabeceraMenuPerfilAdmin()
+{
+    puts("|------------------------------------------------------|");
+    puts("|                Perfil de administrador               |");
     puts("|------------------------------------------------------|");
 }

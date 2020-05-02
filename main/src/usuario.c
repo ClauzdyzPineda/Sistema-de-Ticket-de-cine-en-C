@@ -1,7 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <windows.h>
+#include "helpers.h"
 #include "usuario.h"
+#include "menus.h"
 #include "_define.h"
 
 void registro()
@@ -11,15 +13,18 @@ void registro()
     file = fopen("Record", "a");
     Usuario.id = (setId() + 1);
     Usuario.acceso = metodoAcceso;
-    printf("Digite su nombre :");
-    scanf("\n%[^\n]", &Usuario.nombre);
-    printf("Digite su correo :");
-    scanf("\n%[^\n]", &Usuario.correo);
-    printf("Digite su contrasenya :");
-    scanf("\n%[^\n]", &Usuario.pass);
+    printf("Nombre :");
+    scanf("\n%[^\n]", Usuario.nombre);
+    printf("Correo :");
+    scanf("\n%[^\n]", Usuario.correo);
+    printf("Contrasenya :");
+    scanf("\n%[^\n]", Usuario.pass);
 
     fwrite(&Usuario, sizeof(Usuario), 1, file);
     fclose(file);
+
+    printf("\nUsuario registrado correctamente\n");
+    system("pause>null");
 }
 
 int inicioSesion()
@@ -66,7 +71,7 @@ int inicioSesion()
 
         if (
             // Si es el super usuario quemado en el codigo
-            (strcmp(correo, SUPER_ADMIN_USUARIO) == 0 && strcmp(password, SUPER_ADMIN_USUARIO) == 0) ||
+            (strcmp(correo, SUPER_ADMIN_USUARIO) == 0 && strcmp(password, SUPER_ADMIN_PASSWORD) == 0) ||
             (validarUsuario(correo, password) == 0) // si es un usuario en la base de datos
         )
         {
@@ -83,9 +88,7 @@ int inicioSesion()
 
     if (loginOk == 1)
     {
-        getAcceso(correo);
-        printf("\n\tBienvenido al Sistema.. Aqui es donde tiene que ir la funcion. de usuario vs admin\n");
-        system("pause>null");
+        menuPerfil(getAcceso(correo));
     }
     else
     {
@@ -126,7 +129,6 @@ int setId()
 int getCorreo(char *correo)
 {
     FILE *file;
-    int c = 0;
     file = fopen("Record", "r");
     while (!feof(file))
     {
@@ -146,7 +148,6 @@ int getCorreo(char *correo)
 int validarUsuario(char *correo, char *password)
 {
     FILE *file;
-    int c = 0;
     file = fopen("Record", "r");
     while (!feof(file))
     {
@@ -173,24 +174,31 @@ int validarUsuario(char *correo, char *password)
     return 1;
 }
 
+// Nunca deberia de regresar -1
+// Porque se supone que a este punto el usuario ya esta validado con usuario y contraseña
 int getAcceso(char *correo)
 {
     FILE *file;
     file = fopen("Record", "r");
-    int acceso;
-    while (!feof(file))
-    {
-        fread(&Usuario, sizeof(Usuario), 1, file);
+    int acceso = -1;
 
-        if (strcmp(correo, Usuario.correo) == 0)
+    if (strcmp(correo, SUPER_ADMIN_USUARIO) == 0)
+    {
+        acceso = SUPER_ADMIN_ACCESO;
+    }
+    else
+    {
+        while (!feof(file))
         {
-            acceso = Usuario.acceso;
-            fclose(file);
-            return acceso;
+            fread(&Usuario, sizeof(Usuario), 1, file);
+
+            if (strcmp(correo, Usuario.correo) == 0)
+            {
+                acceso = Usuario.acceso;
+            }
         }
     }
 
-    // No deberia de llegar aqui.
     fclose(file);
-    return -1;
+    return acceso;
 }

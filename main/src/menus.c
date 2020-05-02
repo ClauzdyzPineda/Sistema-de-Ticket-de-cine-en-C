@@ -9,18 +9,17 @@ void menuPrincipal()
 {
     int opcion;
 
-    char opciones[][20] = {
+    char opciones[][LENGTH] = {
         "Ver cartelera",
         "Registrate",
         "Iniciar sesion",
-        "Mostar usuarios",
         "Salir",
     };
 
     do
     {
         // estadoCursor(false);
-        opcion = seleccion(MENU_PRINCIPAL, opciones, 5);
+        opcion = seleccion(MENU_PRINCIPAL, opciones, 4);
         switch (opcion)
         {
         case 1:
@@ -29,16 +28,68 @@ void menuPrincipal()
             break;
         case 2:
             registro();
-            printf("\nUsuario registrado correctamente\n");
-            system("pause>null"); // Si se borra, porfavor, eliminar windows
             break;
         case 3:
             inicioSesion();
             break;
-        case 4:
-            mostrarUsuarios();
-            system("pause>null"); // Si se borra, porfavor, eliminar windows
+        }
+    } while (opcion != 4);
+}
+
+void menuPerfil(int acceso)
+{
+    int opcion;
+    char opciones[][LENGTH] = {
+        "Administrar usuarios",
+        "Regresar",
+    };
+
+    do
+    {
+        // estadoCursor(false);
+        opcion = seleccion(MENU_PERFIL_ADMIN, opciones, 2);
+        switch (opcion)
+        {
+        case 1:
+            printf("\nAdministrar usuarios\n");
+            system("pause>null");
             break;
         }
-    } while (opcion != 5);
+    } while (opcion != 2);
+}
+
+void menuUsuarios()
+{
+
+    int opcion;
+    char opciones[][LENGTH] = {
+        "Crear usuario",
+        "Mostrar usuarios",
+        "Actualizar usuario",
+        "Eliminar usuario",
+        "Regresar",
+    };
+
+    do
+    {
+        // estadoCursor(false);
+        opcion = seleccion(MENU_PERFIL_ADMIN, opciones, 5);
+        switch (opcion)
+        {
+        case 1:
+            registro();
+            break;
+        case 2:
+            mostrarUsuarios();
+            break;
+        case 3:
+            printf("\nActualizar usuarios\n");
+            system("pause>null");
+            break;
+        case 4:
+            printf("\nEliminar usuarios\n");
+            system("pause>null");
+            break;
+        }
+    } while (opcion != 2);
 }

@@ -6,9 +6,11 @@
 #define ARRIBA 80
 #define ABAJO 72
 #define MENU_PRINCIPAL "MENU_PRINCIPAL"
-#define LONGITUD 80
+#define MENU_PERFIL_ADMIN "MENU_PERFIL_ADMIN"
+#define LENGTH 80
 // informacion del super administrador
 #define SUPER_ADMIN_USUARIO "c"
-#define SUPER_ADMIN_PASSWORD "java"
+#define SUPER_ADMIN_PASSWORD "med"
+#define SUPER_ADMIN_ACCESO 1
 
 #endif // _DEFINE

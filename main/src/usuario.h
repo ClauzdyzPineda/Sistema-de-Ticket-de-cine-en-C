@@ -23,5 +23,6 @@ int setId();
 int getCorreo(char *correo);
 int validarUsuario(char *correo, char *password);
 int getAcceso(char *correo);
+int getch();
 
 #endif // USUARIO
