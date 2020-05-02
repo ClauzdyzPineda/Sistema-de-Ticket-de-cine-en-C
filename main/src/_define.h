@@ -8,7 +8,7 @@
 #define MENU_PRINCIPAL "MENU_PRINCIPAL"
 #define LONGITUD 80
 // informacion del super administrador
-#define USUARIO "c"
-#define CLAVE "java"
+#define SUPER_ADMIN_USUARIO "c"
+#define SUPER_ADMIN_PASSWORD "java"
 
 #endif // _DEFINE

@@ -155,10 +155,16 @@ int inicioSesion()
             }
         }
 
-        if (strcmp(usuario, USUARIO) == 0 && strcmp(clave, CLAVE) == 0)
+        // Si es el super usuario quemado en el codigo
+        if (strcmp(usuario, SUPER_ADMIN_USUARIO) == 0 && strcmp(clave, SUPER_ADMIN_USUARIO) == 0)
         {
             ingresa = 1;
         }
+        // si es un usuario en la base de datos
+        // else if ()
+        // {
+        //     // Se tiene que abrir el archivo y buscar por el usuario por correo y luego con la contra
+        // }
         else
         {
             printf("\n\tUsuario y/o clave son incorrectos\n");
