@@ -1,6 +1,21 @@
 #include <stdio.h>
 #include "helpers.h"
 
+void mainHeader()
+{
+    system("cls");
+    puts("|------------------------------------------------------|");
+    puts("|     Administracion de sistema de tickets de cine     |");
+    puts("|------------------------------------------------------|");
+}
+
+void mainMenuHeader()
+{
+    puts("|------------------------------------------------------|");
+    puts("|                    Menu principal                    |");
+    puts("|------------------------------------------------------|");
+}
+
 void showArrow(int realPosition, int arrowPosition)
 {
     if (realPosition == arrowPosition)
@@ -21,6 +36,8 @@ int mainMenu()
     // key 13 = enter
     while (key != 13)
     {
+        mainHeader();
+        mainMenuHeader();
 
         // Showing the arrows and the options all together
         showArrow(1, position);

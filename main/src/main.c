@@ -35,10 +35,20 @@ void selector(int posicionReal, int posicionSelector)
     }
 }
 
-int seleccion()
+void dispStrings(char opcs[][20], int noOpcs)
+{
+    int i = 0;
+    for (i = 0; i < noOpcs; i++)
+    {
+        printf("%s\n", opcs[i]);
+    }
+}
+
+int seleccion(char *menu, char opcs[][20], int noOpcs)
 {
     int posicion = 1;
     int tecla = 0;
+    int i;
 
     // tecla 13 = enter
     while (tecla != 13)
@@ -49,41 +59,35 @@ int seleccion()
         puts("|     Administracion de sistema de tickets de cine     |");
         puts("|------------------------------------------------------|");
         // titulo del menu
-        puts("|------------------------------------------------------|");
-        puts("|                    Menu principal                    |");
-        puts("|------------------------------------------------------|");
+        if (strcmp(menu, "MENU_PRINCIPAL") == 0)
+        {
+            puts("|------------------------------------------------------|");
+            puts("|                    Menu principal                    |");
+            puts("|------------------------------------------------------|");
+        }
 
-        selector(1, posicion);
-        printf("Ver cartelera\n");
-
-        selector(2, posicion);
-        printf("Registrate\n");
-
-        selector(3, posicion);
-        printf("Iniciar sesion\n");
-
-        selector(4, posicion);
-        printf("Administrar Usuarios\n");
-
-        selector(5, posicion);
-        printf("Salir\n");
+        for (i = 0; i < noOpcs; i++)
+        {
+            selector((i + 1), posicion);
+            printf("%s\n", opcs[i]);
+        }
 
         // escuchando tecla
         tecla = getch();
 
         // tecla 80 = abajo
         // tecla 72 = arriba
-        if (tecla == 80 && posicion != 5)
+        if (tecla == 80 && posicion != noOpcs)
         {
             posicion++;
         }
-        else if (tecla == 80 && posicion == 5)
+        else if (tecla == 80 && posicion == noOpcs)
         {
             posicion = 1;
         }
         else if (tecla == 72 && posicion == 1)
         {
-            posicion = 5;
+            posicion = noOpcs;
         }
         else if (tecla == 72 && posicion != 1)
         {
@@ -102,10 +106,17 @@ void menuPrincipal()
 {
     int opcion;
 
+    char opciones[][20] = {
+        "Ver cartelera",
+        "Registrate",
+        "Iniciar sesion",
+        "Salir",
+    };
+
     do
     {
         // estadoCursor(false);
-        opcion = seleccion();
+        opcion = seleccion("MENU_PRINCIPAL", opciones, 4);
         switch (opcion)
         {
         case 1:
@@ -120,16 +131,8 @@ void menuPrincipal()
             printf("\nSection Iniciar sesion\n");
             system("pause>null");
             break;
-        case 4:
-            printf("\nSection Please delete\n");
-            system("pause>null");
-            break;
-        case 5:
-            printf("\nSalir\n");
-            system("pause>null");
-            break;
         }
-    } while (opcion != 5);
+    } while (opcion != 4);
 }
 
 int main()
@@ -140,3 +143,17 @@ int main()
     system("cls");
     return 0;
 }
+
+// void printing(char *string)
+// {
+//     if (strcmp(string, "menu") == 0)
+//     {
+//         printf("correcto");
+//     }
+// }
+
+// int main()
+// {
+//     printing("menu,");
+//     return 0;
+// }
