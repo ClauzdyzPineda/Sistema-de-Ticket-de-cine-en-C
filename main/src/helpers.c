@@ -3,6 +3,7 @@
 #include <windows.h>
 #include "helpers.h"
 #include "_define.h"
+#include "usuario.h"
 
 // Funcion para poder ocultar el cursor
 // Osea para que no parpade. establecer visible a false
@@ -115,8 +116,8 @@ void cabeceraInicioSesion()
 
 int inicioSesion()
 {
-    char usuario[LONGITUD + 1];
-    char clave[LONGITUD + 1];
+    char correo[50];
+    char password[50];
     int intento = 0;
     int ingresa = 0;
     char caracter;
@@ -126,14 +127,14 @@ int inicioSesion()
     {
         titulo();
         cabeceraInicioSesion();
-        printf("\nUSUARIO: ");
-        gets(usuario);
-        printf("CLAVE: ");
+        printf("\nCoreo: ");
+        gets(correo);
+        printf("Contrasenya: ");
         while ((caracter = getch()))
         {
             if (caracter == ENTER)
             {
-                clave[i] = '\0';
+                password[i] = '\0';
                 break;
             }
             else if (caracter == BACKSPACE)
@@ -149,22 +150,24 @@ int inicioSesion()
                 if (i < LONGITUD)
                 {
                     printf("*");
-                    clave[i] = caracter;
+                    password[i] = caracter;
                     i++;
                 }
             }
         }
 
+        printf("Validacion de correo %i", validarUsuario(correo, password));
+
         // Si es el super usuario quemado en el codigo
-        if (strcmp(usuario, SUPER_ADMIN_USUARIO) == 0 && strcmp(clave, SUPER_ADMIN_USUARIO) == 0)
+        if (strcmp(correo, SUPER_ADMIN_USUARIO) == 0 && strcmp(password, SUPER_ADMIN_PASSWORD) == 0)
         {
             ingresa = 1;
         }
         // si es un usuario en la base de datos
-        // else if ()
-        // {
-        //     // Se tiene que abrir el archivo y buscar por el usuario por correo y luego con la contra
-        // }
+        else if (validarUsuario(correo, password) == 0)
+        {
+            ingresa = 1;
+        }
         else
         {
             printf("\n\tUsuario y/o clave son incorrectos\n");

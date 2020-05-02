@@ -3,6 +3,7 @@
 #include "helpers.h"
 #include "menus.h"
 #include "_define.h"
+#include "usuario.h"
 
 void menuPrincipal()
 {
@@ -12,13 +13,14 @@ void menuPrincipal()
         "Ver cartelera",
         "Registrate",
         "Iniciar sesion",
+        "Mostar usuarios",
         "Salir",
     };
 
     do
     {
         // estadoCursor(false);
-        opcion = seleccion(MENU_PRINCIPAL, opciones, 4);
+        opcion = seleccion(MENU_PRINCIPAL, opciones, 5);
         switch (opcion)
         {
         case 1:
@@ -26,12 +28,17 @@ void menuPrincipal()
             system("pause>null"); // Si se borra, porfavor, eliminar windows
             break;
         case 2:
-            printf("\nSection registrate\n");
+            registro();
+            printf("\nUsuario registrado correctamente\n");
             system("pause>null"); // Si se borra, porfavor, eliminar windows
             break;
         case 3:
             inicioSesion();
             break;
+        case 4:
+            mostrarUsuarios();
+            system("pause>null"); // Si se borra, porfavor, eliminar windows
+            break;
         }
-    } while (opcion != 4);
+    } while (opcion != 5);
 }
