@@ -4,6 +4,7 @@
 #include "helpers.h"
 #include "_define.h"
 #include "usuario.h"
+#include "pelicula.h"
 #include "cabeceras.h"
 
 // Funcion para poder ocultar el cursor
@@ -121,6 +122,18 @@ int setId(char *registro)
         fclose(file);
     }
 
+    if (strcmp(registro, REGISTRO_PELICULA) == 0)
+    {
+        FILE *file;
+        file = fopen("Pelicula", "r");
+
+        while (fread(&Pelicula, sizeof(Pelicula), 1, file))
+        {
+            id++;
+        }
+        fclose(file);
+    }
+
     return id;
 }
 
@@ -146,24 +159,24 @@ void crearRegistro(char *registro)
         printf("\nUsuario registrado correctamente\n");
         system("pause>null");
     }
-    // if (strcmp(registro, REGISTRO_PELICULA) == 0)
-    // {
-    //     FILE *file;
-    //     file = fopen("Record", "a");
-    //     Usuario.id = (setId() + 1);
-    //     printf("Nombre: ");
-    //     scanf("\n%[^\n]", Usuario.nombre);
-    //     printf("Correo: ");
-    //     scanf("\n%[^\n]", Usuario.correo);
-    //     printf("Contrasenya: ");
-    //     scanf("\n%[^\n]", Usuario.pass);
+    if (strcmp(registro, REGISTRO_PELICULA) == 0)
+    {
+        FILE *file;
+        file = fopen("Pelicula", "a");
+        Usuario.id = (setId(REGISTRO_PELICULA) + 1);
+        printf("Titulo: ");
+        scanf("\n%[^\n]", Pelicula.titulo);
+        printf("Genero: ");
+        scanf("\n%[^\n]", Pelicula.genero);
+        // printf("Contrasenya: ");
+        // scanf("\n%[^\n]", Usuario.pass);
 
-    //     fwrite(&Usuario, sizeof(Usuario), 1, file);
-    //     fclose(file);
+        fwrite(&Pelicula, sizeof(Pelicula), 1, file);
+        fclose(file);
 
-    //     printf("\nUsuario registrado correctamente\n");
-    //     system("pause>null");
-    // }
+        printf("\nPelicula registrada correctamente\n");
+        system("pause>null");
+    }
 }
 
 void mostrarRegistros(char *registro)
@@ -176,6 +189,18 @@ void mostrarRegistros(char *registro)
         while (fread(&Usuario, sizeof(Usuario), 1, file))
         {
             printf("  %i\t\t%s\t\t%s\t\t%s\t\t%i\n", Usuario.id, Usuario.nombre, Usuario.correo, Usuario.pass, Usuario.acceso);
+        }
+        fclose(file);
+        system("pause>null");
+    }
+    if (strcmp(registro, REGISTRO_PELICULA) == 0)
+    {
+        FILE *file;
+        file = fopen("Pelicula", "r");
+        printf("\nid\t\tTitulo\t\tGenero\t\tHorarios\n\n");
+        while (fread(&Pelicula, sizeof(Pelicula), 1, file))
+        {
+            printf("  %i\t\t%s\t\t%s\n", Pelicula.id, Pelicula.titulo, Pelicula.genero);
         }
         fclose(file);
         system("pause>null");

@@ -45,20 +45,24 @@ void menuPerfil(int acceso)
         int opcion;
         char opciones[][LENGTH] = {
             "Administrar usuarios",
+            "Administrar Peliculas",
             "Regresar",
         };
 
         do
         {
             // estadoCursor(false);
-            opcion = seleccion(MENU_PERFIL_ADMIN, opciones, 2);
+            opcion = seleccion(MENU_PERFIL_ADMIN, opciones, 3);
             switch (opcion)
             {
             case 1:
                 menuUsuarios();
                 break;
+            case 2:
+                menuPeliculas();
+                break;
             }
-        } while (opcion != 2);
+        } while (opcion != 3);
     }
     else
     {
@@ -118,6 +122,40 @@ void menuUsuarios()
             break;
         case 4:
             eliminarRegistro(REGISTRO_USUARIO);
+            break;
+        }
+    } while (opcion != 5);
+}
+
+void menuPeliculas()
+{
+
+    int opcion;
+    char opciones[][LENGTH] = {
+        "Crear pelicula",
+        "Mostrar peliculas",
+        "Actualizar pelicula",
+        "Eliminar pelicula",
+        "Regresar",
+    };
+
+    do
+    {
+        // estadoCursor(false);
+        opcion = seleccion(MENU_PERFIL_ADMIN, opciones, 5);
+        switch (opcion)
+        {
+        case 1:
+            crearRegistro(REGISTRO_PELICULA);
+            break;
+        case 2:
+            mostrarRegistros(REGISTRO_PELICULA);
+            break;
+        case 3:
+            actualizarRegistro(REGISTRO_PELICULA);
+            break;
+        case 4:
+            eliminarRegistro(REGISTRO_PELICULA);
             break;
         }
     } while (opcion != 5);
