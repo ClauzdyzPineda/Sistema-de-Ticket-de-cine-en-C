@@ -38,23 +38,54 @@ void menuPrincipal()
 
 void menuPerfil(int acceso)
 {
-    int opcion;
-    char opciones[][LENGTH] = {
-        "Administrar usuarios",
-        "Regresar",
-    };
-
-    do
+    Role esAdmin = ADMIN;
+    if (acceso == esAdmin)
     {
-        // estadoCursor(false);
-        opcion = seleccion(MENU_PERFIL_ADMIN, opciones, 2);
-        switch (opcion)
+        int opcion;
+        char opciones[][LENGTH] = {
+            "Administrar usuarios",
+            "Regresar",
+        };
+
+        do
         {
-        case 1:
-            menuUsuarios();
-            break;
-        }
-    } while (opcion != 2);
+            // estadoCursor(false);
+            opcion = seleccion(MENU_PERFIL_ADMIN, opciones, 2);
+            switch (opcion)
+            {
+            case 1:
+                menuUsuarios();
+                break;
+            }
+        } while (opcion != 2);
+    }
+    else
+    {
+        // PANEL DE USUARIO NORMAL
+        int opcion;
+        char opciones[][LENGTH] = {
+            "Comprar entradas",
+            "Mi perfil",
+            "Regresar",
+        };
+
+        do
+        {
+            // estadoCursor(false);
+            opcion = seleccion(MENU_PERFIL, opciones, 3);
+            switch (opcion)
+            {
+            case 1:
+                printf("Comprar entradas");
+                system("pause>null");
+                break;
+            case 2:
+                printf("Actualizar mi perfil");
+                system("pause>null");
+                break;
+            }
+        } while (opcion != 3);
+    }
 }
 
 void menuUsuarios()

@@ -63,6 +63,10 @@ int seleccion(char *menu, char opcs[][LENGTH], int noOpcs)
         {
             cabeceraActualizarUsuario();
         }
+        if (strcmp(menu, MENU_PERFIL) == 0)
+        {
+            cabeceraMenuPerfil();
+        }
 
         for (i = 0; i < noOpcs; i++)
         {
@@ -126,6 +130,13 @@ void cabeceraMenuPerfilAdmin()
 {
     puts("|------------------------------------------------------|");
     puts("|                Perfil de administrador               |");
+    puts("|------------------------------------------------------|");
+}
+
+void cabeceraMenuPerfil()
+{
+    puts("|------------------------------------------------------|");
+    puts("|                        Perfil                        |");
     puts("|------------------------------------------------------|");
 }
 

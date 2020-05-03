@@ -37,6 +37,6 @@ Este todo list, es del ensamblado final. Luego de recopilar todos los bloques de
     - [ ] Eliminar salas
   - [ ] Modulo para reporteria de los tickets.
     - [ ] Reportes de tickets vendidos. 
-- [ ] Panel de usuario normal
+- [x] Panel de usuario normal
   - [ ] Mi cuenta.
   - [ ] Comprar entradas
