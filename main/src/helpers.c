@@ -69,6 +69,10 @@ int seleccion(char *menu, char opcs[][LENGTH], int noOpcs)
         {
             cabeceraMenuPerfil();
         }
+        if (strcmp(menu, MENU_ACTUALIZAR_PELICULA) == 0)
+        {
+            cabeceraActualizarPelicula();
+        }
 
         for (i = 0; i < noOpcs; i++)
         {
@@ -144,13 +148,30 @@ int getRegistro(char *tipoRegistro, char *registro)
     if (strcmp(tipoRegistro, REGISTRO_USUARIO) == 0)
     {
         FILE *file;
-        file = fopen("Record", "r");
+        file = fopen(ARCHIVO_USUARIOS, "r");
 
         while (!feof(file))
         {
             fread(&Usuario, sizeof(Usuario), 1, file);
 
             if (strcmp(registro, Usuario.correo) == 0)
+            {
+                existe = 1;
+            }
+        }
+        fclose(file);
+    }
+
+    if (strcmp(tipoRegistro, REGISTRO_PELICULA) == 0)
+    {
+        FILE *file;
+        file = fopen(ARCHIVO_PELICULAS, "r");
+
+        while (!feof(file))
+        {
+            fread(&Pelicula, sizeof(Pelicula), 1, file);
+
+            if (strcmp(registro, Pelicula.titulo) == 0)
             {
                 existe = 1;
             }
@@ -319,87 +340,84 @@ void actualizarRegistro(char *registro)
         }
     }
 
-    // if (strcmp(registro, REGISTRO_PELICULA) == 0)
-    // {
-    //     FILE *file;
-    //     FILE *tmpfile;
-    //     int existe;
-    //     int opcion;
-    //     char Titulo[LENGTH];
-    //     char *UTitulo;
+    if (strcmp(registro, REGISTRO_PELICULA) == 0)
+    {
+        FILE *file;
+        FILE *tmpfile;
+        int existe;
+        int opcion;
+        char titulo[LENGTH];
+        char *UTitulo;
 
-    //     printf("Digite titulo: ");
-    //     scanf("\n%[^\n]", titulo);
+        printf("Digite Titulo: ");
+        scanf("\n%[^\n]", titulo);
 
-    //     existe = getCorreo(correo);
+        existe = getRegistro(REGISTRO_PELICULA, titulo);
 
-    //     if (existe == 0)
-    //     {
-    //         printf("No se encontraron registros para el correo: %s", correo);
-    //     }
-    //     else
-    //     {
-    //         tmpfile = fopen("Record", "r");
-    //         file = fopen("TempFile", "w");
-    //         while (fread(&Usuario, sizeof(Usuario), 1, tmpfile))
-    //         {
-    //             UCorreo = Usuario.correo;
+        if (existe == 0)
+        {
+            printf("No se encontraron registros para el correo: '%s'", titulo);
+            system("pause>null");
+        }
+        else
+        {
+            file = fopen(ARCHIVO_PELICULAS, "r");
+            tmpfile = fopen(ARCHIVO_TEMP, "w");
+            while (fread(&Pelicula, sizeof(Pelicula), 1, file))
+            {
+                UTitulo = Pelicula.titulo;
 
-    //             if (strcmp(correo, UCorreo) != 0)
-    //             {
-    //                 fwrite(&Usuario, sizeof(Usuario), 1, file);
-    //             }
-    //             else
-    //             {
-    //                 char opciones[][LENGTH] = {
-    //                     "Nombre",
-    //                     "Correo",
-    //                     "Contrasenya",
-    //                     "Acceso",
-    //                     "Regresar",
-    //                 };
+                if (strcmp(titulo, UTitulo) != 0)
+                {
+                    fwrite(&Pelicula, sizeof(Pelicula), 1, tmpfile);
+                }
+                else
+                {
+                    char opciones[][LENGTH] = {
+                        "Titulo",
+                        "Genero",
+                        "Horarios",
+                        "Regresar",
+                    };
 
-    //                 do
-    //                 {
-    //                     opcion = seleccion(MENU_ACTUALIZAR_USER, opciones, 5);
+                    do
+                    {
+                        opcion = seleccion(MENU_ACTUALIZAR_PELICULA, opciones, 4);
 
-    //                     switch (opcion)
-    //                     {
-    //                     case 1:
-    //                         printf("Nombre: ");
-    //                         scanf("\n%[^\n]", Usuario.nombre);
-    //                         break;
-    //                     case 2:
-    //                         printf("Correo: ");
-    //                         scanf("\n%[^\n]", Usuario.correo);
-    //                         break;
-    //                     case 3:
-    //                         printf("Contrasenya: ");
-    //                         scanf("\n%[^\n]", Usuario.pass);
-    //                         break;
-    //                     case 4:
-    //                         printf("Acceso: ");
-    //                         system("pause>null");
-    //                         break;
-    //                     }
-    //                 } while (opcion != 5);
+                        switch (opcion)
+                        {
+                        case 1:
+                            printf("Titulo: ");
+                            scanf("\n%[^\n]", Pelicula.titulo);
+                            break;
+                        case 2:
+                            printf("Genero: ");
+                            scanf("\n%[^\n]", Pelicula.genero);
+                            break;
+                        case 3:
+                            printf("Actualizar horarios: ");
+                            system("pause>null");
+                            break;
+                        }
+                    } while (opcion != 4);
 
-    //                 fwrite(&Usuario, sizeof(Usuario), 1, file);
-    //             }
-    //         }
-    //         fclose(tmpfile);
-    //         fclose(file);
-    //         tmpfile = fopen("Record", "w");
-    //         file = fopen("TempFile", "r");
-    //         while (fread(&Usuario, sizeof(Usuario), 1, file))
-    //         {
-    //             fwrite(&Usuario, sizeof(Usuario), 1, tmpfile);
-    //         }
-    //         fclose(tmpfile);
-    //         fclose(file);
-    //         printf("RECORD UPDATED");
-    //     }
-    // }
+                    fwrite(&Pelicula, sizeof(Pelicula), 1, tmpfile);
+                }
+            }
+            fclose(file);
+            fclose(tmpfile);
+            file = fopen(ARCHIVO_PELICULAS, "w");
+            tmpfile = fopen(ARCHIVO_TEMP, "r");
+            while (fread(&Pelicula, sizeof(Pelicula), 1, tmpfile))
+            {
+                fwrite(&Pelicula, sizeof(Pelicula), 1, file);
+            }
+            fclose(file);
+            fclose(tmpfile);
+            printf("Pelicula actualizado.");
+            system("pause>null");
+        }
+    }
 }
 
 void eliminarRegistro(char *registro)

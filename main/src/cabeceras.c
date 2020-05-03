@@ -44,3 +44,10 @@ void cabeceraActualizarUsuario()
     puts("|                Actualizar usuario                     |");
     puts("|------------------------------------------------------|");
 }
+
+void cabeceraActualizarPelicula()
+{
+    puts("|------------------------------------------------------|");
+    puts("|                 Actualizar pelicula                  |");
+    puts("|------------------------------------------------------|");
+}
