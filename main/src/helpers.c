@@ -105,6 +105,25 @@ int seleccion(char *menu, char opcs[][LENGTH], int noOpcs)
     return posicion;
 }
 
+int setId(char *registro)
+{
+    int id = 0;
+
+    if (strcmp(registro, REGISTRO_USUARIO) == 0)
+    {
+        FILE *file;
+        file = fopen("Record", "r");
+
+        while (fread(&Usuario, sizeof(Usuario), 1, file))
+        {
+            id++;
+        }
+        fclose(file);
+    }
+
+    return id;
+}
+
 void crearRegistro(char *registro)
 {
     if (strcmp(registro, REGISTRO_USUARIO) == 0)
@@ -112,7 +131,7 @@ void crearRegistro(char *registro)
         FILE *file;
         Role metodoAcceso = NORMAL;
         file = fopen("Record", "a");
-        Usuario.id = (setId() + 1);
+        Usuario.id = (setId(REGISTRO_USUARIO) + 1);
         Usuario.acceso = metodoAcceso;
         printf("Nombre: ");
         scanf("\n%[^\n]", Usuario.nombre);
@@ -127,6 +146,24 @@ void crearRegistro(char *registro)
         printf("\nUsuario registrado correctamente\n");
         system("pause>null");
     }
+    // if (strcmp(registro, REGISTRO_PELICULA) == 0)
+    // {
+    //     FILE *file;
+    //     file = fopen("Record", "a");
+    //     Usuario.id = (setId() + 1);
+    //     printf("Nombre: ");
+    //     scanf("\n%[^\n]", Usuario.nombre);
+    //     printf("Correo: ");
+    //     scanf("\n%[^\n]", Usuario.correo);
+    //     printf("Contrasenya: ");
+    //     scanf("\n%[^\n]", Usuario.pass);
+
+    //     fwrite(&Usuario, sizeof(Usuario), 1, file);
+    //     fclose(file);
+
+    //     printf("\nUsuario registrado correctamente\n");
+    //     system("pause>null");
+    // }
 }
 
 void mostrarRegistros(char *registro)

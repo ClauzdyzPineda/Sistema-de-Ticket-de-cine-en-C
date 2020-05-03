@@ -17,7 +17,6 @@ struct
 } Usuario;
 
 int inicioSesion();
-int setId();
 int getCorreo(char *correo);
 int validarUsuario(char *correo, char *password);
 int getAcceso(char *correo);

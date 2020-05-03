@@ -79,20 +79,6 @@ int inicioSesion()
     return 0;
 }
 
-int setId()
-{
-    FILE *file;
-    file = fopen("Record", "r");
-    int id = 0;
-
-    while (fread(&Usuario, sizeof(Usuario), 1, file))
-    {
-        id++;
-    }
-    fclose(file);
-    return id;
-}
-
 // Funcion para verificar si el usuario existe
 // Si correo existe devuelve 1
 int getCorreo(char *correo)
