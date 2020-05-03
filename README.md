@@ -26,11 +26,11 @@ Este todo list, es del ensamblado final. Luego de recopilar todos los bloques de
     - [x] Mostrar usuarios
       - [ ] Tabulacion de usuarios => Sort?
     - [x] Eliminar usuarios
-  - [ ] Modulo para gestionar peliculas
-    - [ ] Crear peliculas
-    - [ ] Actualizar peliculas
-    - [ ] Mostrar peliculas
-    - [ ] Eliminar peliculas
+  - [x] Modulo para gestionar peliculas
+    - [x] Crear peliculas
+    - [x] Actualizar peliculas
+    - [x] Mostrar peliculas
+    - [x] Eliminar peliculas
   - [ ] Modulo para gestionar salas.
     - [ ] Crear salas
     - [ ] Actualizar salas

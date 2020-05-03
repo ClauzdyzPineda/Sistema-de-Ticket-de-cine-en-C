@@ -466,4 +466,48 @@ void eliminarRegistro(char *registro)
             system("pause>null");
         }
     }
+    if (strcmp(registro, REGISTRO_PELICULA) == 0)
+    {
+        FILE *tmpfile;
+        FILE *file;
+        char titulo[LENGTH];
+        char *UTitulo;
+        int existe;
+
+        printf("Digite titulo: ");
+        scanf("\n%[^\n]", titulo);
+
+        existe = getRegistro(REGISTRO_PELICULA, titulo);
+
+        if (existe == 0)
+        {
+            printf("No se encontraron registros para el correo: '%s'", titulo);
+        }
+        else
+        {
+            file = fopen(ARCHIVO_PELICULAS, "r");
+            tmpfile = fopen(ARCHIVO_TEMP, "w");
+            while (fread(&Pelicula, sizeof(Pelicula), 1, file))
+            {
+                UTitulo = Pelicula.titulo;
+
+                if (strcmp(titulo, UTitulo) != 0)
+                {
+                    fwrite(&Pelicula, sizeof(Pelicula), 1, tmpfile);
+                }
+            }
+            fclose(file);
+            fclose(tmpfile);
+            file = fopen(ARCHIVO_PELICULAS, "w");
+            tmpfile = fopen(ARCHIVO_TEMP, "r");
+            while (fread(&Pelicula, sizeof(Pelicula), 1, tmpfile))
+            {
+                fwrite(&Pelicula, sizeof(Pelicula), 1, file);
+            }
+            fclose(file);
+            fclose(tmpfile);
+            printf("Pelicula eliminada");
+            system("pause>null");
+        }
+    }
 }
