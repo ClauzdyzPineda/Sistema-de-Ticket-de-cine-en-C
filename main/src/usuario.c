@@ -131,48 +131,51 @@ void actualizarRegistro(char *registro)
     }
 }
 
-void eliminarUsuario()
+void eliminarRegistro(char *registro)
 {
-    FILE *tmpfile;
-    FILE *file;
-    char correo[LENGTH];
-    char *UCorreo;
-    int existe;
-
-    printf("Digite correo: ");
-    scanf("\n%[^\n]", correo);
-
-    existe = getCorreo(correo);
-
-    if (existe == 0)
+    if (strcmp(registro, REGISTRO_USUARIO) == 0)
     {
-        printf("No se encontraron registros para el correo: %s", correo);
-    }
-    else
-    {
-        tmpfile = fopen("Record", "r");
-        file = fopen("TempFile", "w");
-        while (fread(&Usuario, sizeof(Usuario), 1, tmpfile))
+        FILE *tmpfile;
+        FILE *file;
+        char correo[LENGTH];
+        char *UCorreo;
+        int existe;
+
+        printf("Digite correo: ");
+        scanf("\n%[^\n]", correo);
+
+        existe = getCorreo(correo);
+
+        if (existe == 0)
         {
-            UCorreo = Usuario.correo;
-
-            if (strcmp(correo, UCorreo) != 0)
+            printf("No se encontraron registros para el correo: %s", correo);
+        }
+        else
+        {
+            tmpfile = fopen("Record", "r");
+            file = fopen("TempFile", "w");
+            while (fread(&Usuario, sizeof(Usuario), 1, tmpfile))
             {
-                fwrite(&Usuario, sizeof(Usuario), 1, file);
+                UCorreo = Usuario.correo;
+
+                if (strcmp(correo, UCorreo) != 0)
+                {
+                    fwrite(&Usuario, sizeof(Usuario), 1, file);
+                }
             }
+            fclose(tmpfile);
+            fclose(file);
+            tmpfile = fopen("Record", "w");
+            file = fopen("TempFile", "r");
+            while (fread(&Usuario, sizeof(Usuario), 1, file))
+            {
+                fwrite(&Usuario, sizeof(Usuario), 1, tmpfile);
+            }
+            fclose(tmpfile);
+            fclose(file);
+            printf("Usuario eliminado");
+            system("pause>null");
         }
-        fclose(tmpfile);
-        fclose(file);
-        tmpfile = fopen("Record", "w");
-        file = fopen("TempFile", "r");
-        while (fread(&Usuario, sizeof(Usuario), 1, file))
-        {
-            fwrite(&Usuario, sizeof(Usuario), 1, tmpfile);
-        }
-        fclose(tmpfile);
-        fclose(file);
-        printf("Usuario eliminado");
-        system("pause>null");
     }
 }
 

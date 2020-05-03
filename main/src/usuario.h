@@ -22,10 +22,10 @@ int getCorreo(char *correo);
 int validarUsuario(char *correo, char *password);
 int getAcceso(char *correo);
 int getch();
-void eliminarUsuario();
 
 void crearRegistro(char *registro);
 void mostrarRegistros(char *registro);
 void actualizarRegistro(char *registro);
+void eliminarRegistro(char *registro);
 
 #endif // USUARIO

@@ -117,7 +117,7 @@ void menuUsuarios()
             actualizarRegistro(REGISTRO_USUARIO);
             break;
         case 4:
-            eliminarUsuario();
+            eliminarRegistro(REGISTRO_USUARIO);
             break;
         }
     } while (opcion != 5);
