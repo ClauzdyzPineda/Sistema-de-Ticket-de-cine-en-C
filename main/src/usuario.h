@@ -10,9 +10,9 @@ typedef enum
 struct
 {
     int id;
-    char nombre[30];
-    char pass[30];
-    char correo[30];
+    char nombre[LENGTH];
+    char pass[LENGTH];
+    char correo[LENGTH];
     Role acceso;
 } Usuario;
 
