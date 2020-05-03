@@ -16,7 +16,6 @@ struct
     Role acceso;
 } Usuario;
 
-void registro();
 int inicioSesion();
 void mostrarUsuarios();
 int setId();
@@ -26,5 +25,7 @@ int getAcceso(char *correo);
 int getch();
 void actualizarUsuario();
 void eliminarUsuario();
+
+void crearRegistro(char *registro);
 
 #endif // USUARIO

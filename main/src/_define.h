@@ -15,5 +15,7 @@
 #define SUPER_ADMIN_USUARIO "c"
 #define SUPER_ADMIN_PASSWORD "med"
 #define SUPER_ADMIN_ACCESO 1
+// registros
+#define REGISTRO_USUARIO "REGISTRO_USUARIO"
 
 #endif // _DEFINE

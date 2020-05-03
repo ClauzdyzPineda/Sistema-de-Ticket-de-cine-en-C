@@ -6,25 +6,28 @@
 #include "menus.h"
 #include "_define.h"
 
-void registro()
+void crearRegistro(char *registro)
 {
-    FILE *file;
-    Role metodoAcceso = NORMAL;
-    file = fopen("Record", "a");
-    Usuario.id = (setId() + 1);
-    Usuario.acceso = metodoAcceso;
-    printf("Nombre: ");
-    scanf("\n%[^\n]", Usuario.nombre);
-    printf("Correo: ");
-    scanf("\n%[^\n]", Usuario.correo);
-    printf("Contrasenya: ");
-    scanf("\n%[^\n]", Usuario.pass);
+    if (strcmp(registro, REGISTRO_USUARIO) == 0)
+    {
+        FILE *file;
+        Role metodoAcceso = NORMAL;
+        file = fopen("Record", "a");
+        Usuario.id = (setId() + 1);
+        Usuario.acceso = metodoAcceso;
+        printf("Nombre: ");
+        scanf("\n%[^\n]", Usuario.nombre);
+        printf("Correo: ");
+        scanf("\n%[^\n]", Usuario.correo);
+        printf("Contrasenya: ");
+        scanf("\n%[^\n]", Usuario.pass);
 
-    fwrite(&Usuario, sizeof(Usuario), 1, file);
-    fclose(file);
+        fwrite(&Usuario, sizeof(Usuario), 1, file);
+        fclose(file);
 
-    printf("\nUsuario registrado correctamente\n");
-    system("pause>null");
+        printf("\nUsuario registrado correctamente\n");
+        system("pause>null");
+    }
 }
 
 int inicioSesion()

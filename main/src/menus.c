@@ -27,7 +27,8 @@ void menuPrincipal()
             system("pause>null"); // Si se borra, porfavor, eliminar windows
             break;
         case 2:
-            registro();
+            // registro();
+            crearRegistro(REGISTRO_USUARIO);
             break;
         case 3:
             inicioSesion();
@@ -107,7 +108,8 @@ void menuUsuarios()
         switch (opcion)
         {
         case 1:
-            registro();
+            // registro();
+            crearRegistro(REGISTRO_USUARIO);
             break;
         case 2:
             mostrarUsuarios();
