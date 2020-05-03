@@ -161,13 +161,14 @@ int getRegistro(char *tipoRegistro, char *registro)
     return existe;
 }
 
+// CRUD DE REGISTROS
 void crearRegistro(char *registro)
 {
     if (strcmp(registro, REGISTRO_USUARIO) == 0)
     {
         FILE *file;
         Role metodoAcceso = NORMAL;
-        file = fopen("Record", "a");
+        file = fopen(ARCHIVO_USUARIOS, "a");
         Usuario.id = (setId(REGISTRO_USUARIO) + 1);
         Usuario.acceso = metodoAcceso;
         printf("Nombre: ");
@@ -186,7 +187,7 @@ void crearRegistro(char *registro)
     if (strcmp(registro, REGISTRO_PELICULA) == 0)
     {
         FILE *file;
-        file = fopen("Pelicula", "a");
+        file = fopen(ARCHIVO_PELICULAS, "a");
         Usuario.id = (setId(REGISTRO_PELICULA) + 1);
         printf("Titulo: ");
         scanf("\n%[^\n]", Pelicula.titulo);
@@ -208,7 +209,7 @@ void mostrarRegistros(char *registro)
     if (strcmp(registro, REGISTRO_USUARIO) == 0)
     {
         FILE *file;
-        file = fopen("Record", "r");
+        file = fopen(ARCHIVO_USUARIOS, "r");
         printf("\nid\t\tNombre\t\tCorreo\t\tPassword\t\tAcceso\n\n");
         while (fread(&Usuario, sizeof(Usuario), 1, file))
         {
@@ -221,7 +222,7 @@ void mostrarRegistros(char *registro)
     if (strcmp(registro, REGISTRO_PELICULA) == 0)
     {
         FILE *file;
-        file = fopen("Pelicula", "r");
+        file = fopen(ARCHIVO_PELICULAS, "r");
         printf("\nid\t\tTitulo\t\tGenero\t\tHorarios\n\n");
         while (fread(&Pelicula, sizeof(Pelicula), 1, file))
         {
@@ -251,18 +252,19 @@ void actualizarRegistro(char *registro)
         if (existe == 0)
         {
             printf("No se encontraron registros para el correo: %s", correo);
+            system("pause>null");
         }
         else
         {
-            tmpfile = fopen("Record", "r");
-            file = fopen("TempFile", "w");
-            while (fread(&Usuario, sizeof(Usuario), 1, tmpfile))
+            file = fopen(ARCHIVO_USUARIOS, "r");
+            tmpfile = fopen(ARCHIVO_TEMP, "w");
+            while (fread(&Usuario, sizeof(Usuario), 1, file))
             {
                 UCorreo = Usuario.correo;
 
                 if (strcmp(correo, UCorreo) != 0)
                 {
-                    fwrite(&Usuario, sizeof(Usuario), 1, file);
+                    fwrite(&Usuario, sizeof(Usuario), 1, tmpfile);
                 }
                 else
                 {
@@ -299,20 +301,21 @@ void actualizarRegistro(char *registro)
                         }
                     } while (opcion != 5);
 
-                    fwrite(&Usuario, sizeof(Usuario), 1, file);
+                    fwrite(&Usuario, sizeof(Usuario), 1, tmpfile);
                 }
             }
-            fclose(tmpfile);
             fclose(file);
-            tmpfile = fopen("Record", "w");
-            file = fopen("TempFile", "r");
-            while (fread(&Usuario, sizeof(Usuario), 1, file))
+            fclose(tmpfile);
+            file = fopen(ARCHIVO_USUARIOS, "w");
+            tmpfile = fopen(ARCHIVO_TEMP, "r");
+            while (fread(&Usuario, sizeof(Usuario), 1, tmpfile))
             {
-                fwrite(&Usuario, sizeof(Usuario), 1, tmpfile);
+                fwrite(&Usuario, sizeof(Usuario), 1, file);
             }
-            fclose(tmpfile);
             fclose(file);
-            printf("RECORD UPDATED");
+            fclose(tmpfile);
+            printf("Usuario actualizado.");
+            system("pause>null");
         }
     }
 
@@ -420,27 +423,27 @@ void eliminarRegistro(char *registro)
         }
         else
         {
-            tmpfile = fopen("Record", "r");
-            file = fopen("TempFile", "w");
-            while (fread(&Usuario, sizeof(Usuario), 1, tmpfile))
+            file = fopen(ARCHIVO_USUARIOS, "r");
+            tmpfile = fopen(ARCHIVO_TEMP, "w");
+            while (fread(&Usuario, sizeof(Usuario), 1, file))
             {
                 UCorreo = Usuario.correo;
 
                 if (strcmp(correo, UCorreo) != 0)
                 {
-                    fwrite(&Usuario, sizeof(Usuario), 1, file);
+                    fwrite(&Usuario, sizeof(Usuario), 1, tmpfile);
                 }
             }
-            fclose(tmpfile);
             fclose(file);
-            tmpfile = fopen("Record", "w");
-            file = fopen("TempFile", "r");
-            while (fread(&Usuario, sizeof(Usuario), 1, file))
+            fclose(tmpfile);
+            file = fopen(ARCHIVO_USUARIOS, "w");
+            tmpfile = fopen(ARCHIVO_TEMP, "r");
+            while (fread(&Usuario, sizeof(Usuario), 1, tmpfile))
             {
-                fwrite(&Usuario, sizeof(Usuario), 1, tmpfile);
+                fwrite(&Usuario, sizeof(Usuario), 1, file);
             }
-            fclose(tmpfile);
             fclose(file);
+            fclose(tmpfile);
             printf("Usuario eliminado");
             system("pause>null");
         }
