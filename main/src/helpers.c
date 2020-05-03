@@ -4,6 +4,7 @@
 #include "helpers.h"
 #include "_define.h"
 #include "usuario.h"
+#include "cabeceras.h"
 
 // Funcion para poder ocultar el cursor
 // Osea para que no parpade. establecer visible a false
@@ -102,48 +103,5 @@ int seleccion(char *menu, char opcs[][LENGTH], int noOpcs)
     }
 
     return posicion;
-}
-
-void titulo()
-{
-    system("cls");
-    puts("|------------------------------------------------------|");
-    puts("|     Administracion de sistema de tickets de cine     |");
-    puts("|------------------------------------------------------|");
-}
-
-void cabeceraMenuPrincipal()
-{
-    puts("|------------------------------------------------------|");
-    puts("|                    Menu principal                    |");
-    puts("|------------------------------------------------------|");
-}
-
-void cabeceraInicioSesion()
-{
-    puts("|------------------------------------------------------|");
-    puts("|                   Inicio de sesion                   |");
-    puts("|------------------------------------------------------|");
-}
-
-void cabeceraMenuPerfilAdmin()
-{
-    puts("|------------------------------------------------------|");
-    puts("|                Perfil de administrador               |");
-    puts("|------------------------------------------------------|");
-}
-
-void cabeceraMenuPerfil()
-{
-    puts("|------------------------------------------------------|");
-    puts("|                        Perfil                        |");
-    puts("|------------------------------------------------------|");
-}
-
-void cabeceraActualizarUsuario()
-{
-    puts("|------------------------------------------------------|");
-    puts("|                Actualizar usuario                     |");
-    puts("|------------------------------------------------------|");
 }
 

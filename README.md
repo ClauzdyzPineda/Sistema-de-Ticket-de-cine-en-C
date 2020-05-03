@@ -12,6 +12,7 @@ Este todo list, es del ensamblado final. Luego de recopilar todos los bloques de
 
 - [x] Menu principal
 - [x] Modulo de inicio de sesion
+- [ ] Escuchar la tecla esc para cancelar
 - [x] Modulo de registro
   - [ ] Validar si el correo registrandose ya existe.
 - [  ] Modulo de cartelera de las peliculas.

@@ -5,6 +5,7 @@
 #include "usuario.h"
 #include "menus.h"
 #include "_define.h"
+#include "cabeceras.h"
 
 void crearRegistro(char *registro)
 {
