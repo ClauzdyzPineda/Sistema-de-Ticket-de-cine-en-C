@@ -13,11 +13,11 @@ void registro()
     file = fopen("Record", "a");
     Usuario.id = (setId() + 1);
     Usuario.acceso = metodoAcceso;
-    printf("Nombre :");
+    printf("Nombre: ");
     scanf("\n%[^\n]", Usuario.nombre);
-    printf("Correo :");
+    printf("Correo: ");
     scanf("\n%[^\n]", Usuario.correo);
-    printf("Contrasenya :");
+    printf("Contrasenya: ");
     scanf("\n%[^\n]", Usuario.pass);
 
     fwrite(&Usuario, sizeof(Usuario), 1, file);
@@ -109,6 +109,7 @@ void mostrarUsuarios()
         printf("  %i\t\t%s\t\t%s\t\t%s\t\t%i\n", Usuario.id, Usuario.nombre, Usuario.correo, Usuario.pass, Usuario.acceso);
     }
     fclose(file);
+    system("pause>null");
 }
 
 int setId()

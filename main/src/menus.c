@@ -51,8 +51,7 @@ void menuPerfil(int acceso)
         switch (opcion)
         {
         case 1:
-            printf("\nAdministrar usuarios\n");
-            system("pause>null");
+            menuUsuarios();
             break;
         }
     } while (opcion != 2);
