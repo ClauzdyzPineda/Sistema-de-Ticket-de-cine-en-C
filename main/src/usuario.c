@@ -209,8 +209,8 @@ int getAcceso(char *correo)
 
 void actualizarUsuario()
 {
-    FILE *fpt;
-    FILE *fpo;
+    FILE *file;
+    FILE *tmpfile;
     int existe;
     int opcion;
     char correo[LENGTH];
@@ -227,15 +227,15 @@ void actualizarUsuario()
     }
     else
     {
-        fpo = fopen("Record", "r");
-        fpt = fopen("TempFile", "w");
-        while (fread(&Usuario, sizeof(Usuario), 1, fpo))
+        tmpfile = fopen("Record", "r");
+        file = fopen("TempFile", "w");
+        while (fread(&Usuario, sizeof(Usuario), 1, tmpfile))
         {
             UCorreo = Usuario.correo;
 
             if (strcmp(correo, UCorreo) != 0)
             {
-                fwrite(&Usuario, sizeof(Usuario), 1, fpt);
+                fwrite(&Usuario, sizeof(Usuario), 1, file);
             }
             else
             {
@@ -272,85 +272,64 @@ void actualizarUsuario()
                     }
                 } while (opcion != 5);
 
-                fwrite(&Usuario, sizeof(Usuario), 1, fpt);
+                fwrite(&Usuario, sizeof(Usuario), 1, file);
             }
         }
-        fclose(fpo);
-        fclose(fpt);
-        fpo = fopen("Record", "w");
-        fpt = fopen("TempFile", "r");
-        while (fread(&Usuario, sizeof(Usuario), 1, fpt))
+        fclose(tmpfile);
+        fclose(file);
+        tmpfile = fopen("Record", "w");
+        file = fopen("TempFile", "r");
+        while (fread(&Usuario, sizeof(Usuario), 1, file))
         {
-            fwrite(&Usuario, sizeof(Usuario), 1, fpo);
+            fwrite(&Usuario, sizeof(Usuario), 1, tmpfile);
         }
-        fclose(fpo);
-        fclose(fpt);
+        fclose(tmpfile);
+        fclose(file);
         printf("RECORD UPDATED");
     }
 }
 
-// void _actualizarUsuario()
-// {
-//     int avl;
-//     FILE *fpt;
-//     FILE *fpo;
-//     int s, r, ch;
-//     printf("Enter roll number to update:");
-//     scanf("%d", &r);
-//     avl = avlrollno(r);
-//     if (avl == 0)
-//     {
-//         printf("Roll number %d is not Available in the file", r);
-//     }
-//     else
-//     {
-//         fpo = fopen("Record", "r");
-//         fpt = fopen("TempFile", "w");
-//         while (fread(&stud, sizeof(stud), 1, fpo))
-//         {
-//             s = stud.rollno;
-//             if (s != r)
-//                 fwrite(&stud, sizeof(stud), 1, fpt);
-//             else
-//             {
-//                 printf("\n\t1. Update Name of Roll Number %d", r);
-//                 printf("\n\t2. Update Mark of Roll Number %d", r);
-//                 printf("\n\t3. Update both Name and Mark of Roll Number %d", r);
-//                 printf("\nEnter your choice:");
-//                 scanf("%d", &ch);
-//                 switch (ch)
-//                 {
-//                 case 1:
-//                     printf("Enter Name:");
-//                     scanf("%s", &stud.name);
-//                     break;
-//                 case 2:
-//                     printf("Enter Mark : ");
-//                     scanf("%f", &stud.mark);
-//                     break;
-//                 case 3:
-//                     printf("Enter Name: ");
-//                     scanf("%s", &stud.name);
-//                     printf("Enter Mark: ");
-//                     scanf("%f", &stud.mark);
-//                     break;
-//                 default:
-//                     printf("Invalid Selection");
-//                     break;
-//                 }
-//                 fwrite(&stud, sizeof(stud), 1, fpt);
-//             }
-//         }
-//         fclose(fpo);
-//         fclose(fpt);
-//         fpo = fopen("Record", "w");
-//         fpt = fopen("TempFile", "r");
-//         while (fread(&stud, sizeof(stud), 1, fpt))
-//         {
-//             fwrite(&stud, sizeof(stud), 1, fpo);
-//         }
-//         fclose(fpo);
-//         fclose(fpt);
-//         printf("RECORD UPDATED");
-//     }
-// }
+void eliminarUsuario()
+{
+    FILE *tmpfile;
+    FILE *file;
+    char correo[LENGTH];
+    char *UCorreo;
+    int existe;
+
+    printf("Digite correo: ");
+    scanf("\n%[^\n]", correo);
+
+    existe = getCorreo(correo);
+
+    if (existe == 0)
+    {
+        printf("No se encontraron registros para el correo: %s", correo);
+    }
+    else
+    {
+        tmpfile = fopen("Record", "r");
+        file = fopen("TempFile", "w");
+        while (fread(&Usuario, sizeof(Usuario), 1, tmpfile))
+        {
+            UCorreo = Usuario.correo;
+
+            if (strcmp(correo, UCorreo) != 0)
+            {
+                fwrite(&Usuario, sizeof(Usuario), 1, file);
+            }
+        }
+        fclose(tmpfile);
+        fclose(file);
+        tmpfile = fopen("Record", "w");
+        file = fopen("TempFile", "r");
+        while (fread(&Usuario, sizeof(Usuario), 1, file))
+        {
+            fwrite(&Usuario, sizeof(Usuario), 1, tmpfile);
+        }
+        fclose(tmpfile);
+        fclose(file);
+        printf("Usuario eliminado");
+        system("pause>null");
+    }
+}

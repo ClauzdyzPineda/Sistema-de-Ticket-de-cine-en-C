@@ -85,9 +85,8 @@ void menuUsuarios()
             actualizarUsuario();
             break;
         case 4:
-            printf("\nEliminar usuarios\n");
-            system("pause>null");
+            eliminarUsuario();
             break;
         }
-    } while (opcion != 2);
+    } while (opcion != 5);
 }

@@ -25,5 +25,6 @@ int validarUsuario(char *correo, char *password);
 int getAcceso(char *correo);
 int getch();
 void actualizarUsuario();
+void eliminarUsuario();
 
 #endif // USUARIO
