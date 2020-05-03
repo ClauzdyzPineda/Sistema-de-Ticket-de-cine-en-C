@@ -79,28 +79,6 @@ int inicioSesion()
     return 0;
 }
 
-// Funcion para verificar si el usuario existe
-// Si correo existe devuelve 1
-int getCorreo(char *correo)
-{
-    FILE *file;
-    file = fopen("Record", "r");
-    int existe = 0;
-
-    while (!feof(file))
-    {
-        fread(&Usuario, sizeof(Usuario), 1, file);
-
-        if (strcmp(correo, Usuario.correo) == 0)
-        {
-            existe = 1;
-        }
-    }
-
-    fclose(file);
-    return existe;
-}
-
 // Validar usuario.
 int validarUsuario(char *correo, char *password)
 {

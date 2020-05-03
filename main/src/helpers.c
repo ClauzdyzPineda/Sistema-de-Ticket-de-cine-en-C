@@ -137,6 +137,30 @@ int setId(char *registro)
     return id;
 }
 
+int getRegistro(char *tipoRegistro, char *registro)
+{
+    int existe = 0;
+
+    if (strcmp(tipoRegistro, REGISTRO_USUARIO) == 0)
+    {
+        FILE *file;
+        file = fopen("Record", "r");
+
+        while (!feof(file))
+        {
+            fread(&Usuario, sizeof(Usuario), 1, file);
+
+            if (strcmp(registro, Usuario.correo) == 0)
+            {
+                existe = 1;
+            }
+        }
+        fclose(file);
+    }
+
+    return existe;
+}
+
 void crearRegistro(char *registro)
 {
     if (strcmp(registro, REGISTRO_USUARIO) == 0)
@@ -193,6 +217,7 @@ void mostrarRegistros(char *registro)
         fclose(file);
         system("pause>null");
     }
+
     if (strcmp(registro, REGISTRO_PELICULA) == 0)
     {
         FILE *file;
@@ -221,7 +246,7 @@ void actualizarRegistro(char *registro)
         printf("Digite correo: ");
         scanf("\n%[^\n]", correo);
 
-        existe = getCorreo(correo);
+        existe = getRegistro(REGISTRO_USUARIO, correo);
 
         if (existe == 0)
         {
@@ -290,6 +315,88 @@ void actualizarRegistro(char *registro)
             printf("RECORD UPDATED");
         }
     }
+
+    // if (strcmp(registro, REGISTRO_PELICULA) == 0)
+    // {
+    //     FILE *file;
+    //     FILE *tmpfile;
+    //     int existe;
+    //     int opcion;
+    //     char Titulo[LENGTH];
+    //     char *UTitulo;
+
+    //     printf("Digite titulo: ");
+    //     scanf("\n%[^\n]", titulo);
+
+    //     existe = getCorreo(correo);
+
+    //     if (existe == 0)
+    //     {
+    //         printf("No se encontraron registros para el correo: %s", correo);
+    //     }
+    //     else
+    //     {
+    //         tmpfile = fopen("Record", "r");
+    //         file = fopen("TempFile", "w");
+    //         while (fread(&Usuario, sizeof(Usuario), 1, tmpfile))
+    //         {
+    //             UCorreo = Usuario.correo;
+
+    //             if (strcmp(correo, UCorreo) != 0)
+    //             {
+    //                 fwrite(&Usuario, sizeof(Usuario), 1, file);
+    //             }
+    //             else
+    //             {
+    //                 char opciones[][LENGTH] = {
+    //                     "Nombre",
+    //                     "Correo",
+    //                     "Contrasenya",
+    //                     "Acceso",
+    //                     "Regresar",
+    //                 };
+
+    //                 do
+    //                 {
+    //                     opcion = seleccion(MENU_ACTUALIZAR_USER, opciones, 5);
+
+    //                     switch (opcion)
+    //                     {
+    //                     case 1:
+    //                         printf("Nombre: ");
+    //                         scanf("\n%[^\n]", Usuario.nombre);
+    //                         break;
+    //                     case 2:
+    //                         printf("Correo: ");
+    //                         scanf("\n%[^\n]", Usuario.correo);
+    //                         break;
+    //                     case 3:
+    //                         printf("Contrasenya: ");
+    //                         scanf("\n%[^\n]", Usuario.pass);
+    //                         break;
+    //                     case 4:
+    //                         printf("Acceso: ");
+    //                         system("pause>null");
+    //                         break;
+    //                     }
+    //                 } while (opcion != 5);
+
+    //                 fwrite(&Usuario, sizeof(Usuario), 1, file);
+    //             }
+    //         }
+    //         fclose(tmpfile);
+    //         fclose(file);
+    //         tmpfile = fopen("Record", "w");
+    //         file = fopen("TempFile", "r");
+    //         while (fread(&Usuario, sizeof(Usuario), 1, file))
+    //         {
+    //             fwrite(&Usuario, sizeof(Usuario), 1, tmpfile);
+    //         }
+    //         fclose(tmpfile);
+    //         fclose(file);
+    //         printf("RECORD UPDATED");
+    //     }
+    // }
 }
 
 void eliminarRegistro(char *registro)
@@ -305,7 +412,7 @@ void eliminarRegistro(char *registro)
         printf("Digite correo: ");
         scanf("\n%[^\n]", correo);
 
-        existe = getCorreo(correo);
+        existe = getRegistro(REGISTRO_USUARIO, correo);
 
         if (existe == 0)
         {

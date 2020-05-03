@@ -8,6 +8,7 @@ void selector(int posicionReal, int posicionSelector);
 int seleccion(char *menu, char opcs[][LENGTH], int noOpcs);
 int getch();
 int setId(char *registro);
+int getRegistro(char *tipoRegistro, char *registro);
 
 // crud
 void crearRegistro(char *registro);
