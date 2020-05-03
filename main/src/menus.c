@@ -108,11 +108,10 @@ void menuUsuarios()
         switch (opcion)
         {
         case 1:
-            // registro();
             crearRegistro(REGISTRO_USUARIO);
             break;
         case 2:
-            mostrarUsuarios();
+            mostrarRegistros(REGISTRO_USUARIO);
             break;
         case 3:
             actualizarUsuario();

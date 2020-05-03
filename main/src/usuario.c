@@ -30,6 +30,22 @@ void crearRegistro(char *registro)
     }
 }
 
+void mostrarRegistros(char *registro)
+{
+    if (strcmp(registro, REGISTRO_USUARIO) == 0)
+    {
+        FILE *file;
+        file = fopen("Record", "r");
+        printf("\nid\t\tNombre\t\tCorreo\t\tPassword\t\tAcceso\n\n");
+        while (fread(&Usuario, sizeof(Usuario), 1, file))
+        {
+            printf("  %i\t\t%s\t\t%s\t\t%s\t\t%i\n", Usuario.id, Usuario.nombre, Usuario.correo, Usuario.pass, Usuario.acceso);
+        }
+        fclose(file);
+        system("pause>null");
+    }
+}
+
 int inicioSesion()
 {
     char correo[LENGTH];
@@ -100,19 +116,6 @@ int inicioSesion()
     }
 
     return 0;
-}
-
-void mostrarUsuarios()
-{
-    FILE *file;
-    file = fopen("Record", "r");
-    printf("\nid\t\tNombre\t\tCorreo\t\tPassword\t\tAcceso\n\n");
-    while (fread(&Usuario, sizeof(Usuario), 1, file))
-    {
-        printf("  %i\t\t%s\t\t%s\t\t%s\t\t%i\n", Usuario.id, Usuario.nombre, Usuario.correo, Usuario.pass, Usuario.acceso);
-    }
-    fclose(file);
-    system("pause>null");
 }
 
 int setId()

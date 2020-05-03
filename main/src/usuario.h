@@ -27,5 +27,6 @@ void actualizarUsuario();
 void eliminarUsuario();
 
 void crearRegistro(char *registro);
+void mostrarRegistros(char *registro);
 
 #endif // USUARIO
