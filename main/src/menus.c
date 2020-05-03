@@ -82,8 +82,7 @@ void menuUsuarios()
             mostrarUsuarios();
             break;
         case 3:
-            printf("\nActualizar usuarios\n");
-            system("pause>null");
+            actualizarUsuario();
             break;
         case 4:
             printf("\nEliminar usuarios\n");

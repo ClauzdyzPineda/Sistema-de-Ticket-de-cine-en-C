@@ -11,5 +11,6 @@ void titulo();
 void cabeceraMenuPrincipal();
 void cabeceraInicioSesion();
 void cabeceraMenuPerfilAdmin();
+void cabeceraActualizarUsuario();
 
 #endif // HELPERS

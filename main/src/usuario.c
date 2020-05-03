@@ -127,22 +127,25 @@ int setId()
 }
 
 // Funcion para verificar si el usuario existe
+// Si correo existe devuelve 1
 int getCorreo(char *correo)
 {
     FILE *file;
     file = fopen("Record", "r");
+    int existe = 0;
+
     while (!feof(file))
     {
         fread(&Usuario, sizeof(Usuario), 1, file);
 
         if (strcmp(correo, Usuario.correo) == 0)
         {
-            fclose(file);
-            return 1;
+            existe = 1;
         }
     }
+
     fclose(file);
-    return 0;
+    return existe;
 }
 
 // Validar usuario.
@@ -203,3 +206,151 @@ int getAcceso(char *correo)
     fclose(file);
     return acceso;
 }
+
+void actualizarUsuario()
+{
+    FILE *fpt;
+    FILE *fpo;
+    int existe;
+    int opcion;
+    char correo[LENGTH];
+    char *UCorreo;
+
+    printf("Digite correo: ");
+    scanf("\n%[^\n]", correo);
+
+    existe = getCorreo(correo);
+
+    if (existe == 0)
+    {
+        printf("No se encontraron registros para el correo: %s", correo);
+    }
+    else
+    {
+        fpo = fopen("Record", "r");
+        fpt = fopen("TempFile", "w");
+        while (fread(&Usuario, sizeof(Usuario), 1, fpo))
+        {
+            UCorreo = Usuario.correo;
+
+            if (strcmp(correo, UCorreo) != 0)
+            {
+                fwrite(&Usuario, sizeof(Usuario), 1, fpt);
+            }
+            else
+            {
+                char opciones[][LENGTH] = {
+                    "Nombre",
+                    "Correo",
+                    "Contrasenya",
+                    "Acceso",
+                    "Regresar",
+                };
+
+                do
+                {
+                    opcion = seleccion(MENU_ACTUALIZAR_USER, opciones, 5);
+
+                    switch (opcion)
+                    {
+                    case 1:
+                        printf("Nombre: ");
+                        scanf("\n%[^\n]", Usuario.nombre);
+                        break;
+                    case 2:
+                        printf("Correo: ");
+                        scanf("\n%[^\n]", Usuario.correo);
+                        break;
+                    case 3:
+                        printf("Contrasenya: ");
+                        scanf("\n%[^\n]", Usuario.pass);
+                        break;
+                    case 4:
+                        printf("Acceso: ");
+                        system("pause>null");
+                        break;
+                    }
+                } while (opcion != 5);
+
+                fwrite(&Usuario, sizeof(Usuario), 1, fpt);
+            }
+        }
+        fclose(fpo);
+        fclose(fpt);
+        fpo = fopen("Record", "w");
+        fpt = fopen("TempFile", "r");
+        while (fread(&Usuario, sizeof(Usuario), 1, fpt))
+        {
+            fwrite(&Usuario, sizeof(Usuario), 1, fpo);
+        }
+        fclose(fpo);
+        fclose(fpt);
+        printf("RECORD UPDATED");
+    }
+}
+
+// void _actualizarUsuario()
+// {
+//     int avl;
+//     FILE *fpt;
+//     FILE *fpo;
+//     int s, r, ch;
+//     printf("Enter roll number to update:");
+//     scanf("%d", &r);
+//     avl = avlrollno(r);
+//     if (avl == 0)
+//     {
+//         printf("Roll number %d is not Available in the file", r);
+//     }
+//     else
+//     {
+//         fpo = fopen("Record", "r");
+//         fpt = fopen("TempFile", "w");
+//         while (fread(&stud, sizeof(stud), 1, fpo))
+//         {
+//             s = stud.rollno;
+//             if (s != r)
+//                 fwrite(&stud, sizeof(stud), 1, fpt);
+//             else
+//             {
+//                 printf("\n\t1. Update Name of Roll Number %d", r);
+//                 printf("\n\t2. Update Mark of Roll Number %d", r);
+//                 printf("\n\t3. Update both Name and Mark of Roll Number %d", r);
+//                 printf("\nEnter your choice:");
+//                 scanf("%d", &ch);
+//                 switch (ch)
+//                 {
+//                 case 1:
+//                     printf("Enter Name:");
+//                     scanf("%s", &stud.name);
+//                     break;
+//                 case 2:
+//                     printf("Enter Mark : ");
+//                     scanf("%f", &stud.mark);
+//                     break;
+//                 case 3:
+//                     printf("Enter Name: ");
+//                     scanf("%s", &stud.name);
+//                     printf("Enter Mark: ");
+//                     scanf("%f", &stud.mark);
+//                     break;
+//                 default:
+//                     printf("Invalid Selection");
+//                     break;
+//                 }
+//                 fwrite(&stud, sizeof(stud), 1, fpt);
+//             }
+//         }
+//         fclose(fpo);
+//         fclose(fpt);
+//         fpo = fopen("Record", "w");
+//         fpt = fopen("TempFile", "r");
+//         while (fread(&stud, sizeof(stud), 1, fpt))
+//         {
+//             fwrite(&stud, sizeof(stud), 1, fpo);
+//         }
+//         fclose(fpo);
+//         fclose(fpt);
+//         printf("RECORD UPDATED");
+//     }
+// }

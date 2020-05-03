@@ -7,6 +7,7 @@
 #define ABAJO 72
 #define MENU_PRINCIPAL "MENU_PRINCIPAL"
 #define MENU_PERFIL_ADMIN "MENU_PERFIL_ADMIN"
+#define MENU_ACTUALIZAR_USER "MENU_ACTUALIZAR_USER"
 #define LENGTH 80
 // informacion del super administrador
 #define SUPER_ADMIN_USUARIO "c"
