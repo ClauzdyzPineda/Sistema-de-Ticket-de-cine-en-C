@@ -114,7 +114,7 @@ void menuUsuarios()
             mostrarRegistros(REGISTRO_USUARIO);
             break;
         case 3:
-            actualizarUsuario();
+            actualizarRegistro(REGISTRO_USUARIO);
             break;
         case 4:
             eliminarUsuario();

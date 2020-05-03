@@ -17,16 +17,15 @@ struct
 } Usuario;
 
 int inicioSesion();
-void mostrarUsuarios();
 int setId();
 int getCorreo(char *correo);
 int validarUsuario(char *correo, char *password);
 int getAcceso(char *correo);
 int getch();
-void actualizarUsuario();
 void eliminarUsuario();
 
 void crearRegistro(char *registro);
 void mostrarRegistros(char *registro);
+void actualizarRegistro(char *registro);
 
 #endif // USUARIO

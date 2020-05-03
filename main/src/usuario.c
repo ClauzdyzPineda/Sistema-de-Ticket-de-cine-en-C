@@ -46,6 +46,136 @@ void mostrarRegistros(char *registro)
     }
 }
 
+void actualizarRegistro(char *registro)
+{
+    if (strcmp(registro, REGISTRO_USUARIO) == 0)
+    {
+        FILE *file;
+        FILE *tmpfile;
+        int existe;
+        int opcion;
+        char correo[LENGTH];
+        char *UCorreo;
+
+        printf("Digite correo: ");
+        scanf("\n%[^\n]", correo);
+
+        existe = getCorreo(correo);
+
+        if (existe == 0)
+        {
+            printf("No se encontraron registros para el correo: %s", correo);
+        }
+        else
+        {
+            tmpfile = fopen("Record", "r");
+            file = fopen("TempFile", "w");
+            while (fread(&Usuario, sizeof(Usuario), 1, tmpfile))
+            {
+                UCorreo = Usuario.correo;
+
+                if (strcmp(correo, UCorreo) != 0)
+                {
+                    fwrite(&Usuario, sizeof(Usuario), 1, file);
+                }
+                else
+                {
+                    char opciones[][LENGTH] = {
+                        "Nombre",
+                        "Correo",
+                        "Contrasenya",
+                        "Acceso",
+                        "Regresar",
+                    };
+
+                    do
+                    {
+                        opcion = seleccion(MENU_ACTUALIZAR_USER, opciones, 5);
+
+                        switch (opcion)
+                        {
+                        case 1:
+                            printf("Nombre: ");
+                            scanf("\n%[^\n]", Usuario.nombre);
+                            break;
+                        case 2:
+                            printf("Correo: ");
+                            scanf("\n%[^\n]", Usuario.correo);
+                            break;
+                        case 3:
+                            printf("Contrasenya: ");
+                            scanf("\n%[^\n]", Usuario.pass);
+                            break;
+                        case 4:
+                            printf("Acceso: ");
+                            system("pause>null");
+                            break;
+                        }
+                    } while (opcion != 5);
+
+                    fwrite(&Usuario, sizeof(Usuario), 1, file);
+                }
+            }
+            fclose(tmpfile);
+            fclose(file);
+            tmpfile = fopen("Record", "w");
+            file = fopen("TempFile", "r");
+            while (fread(&Usuario, sizeof(Usuario), 1, file))
+            {
+                fwrite(&Usuario, sizeof(Usuario), 1, tmpfile);
+            }
+            fclose(tmpfile);
+            fclose(file);
+            printf("RECORD UPDATED");
+        }
+    }
+}
+
+void eliminarUsuario()
+{
+    FILE *tmpfile;
+    FILE *file;
+    char correo[LENGTH];
+    char *UCorreo;
+    int existe;
+
+    printf("Digite correo: ");
+    scanf("\n%[^\n]", correo);
+
+    existe = getCorreo(correo);
+
+    if (existe == 0)
+    {
+        printf("No se encontraron registros para el correo: %s", correo);
+    }
+    else
+    {
+        tmpfile = fopen("Record", "r");
+        file = fopen("TempFile", "w");
+        while (fread(&Usuario, sizeof(Usuario), 1, tmpfile))
+        {
+            UCorreo = Usuario.correo;
+
+            if (strcmp(correo, UCorreo) != 0)
+            {
+                fwrite(&Usuario, sizeof(Usuario), 1, file);
+            }
+        }
+        fclose(tmpfile);
+        fclose(file);
+        tmpfile = fopen("Record", "w");
+        file = fopen("TempFile", "r");
+        while (fread(&Usuario, sizeof(Usuario), 1, file))
+        {
+            fwrite(&Usuario, sizeof(Usuario), 1, tmpfile);
+        }
+        fclose(tmpfile);
+        fclose(file);
+        printf("Usuario eliminado");
+        system("pause>null");
+    }
+}
+
 int inicioSesion()
 {
     char correo[LENGTH];
@@ -211,131 +341,4 @@ int getAcceso(char *correo)
 
     fclose(file);
     return acceso;
-}
-
-void actualizarUsuario()
-{
-    FILE *file;
-    FILE *tmpfile;
-    int existe;
-    int opcion;
-    char correo[LENGTH];
-    char *UCorreo;
-
-    printf("Digite correo: ");
-    scanf("\n%[^\n]", correo);
-
-    existe = getCorreo(correo);
-
-    if (existe == 0)
-    {
-        printf("No se encontraron registros para el correo: %s", correo);
-    }
-    else
-    {
-        tmpfile = fopen("Record", "r");
-        file = fopen("TempFile", "w");
-        while (fread(&Usuario, sizeof(Usuario), 1, tmpfile))
-        {
-            UCorreo = Usuario.correo;
-
-            if (strcmp(correo, UCorreo) != 0)
-            {
-                fwrite(&Usuario, sizeof(Usuario), 1, file);
-            }
-            else
-            {
-                char opciones[][LENGTH] = {
-                    "Nombre",
-                    "Correo",
-                    "Contrasenya",
-                    "Acceso",
-                    "Regresar",
-                };
-
-                do
-                {
-                    opcion = seleccion(MENU_ACTUALIZAR_USER, opciones, 5);
-
-                    switch (opcion)
-                    {
-                    case 1:
-                        printf("Nombre: ");
-                        scanf("\n%[^\n]", Usuario.nombre);
-                        break;
-                    case 2:
-                        printf("Correo: ");
-                        scanf("\n%[^\n]", Usuario.correo);
-                        break;
-                    case 3:
-                        printf("Contrasenya: ");
-                        scanf("\n%[^\n]", Usuario.pass);
-                        break;
-                    case 4:
-                        printf("Acceso: ");
-                        system("pause>null");
-                        break;
-                    }
-                } while (opcion != 5);
-
-                fwrite(&Usuario, sizeof(Usuario), 1, file);
-            }
-        }
-        fclose(tmpfile);
-        fclose(file);
-        tmpfile = fopen("Record", "w");
-        file = fopen("TempFile", "r");
-        while (fread(&Usuario, sizeof(Usuario), 1, file))
-        {
-            fwrite(&Usuario, sizeof(Usuario), 1, tmpfile);
-        }
-        fclose(tmpfile);
-        fclose(file);
-        printf("RECORD UPDATED");
-    }
-}
-
-void eliminarUsuario()
-{
-    FILE *tmpfile;
-    FILE *file;
-    char correo[LENGTH];
-    char *UCorreo;
-    int existe;
-
-    printf("Digite correo: ");
-    scanf("\n%[^\n]", correo);
-
-    existe = getCorreo(correo);
-
-    if (existe == 0)
-    {
-        printf("No se encontraron registros para el correo: %s", correo);
-    }
-    else
-    {
-        tmpfile = fopen("Record", "r");
-        file = fopen("TempFile", "w");
-        while (fread(&Usuario, sizeof(Usuario), 1, tmpfile))
-        {
-            UCorreo = Usuario.correo;
-
-            if (strcmp(correo, UCorreo) != 0)
-            {
-                fwrite(&Usuario, sizeof(Usuario), 1, file);
-            }
-        }
-        fclose(tmpfile);
-        fclose(file);
-        tmpfile = fopen("Record", "w");
-        file = fopen("TempFile", "r");
-        while (fread(&Usuario, sizeof(Usuario), 1, file))
-        {
-            fwrite(&Usuario, sizeof(Usuario), 1, tmpfile);
-        }
-        fclose(tmpfile);
-        fclose(file);
-        printf("Usuario eliminado");
-        system("pause>null");
-    }
 }
