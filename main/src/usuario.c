@@ -114,7 +114,7 @@ int validarUsuario(char *correo, char *password)
 int getAcceso(char *correo)
 {
     FILE *file;
-    file = fopen("Record", "r");
+    file = fopen(REGISTRO_USUARIO, "r");
     int acceso = -1;
 
     if (strcmp(correo, SUPER_ADMIN_USUARIO) == 0)
