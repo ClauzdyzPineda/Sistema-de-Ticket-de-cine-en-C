@@ -16,11 +16,12 @@
 // Menus
 #define MENU_PRINCIPAL "MENU_PRINCIPAL"
 #define MENU_PERFIL_ADMIN "MENU_PERFIL_ADMIN"
+#define MENU_ACTUALIZAR_USUARIO "MENU_ACTUALIZAR_USUARIO"
 // Registros
 #define USUARIO "USUARIO"
 // Archivos
 #define ARCHIVO_USUARIOS "Usuarios"
-#define TMP "Tmp"
+#define ARCHIVO_TMP "Tmp"
 //modelos
 typedef enum
 {
@@ -51,9 +52,11 @@ void selector(int posicionReal, int posicionSelector);
 int validarUsuario(char *correo, char *password);
 int setId(char *registro);
 int getAcceso(char *correo);
+int getRegistro(char *tipoRegistro, char *registro);
 int inicioSesion();
 void crearRegistro(char *registro);
 void mostrarRegistros(char *registro);
+void actualizarRegistro(char *registro);
 // Cabeceras
 void titulo();
 void cabeceraMenuPrincipal();
@@ -121,6 +124,7 @@ int seleccion(char *menu, char opcs[][LEN], int nOpcs)
             posicion = posicion;
         }
     }
+    fflush(stdin);
 
     return posicion;
 }
@@ -208,6 +212,30 @@ int getAcceso(char *correo)
     }
 
     return acceso;
+}
+
+int getRegistro(char *tipoRegistro, char *registro)
+{
+    int existe = 0;
+
+    if (strcmp(tipoRegistro, USUARIO) == 0)
+    {
+        FILE *file;
+        file = fopen(ARCHIVO_USUARIOS, "r");
+
+        while (!feof(file))
+        {
+            fread(&Usuario, sizeof(Usuario), 1, file);
+
+            if (strcmp(registro, Usuario.correo) == 0)
+            {
+                existe = 1;
+            }
+        }
+        fclose(file);
+    }
+
+    return existe;
 }
 
 int inicioSesion()
@@ -320,6 +348,93 @@ void mostrarRegistros(char *registro)
     }
 }
 
+void actualizarRegistro(char *registro)
+{
+    if (strcmp(registro, USUARIO) == 0)
+    {
+        FILE *file;
+        FILE *tmpfile;
+        int existe;
+        int opcion;
+        char correo[LEN];
+        char *Correo;
+
+        printf("Digite correo: ");
+        scanf("\n%[^\n]", correo);
+
+        existe = getRegistro(USUARIO, correo);
+
+        if (existe == 0)
+        {
+            printf("No se encontraron registros para el correo: %s", correo);
+            system("pause>null");
+        }
+        else
+        {
+            file = fopen(ARCHIVO_USUARIOS, "r");
+            tmpfile = fopen(ARCHIVO_TMP, "w");
+            while (fread(&Usuario, sizeof(Usuario), 1, file))
+            {
+                Correo = Usuario.correo;
+
+                if (strcmp(correo, Correo) != 0)
+                {
+                    fwrite(&Usuario, sizeof(Usuario), 1, tmpfile);
+                }
+                else
+                {
+                    char opciones[][LEN] = {
+                        "Nombre",
+                        "Correo",
+                        "Contrasenya",
+                        "Acceso",
+                        "Regresar",
+                    };
+
+                    do
+                    {
+                        opcion = seleccion(MENU_ACTUALIZAR_USUARIO, opciones, 5);
+
+                        switch (opcion)
+                        {
+                        case 1:
+                            printf("Nombre: ");
+                            scanf("\n%[^\n]", Usuario.nombre);
+                            break;
+                        case 2:
+                            printf("Correo: ");
+                            scanf("\n%[^\n]", Usuario.correo);
+                            break;
+                        case 3:
+                            printf("Contrasenya: ");
+                            scanf("\n%[^\n]", Usuario.pass);
+                            break;
+                        case 4:
+                            printf("Acceso: ");
+                            system("pause>null");
+                            break;
+                        }
+                    } while (opcion != 5);
+
+                    fwrite(&Usuario, sizeof(Usuario), 1, tmpfile);
+                }
+            }
+            fclose(file);
+            fclose(tmpfile);
+            file = fopen(ARCHIVO_USUARIOS, "w");
+            tmpfile = fopen(ARCHIVO_TMP, "r");
+            while (fread(&Usuario, sizeof(Usuario), 1, tmpfile))
+            {
+                fwrite(&Usuario, sizeof(Usuario), 1, file);
+            }
+            fclose(file);
+            fclose(tmpfile);
+            printf("Usuario actualizado.");
+            system("pause>null");
+        }
+    }
+}
+
 // -------------------------------------------------------------------------------- Menus
 void menuPrincipal()
 {
@@ -410,9 +525,7 @@ void menuUsuarios()
             mostrarRegistros(USUARIO);
             break;
         case 3:
-            // actualizarRegistro(USUARIO);
-            printf("actualizar usuarios");
-            system("cls");
+            actualizarRegistro(USUARIO);
             break;
         case 4:
             // eliminarRegistro(USUARIO);
