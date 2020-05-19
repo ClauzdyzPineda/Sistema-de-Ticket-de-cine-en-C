@@ -16,6 +16,7 @@
 // Menus
 #define MENU_PRINCIPAL "MENU_PRINCIPAL"
 #define MENU_PERFIL_ADMIN "MENU_PERFIL_ADMIN"
+#define MENU_PERFIL "MENU_PERFIL"
 #define MENU_ACTUALIZAR_USUARIO "MENU_ACTUALIZAR_USUARIO"
 // Registros
 #define USUARIO "USUARIO"
@@ -63,6 +64,7 @@ void titulo();
 void cabeceraMenuPrincipal();
 void cabeceraInicioSesion();
 void cabeceraMenuPerfilAdmin();
+void cabeceraMenuPerfil();
 
 // -------------------------------------------------------------------------------- Main
 int main()
@@ -87,6 +89,10 @@ int seleccion(char *menu, char opcs[][LEN], int nOpcs)
         if (strcmp(menu, MENU_PRINCIPAL) == 0)
         {
             cabeceraMenuPrincipal();
+        }
+        if (strcmp(menu, MENU_PERFIL) == 0)
+        {
+            cabeceraMenuPerfil();
         }
         if (strcmp(menu, MENU_PERFIL_ADMIN) == 0)
         {
@@ -544,8 +550,29 @@ void menuPerfil(int acceso)
     }
     else
     {
-        printf("MEno de usuario normal");
-        system("pause>null");
+        // PANEL DE USUARIO NORMAL
+        int opcion;
+        char opciones[][LEN] = {
+            "Comprar entradas",
+            "Mi perfil",
+            "Regresar",
+        };
+
+        do
+        {
+            opcion = seleccion(MENU_PERFIL, opciones, 3);
+            switch (opcion)
+            {
+            case 1:
+                printf("Comprar entradas");
+                system("pause>null");
+                break;
+            case 2:
+                printf("Actualizar mi perfil");
+                system("pause>null");
+                break;
+            }
+        } while (opcion != 3);
     }
 }
 
@@ -610,5 +637,12 @@ void cabeceraMenuPerfilAdmin()
 {
     puts("|------------------------------------------------------|");
     puts("|                Perfil de administrador               |");
+    puts("|------------------------------------------------------|");
+}
+
+void cabeceraMenuPerfil()
+{
+    puts("|------------------------------------------------------|");
+    puts("|                        Perfil                        |");
     puts("|------------------------------------------------------|");
 }
