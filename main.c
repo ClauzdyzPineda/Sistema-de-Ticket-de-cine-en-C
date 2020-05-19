@@ -15,25 +15,47 @@
 #define ABAJO 72
 // Menus
 #define MENU_PRINCIPAL "MENU_PRINCIPAL"
+#define MENU_PERFIL_ADMIN "MENU_PERFIL_ADMIN"
 // Registros
 #define USUARIO "USUARIO"
 // Archivos
 #define ARCHIVO_USUARIOS "Usuarios"
 #define TMP "Tmp"
+//modelos
+typedef enum
+{
+    NORMAL,
+    ADMIN
+} Role;
+
+struct
+{
+    int id;
+    char nombre[LEN];
+    char pass[LEN];
+    char correo[LEN];
+    Role acceso;
+} Usuario;
 
 // -------------------------------------------------- Prototipos
 // General
 int getch();
 // Menus
 void menuPrincipal();
+void menuPerfil(int acceso);
+void menuUsuarios();
+void menuUsuarios();
 // Helpers
 int seleccion(char *menu, char opcs[][LEN], int nOpcs);
 void selector(int posicionReal, int posicionSelector);
 int inicioSesion();
+void crearRegistro(char *registro);
+int setId(char *registro);
 // Cabeceras
 void titulo();
 void cabeceraMenuPrincipal();
 void cabeceraInicioSesion();
+void cabeceraMenuPerfilAdmin();
 
 // -------------------------------------------------- Main
 int main()
@@ -58,6 +80,10 @@ int seleccion(char *menu, char opcs[][LEN], int nOpcs)
         if (strcmp(menu, MENU_PRINCIPAL) == 0)
         {
             cabeceraMenuPrincipal();
+        }
+        if (strcmp(menu, MENU_PERFIL_ADMIN) == 0)
+        {
+            cabeceraMenuPerfilAdmin();
         }
 
         for (i = 0; i < nOpcs; i++)
@@ -94,6 +120,18 @@ int seleccion(char *menu, char opcs[][LEN], int nOpcs)
     }
 
     return posicion;
+}
+
+void selector(int posicionReal, int posicionSelector)
+{
+    if (posicionReal == posicionSelector)
+    {
+        printf(" > ");
+    }
+    else
+    {
+        printf("   ");
+    }
 }
 
 int inicioSesion()
@@ -159,8 +197,9 @@ int inicioSesion()
 
     if (loginOk == 1)
     {
-        printf("\n\tInicio de sesion correcto\n");
-        system("pause>null");
+        // printf("\n\tInicio de sesion correcto\n");
+        // system("pause>null");
+        menuPerfil(1);
     }
     else
     {
@@ -202,15 +241,111 @@ void menuPrincipal()
     } while (opcion != 4);
 }
 
-void selector(int posicionReal, int posicionSelector)
+void menuPerfil(int acceso)
 {
-    if (posicionReal == posicionSelector)
+    int opcion;
+    char opciones[][LEN] = {
+        "Administrar usuarios",
+        "Administrar Peliculas",
+        "Regresar",
+    };
+
+    do
     {
-        printf(" > ");
+        opcion = seleccion(MENU_PERFIL_ADMIN, opciones, 3);
+        switch (opcion)
+        {
+        case 1:
+            menuUsuarios();
+            break;
+        case 2:
+            printf("Menu peliculas");
+            system("pause>null");
+            break;
+        }
+    } while (opcion != 3);
+}
+
+void menuUsuarios()
+{
+
+    int opcion;
+    char opciones[][LEN] = {
+        "Crear usuario",
+        "Mostrar usuarios",
+        "Actualizar usuario",
+        "Eliminar usuario",
+        "Regresar",
+    };
+
+    do
+    {
+        // estadoCursor(false);
+        opcion = seleccion(MENU_PERFIL_ADMIN, opciones, 5);
+        switch (opcion)
+        {
+        case 1:
+            crearRegistro(USUARIO);
+            break;
+        case 2:
+            // mostrarRegistros(USUARIO);
+            printf("mostrar usuarios");
+            system("cls");
+            break;
+        case 3:
+            // actualizarRegistro(USUARIO);
+            printf("actualizar usuarios");
+            system("cls");
+            break;
+        case 4:
+            // eliminarRegistro(USUARIO);
+            printf("eliminar usuarios");
+            system("cls");
+            break;
+        }
+    } while (opcion != 5);
+}
+
+int setId(char *registro)
+{
+    int id = 0;
+
+    if (strcmp(registro, USUARIO) == 0)
+    {
+        FILE *file;
+        file = fopen(ARCHIVO_USUARIOS, "r");
+
+        while (fread(&Usuario, sizeof(Usuario), 1, file))
+        {
+            id++;
+        }
+        fclose(file);
     }
-    else
+
+    return id;
+}
+
+void crearRegistro(char *registro)
+{
+    if (strcmp(registro, USUARIO) == 0)
     {
-        printf("   ");
+        FILE *file;
+        Role metodoAcceso = NORMAL;
+        file = fopen(ARCHIVO_USUARIOS, "a");
+        Usuario.id = (setId(USUARIO) + 1);
+        Usuario.acceso = metodoAcceso;
+        printf("Nombre: ");
+        scanf("\n%[^\n]", Usuario.nombre);
+        printf("Correo: ");
+        scanf("\n%[^\n]", Usuario.correo);
+        printf("Contrasenya: ");
+        scanf("\n%[^\n]", Usuario.pass);
+
+        fwrite(&Usuario, sizeof(Usuario), 1, file);
+        fclose(file);
+
+        printf("\nUsuario registrado correctamente\n");
+        system("pause>null");
     }
 }
 
@@ -234,5 +369,12 @@ void cabeceraInicioSesion()
 {
     puts("|------------------------------------------------------|");
     puts("|                   Inicio de sesion                   |");
+    puts("|------------------------------------------------------|");
+}
+
+void cabeceraMenuPerfilAdmin()
+{
+    puts("|------------------------------------------------------|");
+    puts("|                Perfil de administrador               |");
     puts("|------------------------------------------------------|");
 }
