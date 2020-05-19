@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <windows.h>
 
-// -------------------------------------------------- Constantes
+// -------------------------------------------------------------------------------- Constantes
 // General
 #define LEN 80
 // Informacion del super administrador
@@ -37,7 +37,7 @@ struct
     Role acceso;
 } Usuario;
 
-// -------------------------------------------------- Prototipos
+// -------------------------------------------------------------------------------- Prototipos
 // General
 int getch();
 // Menus
@@ -48,16 +48,19 @@ void menuUsuarios();
 // Helpers
 int seleccion(char *menu, char opcs[][LEN], int nOpcs);
 void selector(int posicionReal, int posicionSelector);
+int validarUsuario(char *correo, char *password);
+int setId(char *registro);
+int getAcceso(char *correo);
 int inicioSesion();
 void crearRegistro(char *registro);
-int setId(char *registro);
+void mostrarRegistros(char *registro);
 // Cabeceras
 void titulo();
 void cabeceraMenuPrincipal();
 void cabeceraInicioSesion();
 void cabeceraMenuPerfilAdmin();
 
-// -------------------------------------------------- Main
+// -------------------------------------------------------------------------------- Main
 int main()
 {
     menuPrincipal();
@@ -65,7 +68,7 @@ int main()
     return 0;
 }
 
-// -------------------------------------------------- Helpers
+// -------------------------------------------------------------------------------- Helpers
 int seleccion(char *menu, char opcs[][LEN], int nOpcs)
 {
     int posicion = 1;
@@ -134,6 +137,79 @@ void selector(int posicionReal, int posicionSelector)
     }
 }
 
+int setId(char *registro)
+{
+    int id = 0;
+
+    if (strcmp(registro, USUARIO) == 0)
+    {
+        FILE *file;
+        file = fopen(ARCHIVO_USUARIOS, "r");
+
+        while (fread(&Usuario, sizeof(Usuario), 1, file))
+        {
+            id++;
+        }
+        fclose(file);
+    }
+
+    return id;
+}
+
+int validarUsuario(char *correo, char *password)
+{
+    FILE *file;
+    file = fopen(ARCHIVO_USUARIOS, "r");
+    while (!feof(file))
+    {
+        fread(&Usuario, sizeof(Usuario), 1, file);
+
+        if (strcmp(correo, Usuario.correo) == 0)
+        {
+            // Se encontro el correo electronico
+            if (strcmp(password, Usuario.pass) == 0)
+            {
+                // La contraseña concuerda con el usuario
+                fclose(file);
+                return 0;
+            }
+
+            // El correo existe pero la contraseña no
+            fclose(file);
+            return 1;
+        }
+    }
+
+    // El correo no existe
+    fclose(file);
+    return 1;
+}
+
+int getAcceso(char *correo)
+{
+    int acceso = -1;
+
+    if (strcmp(correo, SUPER_ADMIN_USER) == 0)
+    {
+        acceso = SUPER_ADMIN_ACCESO;
+    }
+    else
+    {
+        FILE *file;
+        file = fopen(ARCHIVO_USUARIOS, "r");
+        while (!feof(file))
+        {
+            fread(&Usuario, sizeof(Usuario), 1, file);
+            if (strcmp(correo, Usuario.correo) == 0)
+            {
+                acceso = Usuario.acceso;
+            }
+        }
+    }
+
+    return acceso;
+}
+
 int inicioSesion()
 {
     char correo[LEN];
@@ -176,13 +252,9 @@ int inicioSesion()
             }
         }
 
-        // if (
-        //     // Si es el super usuario quemado en el codigo
-        //     (strcmp(correo, SUPER_ADMIN_USER) == 0 && strcmp(password, SUPER_ADMIN_PASS) == 0) ||
-        //     (validarUsuario(correo, password) == 0) // si es un usuario en la base de datos
-        // )
-        // Si es el super usuario quemado en el codigo
-        if (strcmp(correo, SUPER_ADMIN_USER) == 0 && strcmp(password, SUPER_ADMIN_PASS) == 0)
+        if (
+            (strcmp(correo, SUPER_ADMIN_USER) == 0 && strcmp(password, SUPER_ADMIN_PASS) == 0) ||
+            validarUsuario(correo, password) == 0)
         {
             loginOk = 1;
         }
@@ -197,9 +269,7 @@ int inicioSesion()
 
     if (loginOk == 1)
     {
-        // printf("\n\tInicio de sesion correcto\n");
-        // system("pause>null");
-        menuPerfil(1);
+        menuPerfil(getAcceso(correo));
     }
     else
     {
@@ -210,7 +280,47 @@ int inicioSesion()
     return 0;
 }
 
-// -------------------------------------------------- Menus
+void crearRegistro(char *registro)
+{
+    if (strcmp(registro, USUARIO) == 0)
+    {
+        FILE *file;
+        Role metodoAcceso = NORMAL;
+        file = fopen(ARCHIVO_USUARIOS, "a");
+        Usuario.id = (setId(USUARIO) + 1);
+        Usuario.acceso = metodoAcceso;
+        printf("Nombre: ");
+        scanf("\n%[^\n]", Usuario.nombre);
+        printf("Correo: ");
+        scanf("\n%[^\n]", Usuario.correo);
+        printf("Contrasenya: ");
+        scanf("\n%[^\n]", Usuario.pass);
+
+        fwrite(&Usuario, sizeof(Usuario), 1, file);
+        fclose(file);
+
+        printf("\nUsuario registrado correctamente\n");
+        system("pause>null");
+    }
+}
+
+void mostrarRegistros(char *registro)
+{
+    if (strcmp(registro, USUARIO) == 0)
+    {
+        FILE *file;
+        file = fopen(ARCHIVO_USUARIOS, "r");
+        printf("\nid\t\tNombre\t\tCorreo\t\tPassword\t\tAcceso\n\n");
+        while (fread(&Usuario, sizeof(Usuario), 1, file))
+        {
+            printf("  %i\t\t%s\t\t%s\t\t%s\t\t%i\n", Usuario.id, Usuario.nombre, Usuario.correo, Usuario.pass, Usuario.acceso);
+        }
+        fclose(file);
+        system("pause>null");
+    }
+}
+
+// -------------------------------------------------------------------------------- Menus
 void menuPrincipal()
 {
     int opcion;
@@ -243,27 +353,36 @@ void menuPrincipal()
 
 void menuPerfil(int acceso)
 {
-    int opcion;
-    char opciones[][LEN] = {
-        "Administrar usuarios",
-        "Administrar Peliculas",
-        "Regresar",
-    };
-
-    do
+    Role esAdmin = ADMIN;
+    if (acceso == esAdmin)
     {
-        opcion = seleccion(MENU_PERFIL_ADMIN, opciones, 3);
-        switch (opcion)
+        int opcion;
+        char opciones[][LEN] = {
+            "Administrar usuarios",
+            "Administrar Peliculas",
+            "Regresar",
+        };
+
+        do
         {
-        case 1:
-            menuUsuarios();
-            break;
-        case 2:
-            printf("Menu peliculas");
-            system("pause>null");
-            break;
-        }
-    } while (opcion != 3);
+            opcion = seleccion(MENU_PERFIL_ADMIN, opciones, 3);
+            switch (opcion)
+            {
+            case 1:
+                menuUsuarios();
+                break;
+            case 2:
+                printf("Menu peliculas");
+                system("pause>null");
+                break;
+            }
+        } while (opcion != 3);
+    }
+    else
+    {
+        printf("MEno de usuario normal");
+        system("pause>null");
+    }
 }
 
 void menuUsuarios()
@@ -288,9 +407,7 @@ void menuUsuarios()
             crearRegistro(USUARIO);
             break;
         case 2:
-            // mostrarRegistros(USUARIO);
-            printf("mostrar usuarios");
-            system("cls");
+            mostrarRegistros(USUARIO);
             break;
         case 3:
             // actualizarRegistro(USUARIO);
@@ -306,50 +423,7 @@ void menuUsuarios()
     } while (opcion != 5);
 }
 
-int setId(char *registro)
-{
-    int id = 0;
-
-    if (strcmp(registro, USUARIO) == 0)
-    {
-        FILE *file;
-        file = fopen(ARCHIVO_USUARIOS, "r");
-
-        while (fread(&Usuario, sizeof(Usuario), 1, file))
-        {
-            id++;
-        }
-        fclose(file);
-    }
-
-    return id;
-}
-
-void crearRegistro(char *registro)
-{
-    if (strcmp(registro, USUARIO) == 0)
-    {
-        FILE *file;
-        Role metodoAcceso = NORMAL;
-        file = fopen(ARCHIVO_USUARIOS, "a");
-        Usuario.id = (setId(USUARIO) + 1);
-        Usuario.acceso = metodoAcceso;
-        printf("Nombre: ");
-        scanf("\n%[^\n]", Usuario.nombre);
-        printf("Correo: ");
-        scanf("\n%[^\n]", Usuario.correo);
-        printf("Contrasenya: ");
-        scanf("\n%[^\n]", Usuario.pass);
-
-        fwrite(&Usuario, sizeof(Usuario), 1, file);
-        fclose(file);
-
-        printf("\nUsuario registrado correctamente\n");
-        system("pause>null");
-    }
-}
-
-// -------------------------------------------------- Cabeceras
+// -------------------------------------------------------------------------------- Cabeceras
 void titulo()
 {
     system("cls");
