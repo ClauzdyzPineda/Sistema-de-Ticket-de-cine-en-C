@@ -57,6 +57,7 @@ int inicioSesion();
 void crearRegistro(char *registro);
 void mostrarRegistros(char *registro);
 void actualizarRegistro(char *registro);
+void eliminarRegistro(char *registro);
 // Cabeceras
 void titulo();
 void cabeceraMenuPrincipal();
@@ -435,6 +436,54 @@ void actualizarRegistro(char *registro)
     }
 }
 
+void eliminarRegistro(char *registro)
+{
+    if (strcmp(registro, USUARIO) == 0)
+    {
+        FILE *tmpfile;
+        FILE *file;
+        char correo[LEN];
+        char *UCorreo;
+        int existe;
+
+        printf("Digite correo: ");
+        scanf("\n%[^\n]", correo);
+
+        existe = getRegistro(USUARIO, correo);
+
+        if (existe == 0)
+        {
+            printf("No se encontraron registros para el correo: %s", correo);
+        }
+        else
+        {
+            file = fopen(ARCHIVO_USUARIOS, "r");
+            tmpfile = fopen(ARCHIVO_TMP, "w");
+            while (fread(&Usuario, sizeof(Usuario), 1, file))
+            {
+                UCorreo = Usuario.correo;
+
+                if (strcmp(correo, UCorreo) != 0)
+                {
+                    fwrite(&Usuario, sizeof(Usuario), 1, tmpfile);
+                }
+            }
+            fclose(file);
+            fclose(tmpfile);
+            file = fopen(ARCHIVO_USUARIOS, "w");
+            tmpfile = fopen(ARCHIVO_TMP, "r");
+            while (fread(&Usuario, sizeof(Usuario), 1, tmpfile))
+            {
+                fwrite(&Usuario, sizeof(Usuario), 1, file);
+            }
+            fclose(file);
+            fclose(tmpfile);
+            printf("Usuario eliminado");
+            system("pause>null");
+        }
+    }
+}
+
 // -------------------------------------------------------------------------------- Menus
 void menuPrincipal()
 {
@@ -528,9 +577,7 @@ void menuUsuarios()
             actualizarRegistro(USUARIO);
             break;
         case 4:
-            // eliminarRegistro(USUARIO);
-            printf("eliminar usuarios");
-            system("cls");
+            eliminarRegistro(USUARIO);
             break;
         }
     } while (opcion != 5);
