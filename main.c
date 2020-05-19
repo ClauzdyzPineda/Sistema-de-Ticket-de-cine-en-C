@@ -29,9 +29,11 @@ void menuPrincipal();
 // Helpers
 int seleccion(char *menu, char opcs[][LEN], int nOpcs);
 void selector(int posicionReal, int posicionSelector);
+int inicioSesion();
 // Cabeceras
 void titulo();
 void cabeceraMenuPrincipal();
+void cabeceraInicioSesion();
 
 // -------------------------------------------------- Main
 int main()
@@ -94,6 +96,81 @@ int seleccion(char *menu, char opcs[][LEN], int nOpcs)
     return posicion;
 }
 
+int inicioSesion()
+{
+    char correo[LEN];
+    char password[LEN];
+    int intento = 0;
+    int loginOk = 0;
+    char caracter;
+    int i = 0;
+
+    do
+    {
+        titulo();
+        cabeceraInicioSesion();
+        printf("\nCoreo: ");
+        gets(correo);
+        printf("Contrasenya: ");
+        while ((caracter = getch()))
+        {
+            if (caracter == ENTER)
+            {
+                password[i] = '\0';
+                break;
+            }
+            else if (caracter == BACKSPACE)
+            {
+                if (i > 0)
+                {
+                    i--;
+                    printf("\b \b");
+                }
+            }
+            else
+            {
+                if (i < LEN)
+                {
+                    printf("*");
+                    password[i] = caracter;
+                    i++;
+                }
+            }
+        }
+
+        // if (
+        //     // Si es el super usuario quemado en el codigo
+        //     (strcmp(correo, SUPER_ADMIN_USER) == 0 && strcmp(password, SUPER_ADMIN_PASS) == 0) ||
+        //     (validarUsuario(correo, password) == 0) // si es un usuario en la base de datos
+        // )
+        // Si es el super usuario quemado en el codigo
+        if (strcmp(correo, SUPER_ADMIN_USER) == 0 && strcmp(password, SUPER_ADMIN_PASS) == 0)
+        {
+            loginOk = 1;
+        }
+        else
+        {
+            printf("\n\tCorreo y/o contrasenya son incorrectos\n");
+            intento++;
+            getchar();
+        }
+
+    } while (intento < 3 && loginOk == 0);
+
+    if (loginOk == 1)
+    {
+        printf("\n\tInicio de sesion correcto\n");
+        system("pause>null");
+    }
+    else
+    {
+        printf("\n\tHa sobrepasado el numero maximo de intentos permitidos\n");
+        system("pause>null");
+    }
+
+    return 0;
+}
+
 // -------------------------------------------------- Menus
 void menuPrincipal()
 {
@@ -119,8 +196,7 @@ void menuPrincipal()
             system("pause>null"); // Si se borra, porfavor, eliminar windows
             break;
         case 3:
-            printf("\nSection Iniciar sesion\n");
-            system("pause>null"); // Si se borra, porfavor, eliminar windows
+            inicioSesion();
             break;
         }
     } while (opcion != 4);
@@ -151,5 +227,12 @@ void cabeceraMenuPrincipal()
 {
     puts("|------------------------------------------------------|");
     puts("|                    Menu principal                    |");
+    puts("|------------------------------------------------------|");
+}
+
+void cabeceraInicioSesion()
+{
+    puts("|------------------------------------------------------|");
+    puts("|                   Inicio de sesion                   |");
     puts("|------------------------------------------------------|");
 }
