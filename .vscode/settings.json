@@ -1,0 +1,7 @@
+{
+  "files.associations": {
+    "windows.h": "c",
+    "usuario.h": "c",
+    "cabeceras.h": "c"
+  }
+}
