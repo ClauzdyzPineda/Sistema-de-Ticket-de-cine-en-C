@@ -19,6 +19,7 @@
 #define MENU_PERFIL "MENU_PERFIL"
 #define MENU_ACTUALIZAR_USUARIO "MENU_ACTUALIZAR_USUARIO"
 #define MENU_ADMINISTRAR_PELICULAS "MENU_ADMINISTRAR_PELICULAS"
+#define MENU_ADMINISTRAR_SALAS "MENU_ADMINISTRAR_SALAS"
 // Registros
 #define USUARIO "USUARIO"
 #define PELICULA "PELICULA"
@@ -58,6 +59,7 @@ void menuPrincipal();
 void menuPerfil(int acceso);
 void menuUsuarios();
 void menuPeliculas();
+void menuSalas();
 // Helpers
 int seleccion(char *menu, char opcs[][LEN], int nOpcs);
 void selector(int posicionReal, int posicionSelector);
@@ -77,6 +79,7 @@ void cabeceraInicioSesion();
 void cabeceraMenuPerfilAdmin();
 void cabeceraMenuPerfil();
 void cabeceraMenuPeliculas();
+void cabeceraMenuSalas();
 
 // -------------------------------------------------------------------------------- Main
 int main()
@@ -112,6 +115,10 @@ int seleccion(char *menu, char opcs[][LEN], int nOpcs)
         if (strcmp(menu, MENU_ADMINISTRAR_PELICULAS) == 0)
         {
             cabeceraMenuPeliculas();
+        }
+        if (strcmp(menu, MENU_ADMINISTRAR_SALAS) == 0)
+        {
+            cabeceraMenuSalas();
         }
 
         for (i = 0; i < nOpcs; i++)
@@ -724,12 +731,14 @@ void menuPerfil(int acceso)
         char opciones[][LEN] = {
             "Administrar usuarios",
             "Administrar Peliculas",
+            "Administrar Salas",
+            "Reporte",
             "Regresar",
         };
 
         do
         {
-            opcion = seleccion(MENU_PERFIL_ADMIN, opciones, 3);
+            opcion = seleccion(MENU_PERFIL_ADMIN, opciones, 5);
             switch (opcion)
             {
             case 1:
@@ -738,8 +747,15 @@ void menuPerfil(int acceso)
             case 2:
                 menuPeliculas();
                 break;
+            case 3:
+                menuSalas();
+                break;
+            case 4:
+                printf("Reportes");
+                system("pause>null");
+                break;
             }
-        } while (opcion != 3);
+        } while (opcion != 5);
     }
     else
     {
@@ -836,6 +852,37 @@ void menuPeliculas()
     } while (opcion != 5);
 }
 
+void menuSalas()
+{
+    int opcion;
+    char opciones[][LEN] = {
+        "Establecer numero de salas",
+        "Agregar pelicula a sala",
+        "Remover pelicula de sala",
+        "Regresar",
+    };
+
+    do
+    {
+        opcion = seleccion(MENU_ADMINISTRAR_SALAS, opciones, 4);
+        switch (opcion)
+        {
+        case 1:
+            printf("Establecer numero de salas");
+            system("pause>null");
+            break;
+        case 2:
+            printf("Agregar pelicula a sala");
+            system("pause>null");
+            break;
+        case 3:
+            printf("Remover pelicula de sala");
+            system("pause>null");
+            break;
+        }
+    } while (opcion != 4);
+}
+
 // -------------------------------------------------------------------------------- Cabeceras
 void titulo()
 {
@@ -877,5 +924,12 @@ void cabeceraMenuPeliculas()
 {
     puts("|------------------------------------------------------|");
     puts("|                 Administrar peliculas                |");
+    puts("|------------------------------------------------------|");
+}
+
+void cabeceraMenuSalas()
+{
+    puts("|------------------------------------------------------|");
+    puts("|                  Administrar Salas                   |");
     puts("|------------------------------------------------------|");
 }
