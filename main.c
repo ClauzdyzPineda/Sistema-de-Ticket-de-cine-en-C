@@ -18,10 +18,13 @@
 #define MENU_PERFIL_ADMIN "MENU_PERFIL_ADMIN"
 #define MENU_PERFIL "MENU_PERFIL"
 #define MENU_ACTUALIZAR_USUARIO "MENU_ACTUALIZAR_USUARIO"
+#define MENU_ADMINISTRAR_PELICULAS "MENU_ADMINISTRAR_PELICULAS"
 // Registros
 #define USUARIO "USUARIO"
+#define PELICULA "PELICULA"
 // Archivos
 #define ARCHIVO_USUARIOS "Usuarios"
+#define ARCHIVO_PELICULAS "Peliculas"
 #define ARCHIVO_TMP "Tmp"
 //modelos
 typedef enum
@@ -39,6 +42,14 @@ struct
     Role acceso;
 } Usuario;
 
+struct
+{
+    int id;
+    char titulo[LEN];
+    char genero[LEN];
+    // DATE horarios
+} Pelicula;
+
 // -------------------------------------------------------------------------------- Prototipos
 // General
 int getch();
@@ -46,7 +57,7 @@ int getch();
 void menuPrincipal();
 void menuPerfil(int acceso);
 void menuUsuarios();
-void menuUsuarios();
+void menuPeliculas();
 // Helpers
 int seleccion(char *menu, char opcs[][LEN], int nOpcs);
 void selector(int posicionReal, int posicionSelector);
@@ -65,6 +76,7 @@ void cabeceraMenuPrincipal();
 void cabeceraInicioSesion();
 void cabeceraMenuPerfilAdmin();
 void cabeceraMenuPerfil();
+void cabeceraMenuPeliculas();
 
 // -------------------------------------------------------------------------------- Main
 int main()
@@ -81,7 +93,6 @@ int seleccion(char *menu, char opcs[][LEN], int nOpcs)
     int tecla = 0;
     int i;
 
-    // tecla 13 = enter
     while (tecla != ENTER)
     {
         titulo();
@@ -97,6 +108,10 @@ int seleccion(char *menu, char opcs[][LEN], int nOpcs)
         if (strcmp(menu, MENU_PERFIL_ADMIN) == 0)
         {
             cabeceraMenuPerfilAdmin();
+        }
+        if (strcmp(menu, MENU_ADMINISTRAR_PELICULAS) == 0)
+        {
+            cabeceraMenuPeliculas();
         }
 
         for (i = 0; i < nOpcs; i++)
@@ -158,6 +173,18 @@ int setId(char *registro)
         file = fopen(ARCHIVO_USUARIOS, "r");
 
         while (fread(&Usuario, sizeof(Usuario), 1, file))
+        {
+            id++;
+        }
+        fclose(file);
+    }
+
+    if (strcmp(registro, PELICULA) == 0)
+    {
+        FILE *file;
+        file = fopen(ARCHIVO_PELICULAS, "r");
+
+        while (fread(&Pelicula, sizeof(Pelicula), 1, file))
         {
             id++;
         }
@@ -335,6 +362,24 @@ void crearRegistro(char *registro)
         fclose(file);
 
         printf("\nUsuario registrado correctamente\n");
+        system("pause>null");
+    }
+
+    if (strcmp(registro, PELICULA) == 0)
+    {
+        FILE *file;
+        file = fopen(ARCHIVO_PELICULAS, "a");
+        Pelicula.id = (setId(PELICULA) + 1);
+
+        printf("Titulo: ");
+        scanf("\n%[^\n]", Pelicula.titulo);
+        printf("Genero: ");
+        scanf("\n%[^\n]", Pelicula.genero);
+
+        fwrite(&Pelicula, sizeof(Pelicula), 1, file);
+        fclose(file);
+
+        printf("\nPelicula registrada correctamente\n");
         system("pause>null");
     }
 }
@@ -542,8 +587,7 @@ void menuPerfil(int acceso)
                 menuUsuarios();
                 break;
             case 2:
-                printf("Menu peliculas");
-                system("pause>null");
+                menuPeliculas();
                 break;
             }
         } while (opcion != 3);
@@ -610,6 +654,39 @@ void menuUsuarios()
     } while (opcion != 5);
 }
 
+void menuPeliculas()
+{
+
+    int opcion;
+    char opciones[][LEN] = {
+        "Crear Pelicula",
+        "Mostrar Peliculas",
+        "Actualizar Pelicula",
+        "Eliminar Pelicula",
+        "Regresar",
+    };
+
+    do
+    {
+        opcion = seleccion(MENU_ADMINISTRAR_PELICULAS, opciones, 5);
+        switch (opcion)
+        {
+        case 1:
+            crearRegistro(PELICULA);
+            break;
+        case 2:
+            mostrarRegistros(PELICULA);
+            break;
+        case 3:
+            actualizarRegistro(PELICULA);
+            break;
+        case 4:
+            eliminarRegistro(PELICULA);
+            break;
+        }
+    } while (opcion != 5);
+}
+
 // -------------------------------------------------------------------------------- Cabeceras
 void titulo()
 {
@@ -644,5 +721,12 @@ void cabeceraMenuPerfil()
 {
     puts("|------------------------------------------------------|");
     puts("|                        Perfil                        |");
+    puts("|------------------------------------------------------|");
+}
+
+void cabeceraMenuPeliculas()
+{
+    puts("|------------------------------------------------------|");
+    puts("|                 Administrar peliculas                |");
     puts("|------------------------------------------------------|");
 }
