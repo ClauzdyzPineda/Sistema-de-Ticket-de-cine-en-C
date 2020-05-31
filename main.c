@@ -4,6 +4,7 @@
 // -------------------------------------------------------------------------------- Constantes
 // General
 #define LEN 80
+#define NUM_SALAS 10
 // Informacion del super administrador
 #define SUPER_ADMIN_USER "c"
 #define SUPER_ADMIN_PASS "med"
@@ -23,9 +24,11 @@
 // Registros
 #define USUARIO "USUARIO"
 #define PELICULA "PELICULA"
+#define SALA "SALA"
 // Archivos
 #define ARCHIVO_USUARIOS "Usuarios"
 #define ARCHIVO_PELICULAS "Peliculas"
+#define ARCHIVO_SALAS "Salas"
 #define ARCHIVO_TMP "Tmp"
 //modelos
 typedef enum
@@ -50,6 +53,13 @@ struct
     char genero[LEN];
     // DATE horarios
 } Pelicula;
+
+struct
+{
+    int id;
+    char pelicula[LEN];
+    int disponibilidad;
+} Sala;
 
 // -------------------------------------------------------------------------------- Prototipos
 // General
@@ -192,6 +202,18 @@ int setId(char *registro)
         file = fopen(ARCHIVO_PELICULAS, "r");
 
         while (fread(&Pelicula, sizeof(Pelicula), 1, file))
+        {
+            id++;
+        }
+        fclose(file);
+    }
+
+    if (strcmp(registro, SALA) == 0)
+    {
+        FILE *file;
+        file = fopen(ARCHIVO_SALAS, "r");
+
+        while (fread(&Sala, sizeof(Sala), 1, file))
         {
             id++;
         }
@@ -406,6 +428,24 @@ void crearRegistro(char *registro)
         printf("\nPelicula registrada correctamente\n");
         system("pause>null");
     }
+
+    // TODO: refactorizar para que soporte seleccion en lugar de escribir
+    if (strcmp(registro, SALA) == 0)
+    {
+        FILE *file;
+        file = fopen(ARCHIVO_SALAS, "a");
+        Sala.id = (setId(SALA) + 1);
+
+        printf("Pelicula: ");
+        scanf("\n%[^\n]", Sala.pelicula);
+        Sala.disponibilidad = 40;
+
+        fwrite(&Sala, sizeof(Sala), 1, file);
+        fclose(file);
+
+        printf("\nSe agrego pelicula a sala correctamente\n");
+        system("pause>null");
+    }
 }
 
 void mostrarRegistros(char *registro)
@@ -431,6 +471,35 @@ void mostrarRegistros(char *registro)
         while (fread(&Pelicula, sizeof(Pelicula), 1, file))
         {
             printf("  %i\t\t%s\t\t%s\n", Pelicula.id, Pelicula.titulo, Pelicula.genero);
+        }
+        fclose(file);
+        system("pause>null");
+    }
+
+    if (strcmp(registro, SALA) == 0)
+    {
+        FILE *file;
+        file = fopen(ARCHIVO_SALAS, "r");
+        int disponible;
+        int i;
+
+        printf("\nNo. Sala\t\tPelicula\t\tDisponibilidad\n\n");
+
+        // imprimiendo salas
+        for (i = 1; i <= NUM_SALAS; i++)
+        {
+            disponible = 0;
+            // recorriendo el archivo salas
+            while (fread(&Sala, sizeof(Sala), 1, file))
+            {
+                printf("  %i\t\t%s\t\t%i\n", Sala.id, Sala.pelicula, Sala.disponibilidad);
+                disponible = 1;
+            }
+
+            if (disponible == 0)
+            {
+                printf(" %i\t\tDisponible\n", i);
+            }
         }
         fclose(file);
         system("pause>null");
@@ -857,6 +926,7 @@ void menuSalas()
     int opcion;
     char opciones[][LEN] = {
         "Establecer numero de salas",
+        "Mostrar salas",
         "Agregar pelicula a sala",
         "Remover pelicula de sala",
         "Regresar",
@@ -864,7 +934,7 @@ void menuSalas()
 
     do
     {
-        opcion = seleccion(MENU_ADMINISTRAR_SALAS, opciones, 4);
+        opcion = seleccion(MENU_ADMINISTRAR_SALAS, opciones, 5);
         switch (opcion)
         {
         case 1:
@@ -872,15 +942,19 @@ void menuSalas()
             system("pause>null");
             break;
         case 2:
-            printf("Agregar pelicula a sala");
-            system("pause>null");
+            mostrarRegistros(SALA);
             break;
         case 3:
+            crearRegistro(SALA);
+            // printf("Agregar pelicula a sala");
+            // system("pause>null");
+            break;
+        case 4:
             printf("Remover pelicula de sala");
             system("pause>null");
             break;
         }
-    } while (opcion != 4);
+    } while (opcion != 5);
 }
 
 // -------------------------------------------------------------------------------- Cabeceras
