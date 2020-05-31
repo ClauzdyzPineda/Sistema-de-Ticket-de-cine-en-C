@@ -637,6 +637,51 @@ void eliminarRegistro(char *registro)
             system("pause>null");
         }
     }
+
+    if (strcmp(registro, PELICULA) == 0)
+    {
+        FILE *tmpfile;
+        FILE *file;
+        char titulo[LEN];
+        char *Titulo;
+        int existe;
+
+        printf("Digite titulo: ");
+        scanf("\n%[^\n]", titulo);
+
+        existe = getRegistro(PELICULA, titulo);
+
+        if (existe == 0)
+        {
+            printf("No se encontraron registros para el titulo: %s", titulo);
+        }
+        else
+        {
+            file = fopen(ARCHIVO_PELICULAS, "r");
+            tmpfile = fopen(ARCHIVO_TMP, "w");
+            while (fread(&Pelicula, sizeof(Pelicula), 1, file))
+            {
+                Titulo = Pelicula.titulo;
+
+                if (strcmp(titulo, Titulo) != 0)
+                {
+                    fwrite(&Pelicula, sizeof(Pelicula), 1, tmpfile);
+                }
+            }
+            fclose(file);
+            fclose(tmpfile);
+            file = fopen(ARCHIVO_PELICULAS, "w");
+            tmpfile = fopen(ARCHIVO_TMP, "r");
+            while (fread(&Pelicula, sizeof(Pelicula), 1, tmpfile))
+            {
+                fwrite(&Pelicula, sizeof(Pelicula), 1, file);
+            }
+            fclose(file);
+            fclose(tmpfile);
+            printf("Pelicula eliminada");
+            system("pause>null");
+        }
+    }
 }
 
 // -------------------------------------------------------------------------------- Menus
