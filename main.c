@@ -269,6 +269,23 @@ int getRegistro(char *tipoRegistro, char *registro)
         fclose(file);
     }
 
+    if (strcmp(tipoRegistro, PELICULA) == 0)
+    {
+        FILE *file;
+        file = fopen(ARCHIVO_PELICULAS, "r");
+
+        while (!feof(file))
+        {
+            fread(&Pelicula, sizeof(Pelicula), 1, file);
+
+            if (strcmp(registro, Pelicula.titulo) == 0)
+            {
+                existe = 1;
+            }
+        }
+        fclose(file);
+    }
+
     return existe;
 }
 
@@ -495,6 +512,80 @@ void actualizarRegistro(char *registro)
             fclose(file);
             fclose(tmpfile);
             printf("Usuario actualizado.");
+            system("pause>null");
+        }
+    }
+
+    if (strcmp(registro, PELICULA) == 0)
+    {
+        FILE *file;
+        FILE *tmpfile;
+        int existe;
+        int opcion;
+        char titulo[LEN];
+        char *Titulo;
+
+        printf("Digite titulo: ");
+        scanf("\n%[^\n]", titulo);
+
+        existe = getRegistro(PELICULA, titulo);
+
+        if (existe == 0)
+        {
+            printf("No se encontraron registros para el titulo: %s", titulo);
+            system("pause>null");
+        }
+        else
+        {
+            file = fopen(ARCHIVO_PELICULAS, "r");
+            tmpfile = fopen(ARCHIVO_TMP, "w");
+            while (fread(&Pelicula, sizeof(Pelicula), 1, file))
+            {
+                Titulo = Pelicula.titulo;
+
+                if (strcmp(titulo, Titulo) != 0)
+                {
+                    fwrite(&Pelicula, sizeof(Pelicula), 1, tmpfile);
+                }
+                else
+                {
+                    char opciones[][LEN] = {
+                        "Titulo",
+                        "Genero",
+                        "Regresar",
+                    };
+
+                    do
+                    {
+                        opcion = seleccion(MENU_ADMINISTRAR_PELICULAS, opciones, 3);
+
+                        switch (opcion)
+                        {
+                        case 1:
+                            printf("Titulo: ");
+                            scanf("\n%[^\n]", Pelicula.titulo);
+                            break;
+                        case 2:
+                            printf("Genero: ");
+                            scanf("\n%[^\n]", Pelicula.genero);
+                            break;
+                        }
+                    } while (opcion != 3);
+
+                    fwrite(&Pelicula, sizeof(Pelicula), 1, tmpfile);
+                }
+            }
+            fclose(file);
+            fclose(tmpfile);
+            file = fopen(ARCHIVO_PELICULAS, "w");
+            tmpfile = fopen(ARCHIVO_TMP, "r");
+            while (fread(&Pelicula, sizeof(Pelicula), 1, tmpfile))
+            {
+                fwrite(&Pelicula, sizeof(Pelicula), 1, file);
+            }
+            fclose(file);
+            fclose(tmpfile);
+            printf("Pelicula actualizado.");
             system("pause>null");
         }
     }
