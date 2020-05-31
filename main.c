@@ -398,6 +398,19 @@ void mostrarRegistros(char *registro)
         fclose(file);
         system("pause>null");
     }
+
+    if (strcmp(registro, PELICULA) == 0)
+    {
+        FILE *file;
+        file = fopen(ARCHIVO_PELICULAS, "r");
+        printf("\nid\t\tTitulo\t\tGenero\n\n");
+        while (fread(&Pelicula, sizeof(Pelicula), 1, file))
+        {
+            printf("  %i\t\t%s\t\t%s\n", Pelicula.id, Pelicula.titulo, Pelicula.genero);
+        }
+        fclose(file);
+        system("pause>null");
+    }
 }
 
 void actualizarRegistro(char *registro)
