@@ -191,7 +191,7 @@ int setId(char *registro)
 
         while (fread(&Usuario, sizeof(Usuario), 1, file))
         {
-            id++;
+            id = Usuario.id;
         }
         fclose(file);
     }
@@ -203,7 +203,7 @@ int setId(char *registro)
 
         while (fread(&Pelicula, sizeof(Pelicula), 1, file))
         {
-            id++;
+            id = Pelicula.id;
         }
         fclose(file);
     }
@@ -215,7 +215,7 @@ int setId(char *registro)
 
         while (fread(&Sala, sizeof(Sala), 1, file))
         {
-            id++;
+            id = Sala.id;
         }
         fclose(file);
     }
