@@ -61,12 +61,24 @@ struct
     int disponibilidad;
 } Sala;
 
+// struct tycket or venta
+struct
+{
+    int id;
+    char fecha;
+    int usuario;
+    int pelicula;
+    int cantidadTickets;
+} Ticket;
+
 // -------------------------------------------------------------------------------- Prototipos
 // General
 int getch();
 // Menus
 void menuPrincipal();
-void menuPerfil(int acceso);
+void menuPerfil(int acceso, int usuario);
+void menuPerfilUsuario(int usuario);
+void menuPerfilAdmin();
 void menuUsuarios();
 void menuPeliculas();
 void menuSalas();
@@ -75,6 +87,7 @@ int seleccion(char *menu, char opcs[][LEN], int nOpcs);
 void selector(int posicionReal, int posicionSelector);
 int validarUsuario(char *correo, char *password);
 int setId(char *registro);
+int getUsuarioId(int *correo);
 int getAcceso(char *correo);
 int getRegistro(char *tipoRegistro, char *registro);
 int inicioSesion();
@@ -82,6 +95,7 @@ void crearRegistro(char *registro);
 void mostrarRegistros(char *registro);
 void actualizarRegistro(char *registro);
 void eliminarRegistro(char *registro);
+void comprarEntradas(int usuario);
 // Cabeceras
 void titulo();
 void cabeceraMenuPrincipal();
@@ -252,6 +266,24 @@ int validarUsuario(char *correo, char *password)
     return 1;
 }
 
+// Nunca deberia de regresar -1;
+int getUsuarioId(int *correo)
+{
+    int id = -1;
+    FILE *file;
+    file = fopen(ARCHIVO_USUARIOS, "r");
+    while (!feof(file))
+    {
+        fread(&Usuario, sizeof(Usuario), 1, file);
+        if (strcmp(correo, Usuario.correo) == 0)
+        {
+            id = Usuario.id;
+        }
+    }
+
+    return id;
+}
+
 int getAcceso(char *correo)
 {
     int acceso = -1;
@@ -377,7 +409,7 @@ int inicioSesion()
 
     if (loginOk == 1)
     {
-        menuPerfil(getAcceso(correo));
+        menuPerfil(getAcceso(correo), getUsuarioId(correo));
     }
     else
     {
@@ -403,6 +435,8 @@ void crearRegistro(char *registro)
         scanf("\n%[^\n]", Usuario.correo);
         printf("Contrasenya: ");
         scanf("\n%[^\n]", Usuario.pass);
+
+        // TODO: logica para validar si usuario con ese correo existe.
 
         fwrite(&Usuario, sizeof(Usuario), 1, file);
         fclose(file);
@@ -760,6 +794,12 @@ void eliminarRegistro(char *registro)
     }
 }
 
+void comprarEntradas(int usuario)
+{
+    printf("Seleccionar pelicula");
+    system("Seleccionar ");
+}
+
 // -------------------------------------------------------------------------------- Menus
 void menuPrincipal()
 {
@@ -791,66 +831,16 @@ void menuPrincipal()
     } while (opcion != 4);
 }
 
-void menuPerfil(int acceso)
+void menuPerfil(int acceso, int usuario)
 {
     Role esAdmin = ADMIN;
     if (acceso == esAdmin)
     {
-        int opcion;
-        char opciones[][LEN] = {
-            "Administrar usuarios",
-            "Administrar Peliculas",
-            "Administrar Salas",
-            "Reporte",
-            "Regresar",
-        };
-
-        do
-        {
-            opcion = seleccion(MENU_PERFIL_ADMIN, opciones, 5);
-            switch (opcion)
-            {
-            case 1:
-                menuUsuarios();
-                break;
-            case 2:
-                menuPeliculas();
-                break;
-            case 3:
-                menuSalas();
-                break;
-            case 4:
-                printf("Reportes");
-                system("pause>null");
-                break;
-            }
-        } while (opcion != 5);
+        menuPerfilAdmin();
     }
     else
     {
-        // PANEL DE USUARIO NORMAL
-        int opcion;
-        char opciones[][LEN] = {
-            "Comprar entradas",
-            "Mi perfil",
-            "Regresar",
-        };
-
-        do
-        {
-            opcion = seleccion(MENU_PERFIL, opciones, 3);
-            switch (opcion)
-            {
-            case 1:
-                printf("Comprar entradas");
-                system("pause>null");
-                break;
-            case 2:
-                printf("Actualizar mi perfil");
-                system("pause>null");
-                break;
-            }
-        } while (opcion != 3);
+        menuPerfilUsuario(usuario);
     }
 }
 
@@ -955,6 +945,69 @@ void menuSalas()
             break;
         }
     } while (opcion != 5);
+}
+
+void menuPerfilAdmin()
+{
+    int opcion;
+    char opciones[][LEN] = {
+        "Administrar usuarios",
+        "Administrar Peliculas",
+        "Administrar Salas",
+        "Reporte",
+        "Regresar",
+    };
+
+    do
+    {
+        opcion = seleccion(MENU_PERFIL_ADMIN, opciones, 5);
+        switch (opcion)
+        {
+        case 1:
+            menuUsuarios();
+            break;
+        case 2:
+            menuPeliculas();
+            break;
+        case 3:
+            menuSalas();
+            break;
+        case 4:
+            printf("Reportes");
+            system("pause>null");
+            break;
+        }
+    } while (opcion != 5);
+}
+
+void menuPerfilUsuario(int usuario)
+{
+
+    printf("el id del usuario es %i", usuario);
+    system("pause>null");
+    // PANEL DE USUARIO NORMAL
+    int opcion;
+    char opciones[][LEN] = {
+        "Comprar entradas",
+        "Mi perfil",
+        "Regresar",
+    };
+
+    do
+    {
+        opcion = seleccion(MENU_PERFIL, opciones, 3);
+        switch (opcion)
+        {
+        case 1:
+            printf("Comprar entradas");
+            system("pause>null");
+            break;
+        case 2:
+            printf("Actualizar mi perfil");
+            system("pause>null");
+            break;
+        }
+    } while (opcion != 3);
 }
 
 // -------------------------------------------------------------------------------- Cabeceras
