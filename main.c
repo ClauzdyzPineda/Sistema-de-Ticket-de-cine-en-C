@@ -830,8 +830,7 @@ void menuPrincipal()
             system("pause>null"); // Si se borra, porfavor, eliminar windows
             break;
         case 2:
-            printf("\nSection Registrarse\n");
-            system("pause>null"); // Si se borra, porfavor, eliminar windows
+            crearRegistro(USUARIO);
             break;
         case 3:
             inicioSesion();
