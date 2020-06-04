@@ -9,6 +9,7 @@
 #define SUPER_ADMIN_USER "c"
 #define SUPER_ADMIN_PASS "med"
 #define SUPER_ADMIN_ACCESO 1
+#define SUPER_ADMIN_ID 0
 // Tecla
 #define ENTER 13
 #define BACKSPACE 8
@@ -270,14 +271,22 @@ int validarUsuario(char *correo, char *password)
 int getUsuarioId(int *correo)
 {
     int id = -1;
-    FILE *file;
-    file = fopen(ARCHIVO_USUARIOS, "r");
-    while (!feof(file))
+
+    if (strcmp(correo, SUPER_ADMIN_USER) == 0)
     {
-        fread(&Usuario, sizeof(Usuario), 1, file);
-        if (strcmp(correo, Usuario.correo) == 0)
+        id = SUPER_ADMIN_ID;
+    }
+    else
+    {
+        FILE *file;
+        file = fopen(ARCHIVO_USUARIOS, "r");
+        while (!feof(file))
         {
-            id = Usuario.id;
+            fread(&Usuario, sizeof(Usuario), 1, file);
+            if (strcmp(correo, Usuario.correo) == 0)
+            {
+                id = Usuario.id;
+            }
         }
     }
 
