@@ -508,57 +508,6 @@ void crearRegistro(char *registro)
         printf("\nPelicula registrada correctamente\n");
         system("pause>null");
     }
-
-    // TODO: refactorizar para que soporte seleccion en lugar de escribir
-    if (strcmp(registro, SALA) == 0)
-    {
-        FILE *file;
-        file = fopen(ARCHIVO_SALAS, "a");
-        int numeroSalaValido = 0;
-        int numSala;
-        // Sala.id = (setId(SALA) + 1);
-
-        // Validando el numero de sala
-        do
-        {
-            system("cls");
-            titulo();
-            cabeceraMenuSalas();
-            printf("Digite numero: ");
-            if (scanf("%i", &numSala) == 0)
-            {
-                printf("[Error] El valor no es valido. El valor tiene que ser un entero");
-                system("pause>null");
-                fflush(stdin);
-            }
-            else
-            {
-                if (numSala < 1 || numSala > NUM_SALAS)
-                {
-                    printf("[Error] El valor no es valido. El valor tiene que estar en el rango de 1 a %i", NUM_SALAS);
-                    system("pause>null");
-                    fflush(stdin);
-                }
-                else
-                {
-                    Sala.id = numSala;
-                    numeroSalaValido = 1;
-                }
-            }
-        } while (numeroSalaValido == 0);
-
-        // Seleccionar la pelicula
-
-        printf("Pelicula: ");
-        scanf("\n%[^\n]", Sala.pelicula);
-        // Sala.disponibilidad = 40;
-
-        fwrite(&Sala, sizeof(Sala), 1, file);
-        fclose(file);
-
-        printf("\nSe agrego pelicula a sala correctamente\n");
-        system("pause>null");
-    }
 }
 
 void mostrarRegistros(char *registro)
@@ -761,6 +710,132 @@ void actualizarRegistro(char *registro)
             printf("Pelicula actualizado.");
             system("pause>null");
         }
+    }
+
+    // TODO: refactorizar para que soporte seleccion en lugar de escribir
+    // if (strcmp(registro, SALA) == 0)
+    // {
+    //     FILE *file;
+    //     file = fopen(ARCHIVO_SALAS, "a");
+    //     int numeroSalaValido = 0;
+    //     int numSala;
+
+    //     // Validando el numero de sala
+    //     do
+    //     {
+    //         system("cls");
+    //         titulo();
+    //         cabeceraMenuSalas();
+    //         printf("Digite numero: ");
+    //         if (scanf("%i", &numSala) == 0)
+    //         {
+    //             printf("[Error] El valor no es valido. El valor tiene que ser un entero");
+    //             system("pause>null");
+    //             fflush(stdin);
+    //         }
+    //         else
+    //         {
+    //             if (numSala < 1 || numSala > NUM_SALAS)
+    //             {
+    //                 printf("[Error] El valor no es valido. El valor tiene que estar en el rango de 1 a %i", NUM_SALAS);
+    //                 system("pause>null");
+    //                 fflush(stdin);
+    //             }
+    //             else
+    //             {
+    //                 Sala.id = numSala;
+    //                 numeroSalaValido = 1;
+    //             }
+    //         }
+    //     } while (numeroSalaValido == 0);
+
+    //     // Seleccionar la pelicula
+
+    //     printf("Pelicula: ");
+    //     scanf("\n%[^\n]", Sala.pelicula);
+    //     // Sala.disponibilidad = 40;
+
+    //     fwrite(&Sala, sizeof(Sala), 1, file);
+    //     fclose(file);
+
+    //     printf("\nSe agrego pelicula a sala correctamente\n");
+    //     system("pause>null");
+    // }
+
+    if (strcmp(registro, SALA) == 0)
+    {
+        FILE *file;
+        FILE *tmpfile;
+        int salaId;
+        int SalaID;
+        int numeroSalaValido = 0;
+        char pelicula[LEN];
+        // int existe;
+        // int opcion;
+        // char *Titulo;
+
+        // Validando el numero de sala
+        do
+        {
+            system("cls");
+            titulo();
+            cabeceraMenuSalas();
+            printf("Digite numero: ");
+            if (scanf("%i", &salaId) == 0)
+            {
+                printf("[Error] El valor no es valido. El valor tiene que ser un entero");
+                system("pause>null");
+                fflush(stdin);
+            }
+            else
+            {
+                if (salaId < 1 || salaId > NUM_SALAS)
+                {
+                    printf("[Error] El valor no es valido. El valor tiene que estar en el rango de 1 a %i", NUM_SALAS);
+                    system("pause>null");
+                    fflush(stdin);
+                }
+                else
+                {
+                    Sala.id = salaId;
+                    numeroSalaValido = 1;
+                }
+            }
+        } while (numeroSalaValido == 0);
+
+        //     // Seleccionar la pelicula
+
+        printf("Pelicula: ");
+        scanf("\n%[^\n]", pelicula);
+
+        file = fopen(ARCHIVO_SALAS, "r");
+        tmpfile = fopen(ARCHIVO_TMP, "w");
+        while (fread(&Sala, sizeof(Sala), 1, file))
+        {
+            SalaID = Sala.id;
+
+            if (SalaID != salaId)
+            {
+                fwrite(&Sala, sizeof(Sala), 1, tmpfile);
+            }
+            else
+            {
+                strcpy(Sala.pelicula, pelicula);
+                fwrite(&Sala, sizeof(Sala), 1, tmpfile);
+            }
+        }
+        fclose(file);
+        fclose(tmpfile);
+        file = fopen(ARCHIVO_SALAS, "w");
+        tmpfile = fopen(ARCHIVO_TMP, "r");
+        while (fread(&Sala, sizeof(Sala), 1, tmpfile))
+        {
+            fwrite(&Sala, sizeof(Sala), 1, file);
+        }
+        fclose(file);
+        fclose(tmpfile);
+        printf("Sala actualizado.");
+        system("pause>null");
     }
 }
 
@@ -1038,7 +1113,7 @@ void menuSalas()
             mostrarRegistros(SALA);
             break;
         case 3:
-            crearRegistro(SALA);
+            actualizarRegistro(SALA);
             // printf("Agregar pelicula a sala");
             // system("pause>null");
             break;
