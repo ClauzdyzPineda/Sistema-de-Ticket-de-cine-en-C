@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <windows.h>
+#include <unistd.h>
 
 // TODO
 // Necesito crear el archivo Salas si no existe un archivo. para crear la estructura. y no tener que ordenar las salas.
@@ -8,6 +9,7 @@
 // General
 #define LEN 80
 #define NUM_SALAS 10
+#define SALA_DISPONIBLE "Disponible"
 // Informacion del super administrador
 #define SUPER_ADMIN_USER "c"
 #define SUPER_ADMIN_PASS "med"
@@ -97,6 +99,7 @@ void menuUsuarios();
 void menuPeliculas();
 void menuSalas();
 // Helpers
+void crearArchivos();
 int seleccion(char *menu, char opcs[][LEN], int nOpcs);
 void selector(int posicionReal, int posicionSelector);
 int validarUsuario(char *correo, char *password);
@@ -110,6 +113,7 @@ void mostrarRegistros(char *registro);
 void actualizarRegistro(char *registro);
 void eliminarRegistro(char *registro);
 void comprarEntradas(int usuario);
+int getNoSalas();
 // Cabeceras
 void titulo();
 void cabeceraMenuPrincipal();
@@ -128,6 +132,25 @@ int main()
 }
 
 // -------------------------------------------------------------------------------- Helpers
+void crearArchivos()
+{
+    // Si archivo Salas no existe entones crearlo
+    if (access("Salas", F_OK) == -1)
+    {
+        FILE *file;
+        file = fopen(ARCHIVO_SALAS, "a");
+        int i;
+        for (i = 1; i <= 10; i++)
+        {
+            Sala.id = i;
+            strcpy(Sala.pelicula, SALA_DISPONIBLE);
+            fwrite(&Sala, sizeof(Sala), 1, file);
+        }
+
+        fclose(file);
+    }
+}
+
 int seleccion(char *menu, char opcs[][LEN], int nOpcs)
 {
     int posicion = 1;
@@ -851,8 +874,49 @@ void eliminarRegistro(char *registro)
 
 void comprarEntradas(int usuario)
 {
-    printf("Seleccionar pelicula");
-    system("Seleccionar ");
+    printf("\nNumero de salas: %i\n", getNoSalas());
+    // Mostrar sala con peliculas
+    int noSalas = getNoSalas();
+    // char *opciones[noSalas + 1][LEN];
+    char *opciones[noSalas][LEN];
+
+    //llenado del vector con las salas
+    // TODO: igual, como voy a tener una estructura necesito validar != disponible. OSea que ya tienen una pelicula asignada
+    FILE *file;
+    file = fopen(ARCHIVO_SALAS, "r");
+    int contador = 0;
+    while (fread(&Sala, sizeof(Sala), 1, file))
+    {
+        *opciones[contador] = Sala.pelicula;
+    }
+    fclose(file);
+
+    for (int i = 0; i < noSalas; i++)
+    {
+        printf("Pelicula: %s\n", opciones[i]);
+    }
+
+    system("pause>null");
+
+    printf("\nSeleccionar horario\n");
+    printf("\nCheckear disponibilidad del horario\n");
+    printf("\nRegistrar venta\n");
+    system("pause>null");
+}
+
+int getNoSalas()
+{
+    int noSalas = 0;
+    FILE *file;
+    file = fopen(ARCHIVO_SALAS, "r");
+    while (fread(&Sala, sizeof(Sala), 1, file))
+    {
+        // TODO: porque necesitare cargar un archivo con la estructura, necesito validar si la iteracion no sea disponible. Osea que tenga asignada una pelicula
+        noSalas++;
+    }
+    fclose(file);
+
+    return noSalas;
 }
 
 // -------------------------------------------------------------------------------- Menus
@@ -1036,9 +1100,6 @@ void menuPerfilAdmin()
 
 void menuPerfilUsuario(int usuario)
 {
-
-    printf("el id del usuario es %i", usuario);
-    system("pause>null");
     // PANEL DE USUARIO NORMAL
     int opcion;
     char opciones[][LEN] = {
@@ -1053,8 +1114,7 @@ void menuPerfilUsuario(int usuario)
         switch (opcion)
         {
         case 1:
-            printf("Comprar entradas");
-            system("pause>null");
+            comprarEntradas(usuario);
             break;
         case 2:
             printf("Actualizar mi perfil");
