@@ -433,6 +433,7 @@ void crearRegistro(char *registro)
 {
     if (strcmp(registro, USUARIO) == 0)
     {
+        int existe;
         FILE *file;
         Role metodoAcceso = NORMAL;
         file = fopen(ARCHIVO_USUARIOS, "a");
@@ -446,12 +447,20 @@ void crearRegistro(char *registro)
         scanf("\n%[^\n]", Usuario.pass);
 
         // TODO: logica para validar si usuario con ese correo existe.
+        existe = getRegistro(USUARIO, Usuario.correo);
+        if (existe == 0)
+        {
+            fwrite(&Usuario, sizeof(Usuario), 1, file);
+            fclose(file);
 
-        fwrite(&Usuario, sizeof(Usuario), 1, file);
-        fclose(file);
-
-        printf("\nUsuario registrado correctamente\n");
-        system("pause>null");
+            printf("\nUsuario registrado correctamente\n");
+            system("pause>null");
+        }
+        else
+        {
+            printf("\nYa existe un usuario con este correo electronico\n");
+            system("pause>null");
+        }
     }
 
     if (strcmp(registro, PELICULA) == 0)
@@ -477,7 +486,40 @@ void crearRegistro(char *registro)
     {
         FILE *file;
         file = fopen(ARCHIVO_SALAS, "a");
-        Sala.id = (setId(SALA) + 1);
+        int numeroSalaValido = 0;
+        int numSala;
+        // Sala.id = (setId(SALA) + 1);
+
+        // Validando el numero de sala
+        do
+        {
+            system("cls");
+            titulo();
+            cabeceraMenuSalas();
+            printf("Digite numero: ");
+            if (scanf("%i", &numSala) == 0)
+            {
+                printf("[Error] El valor no es valido. El valor tiene que ser un entero");
+                system("pause>null");
+                fflush(stdin);
+            }
+            else
+            {
+                if (numSala < 1 || numSala > NUM_SALAS)
+                {
+                    printf("[Error] El valor no es valido. El valor tiene que estar en el rango de 1 a %i", NUM_SALAS);
+                    system("pause>null");
+                    fflush(stdin);
+                }
+                else
+                {
+                    Sala.id = numSala;
+                    numeroSalaValido = 1;
+                }
+            }
+        } while (numeroSalaValido == 0);
+
+        // Seleccionar la pelicula
 
         printf("Pelicula: ");
         scanf("\n%[^\n]", Sala.pelicula);
@@ -497,7 +539,7 @@ void mostrarRegistros(char *registro)
     {
         FILE *file;
         file = fopen(ARCHIVO_USUARIOS, "r");
-        printf("\nid\t\tNombre\t\tCorreo\t\tPassword\t\tAcceso\n\n");
+        printf("\nid\t\tNombre\t\t\tCorreo\t\t\t\tPassword\t\tAcceso\n\n");
         while (fread(&Usuario, sizeof(Usuario), 1, file))
         {
             printf("  %i\t\t%s\t\t%s\t\t%s\t\t%i\n", Usuario.id, Usuario.nombre, Usuario.correo, Usuario.pass, Usuario.acceso);
