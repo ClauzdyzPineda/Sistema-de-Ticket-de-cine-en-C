@@ -126,6 +126,7 @@ void cabeceraMenuSalas();
 // -------------------------------------------------------------------------------- Main
 int main()
 {
+    crearArchivos();
     menuPrincipal();
     system("cls");
     return 0;
@@ -592,26 +593,10 @@ void mostrarRegistros(char *registro)
     {
         FILE *file;
         file = fopen(ARCHIVO_SALAS, "r");
-        int disponible;
-        int i;
-
-        printf("\nNo. Sala\t\tPelicula\n\n");
-
-        // imprimiendo salas
-        for (i = 1; i <= NUM_SALAS; i++)
+        printf("\nid\t\tPelicula\n");
+        while (fread(&Sala, sizeof(Sala), 1, file))
         {
-            disponible = 0;
-            // recorriendo el archivo salas
-            while (fread(&Sala, sizeof(Sala), 1, file))
-            {
-                printf("%i\t\t%s\t\n", Sala.id, Sala.pelicula);
-                disponible = 1;
-            }
-
-            if (disponible == 0)
-            {
-                printf(" %i\t\tDisponible\n", i);
-            }
+            printf("%i\t\t%s\n", Sala.id, Sala.pelicula);
         }
         fclose(file);
         system("pause>null");
