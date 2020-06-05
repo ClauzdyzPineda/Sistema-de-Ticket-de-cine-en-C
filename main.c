@@ -61,11 +61,21 @@ struct
 struct
 {
     int id;
+    // TODO: cambiar esto a int
     char pelicula[LEN];
     // int disponibilidad;
 } Sala;
 
-// struct tycket or venta
+struct
+{
+    int id;
+    char horario[LEN];
+    int day;
+    int month;
+    int year;
+    int disponibilidad;
+} Funcion;
+
 struct
 {
     int id;
