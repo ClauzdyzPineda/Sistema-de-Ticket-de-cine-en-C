@@ -1,6 +1,9 @@
 #include <stdio.h>
 #include <windows.h>
 
+// TODO
+// Necesito crear el archivo Salas si no existe un archivo. para crear la estructura. y no tener que ordenar las salas.
+
 // -------------------------------------------------------------------------------- Constantes
 // General
 #define LEN 80
@@ -59,7 +62,7 @@ struct
 {
     int id;
     char pelicula[LEN];
-    int disponibilidad;
+    // int disponibilidad;
 } Sala;
 
 // struct tycket or venta
@@ -477,11 +480,44 @@ void crearRegistro(char *registro)
     {
         FILE *file;
         file = fopen(ARCHIVO_SALAS, "a");
-        Sala.id = (setId(SALA) + 1);
+        int numeroSalaValido = 0;
+        int numSala;
+        // Sala.id = (setId(SALA) + 1);
+
+        // Validando el numero de sala
+        do
+        {
+            system("cls");
+            titulo();
+            cabeceraMenuSalas();
+            printf("Digite numero: ");
+            if (scanf("%i", &numSala) == 0)
+            {
+                printf("[Error] El valor no es valido. El valor tiene que ser un entero");
+                system("pause>null");
+                fflush(stdin);
+            }
+            else
+            {
+                if (numSala < 1 || numSala > NUM_SALAS)
+                {
+                    printf("[Error] El valor no es valido. El valor tiene que estar en el rango de 1 a %i", NUM_SALAS);
+                    system("pause>null");
+                    fflush(stdin);
+                }
+                else
+                {
+                    Sala.id = numSala;
+                    numeroSalaValido = 1;
+                }
+            }
+        } while (numeroSalaValido == 0);
+
+        // Seleccionar la pelicula
 
         printf("Pelicula: ");
         scanf("\n%[^\n]", Sala.pelicula);
-        Sala.disponibilidad = 40;
+        // Sala.disponibilidad = 40;
 
         fwrite(&Sala, sizeof(Sala), 1, file);
         fclose(file);
@@ -526,7 +562,7 @@ void mostrarRegistros(char *registro)
         int disponible;
         int i;
 
-        printf("\nNo. Sala\t\tPelicula\t\tDisponibilidad\n\n");
+        printf("\nNo. Sala\t\tPelicula\n\n");
 
         // imprimiendo salas
         for (i = 1; i <= NUM_SALAS; i++)
@@ -535,7 +571,7 @@ void mostrarRegistros(char *registro)
             // recorriendo el archivo salas
             while (fread(&Sala, sizeof(Sala), 1, file))
             {
-                printf("  %i\t\t%s\t\t%i\n", Sala.id, Sala.pelicula, Sala.disponibilidad);
+                printf("%i\t\t%s\t\n", Sala.id, Sala.pelicula);
                 disponible = 1;
             }
 
