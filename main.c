@@ -122,6 +122,7 @@ void cabeceraMenuPerfilAdmin();
 void cabeceraMenuPerfil();
 void cabeceraMenuPeliculas();
 void cabeceraMenuSalas();
+void cabeceraComprarTicket();
 
 // -------------------------------------------------------------------------------- Main
 int main()
@@ -713,55 +714,6 @@ void actualizarRegistro(char *registro)
     }
 
     // TODO: refactorizar para que soporte seleccion en lugar de escribir
-    // if (strcmp(registro, SALA) == 0)
-    // {
-    //     FILE *file;
-    //     file = fopen(ARCHIVO_SALAS, "a");
-    //     int numeroSalaValido = 0;
-    //     int numSala;
-
-    //     // Validando el numero de sala
-    //     do
-    //     {
-    //         system("cls");
-    //         titulo();
-    //         cabeceraMenuSalas();
-    //         printf("Digite numero: ");
-    //         if (scanf("%i", &numSala) == 0)
-    //         {
-    //             printf("[Error] El valor no es valido. El valor tiene que ser un entero");
-    //             system("pause>null");
-    //             fflush(stdin);
-    //         }
-    //         else
-    //         {
-    //             if (numSala < 1 || numSala > NUM_SALAS)
-    //             {
-    //                 printf("[Error] El valor no es valido. El valor tiene que estar en el rango de 1 a %i", NUM_SALAS);
-    //                 system("pause>null");
-    //                 fflush(stdin);
-    //             }
-    //             else
-    //             {
-    //                 Sala.id = numSala;
-    //                 numeroSalaValido = 1;
-    //             }
-    //         }
-    //     } while (numeroSalaValido == 0);
-
-    //     // Seleccionar la pelicula
-
-    //     printf("Pelicula: ");
-    //     scanf("\n%[^\n]", Sala.pelicula);
-    //     // Sala.disponibilidad = 40;
-
-    //     fwrite(&Sala, sizeof(Sala), 1, file);
-    //     fclose(file);
-
-    //     printf("\nSe agrego pelicula a sala correctamente\n");
-    //     system("pause>null");
-    // }
-
     if (strcmp(registro, SALA) == 0)
     {
         FILE *file;
@@ -803,7 +755,7 @@ void actualizarRegistro(char *registro)
             }
         } while (numeroSalaValido == 0);
 
-        //     // Seleccionar la pelicula
+        //TODO: Seleccionar la pelicula
 
         printf("Pelicula: ");
         scanf("\n%[^\n]", pelicula);
@@ -934,29 +886,88 @@ void eliminarRegistro(char *registro)
 
 void comprarEntradas(int usuario)
 {
-    printf("\nNumero de salas: %i\n", getNoSalas());
-    // Mostrar sala con peliculas
-    int noSalas = getNoSalas();
-    // char *opciones[noSalas + 1][LEN];
-    char *opciones[noSalas][LEN];
-
-    //llenado del vector con las salas
-    // TODO: igual, como voy a tener una estructura necesito validar != disponible. OSea que ya tienen una pelicula asignada
+    int i = 0;
+    int posicion = 1;
+    int tecla = 0;
+    char peliculas[NUM_SALAS][LEN];
+    // printf("\nNumero de salas: %i\n", getNoSalas());
+    // leear sala y mostrar pelicula
+    // sala: X pelicula Y
     FILE *file;
     file = fopen(ARCHIVO_SALAS, "r");
-    int contador = 0;
     while (fread(&Sala, sizeof(Sala), 1, file))
     {
-        *opciones[contador] = Sala.pelicula;
+        if (strcmp(Sala.pelicula, SALA_DISPONIBLE) == 0)
+        {
+            // printf("Sala no disponible\n");
+            strcpy(peliculas[i], "No disponible");
+        }
+        else
+        {
+            // printf("%s\n", Sala.pelicula);
+            strcpy(peliculas[i], Sala.pelicula);
+        }
+        i++;
     }
     fclose(file);
 
-    for (int i = 0; i < noSalas; i++)
+    while (tecla != ENTER)
     {
-        printf("Pelicula: %s\n", opciones[i]);
+        titulo();
+        cabeceraComprarTicket();
+
+        for (i = 1; i <= NUM_SALAS; i++)
+        {
+            selector(i, posicion);
+            printf("Sala %i: %s\n", i, peliculas[i - 1]);
+        }
+        // escuchando tecla
+        tecla = getch();
+
+        if (tecla == ARRIBA && posicion != NUM_SALAS)
+        {
+            posicion++;
+        }
+        else if (tecla == ARRIBA && posicion == NUM_SALAS)
+        {
+            posicion = 1;
+        }
+        else if (tecla == ABAJO && posicion == 1)
+        {
+            posicion = NUM_SALAS;
+        }
+        else if (tecla == ABAJO && posicion != 1)
+        {
+            posicion--;
+        }
+        else
+        {
+            posicion = posicion;
+        }
     }
+    fflush(stdin);
+
+    // obtener pelicula por su numero de sala asignado
+    // Validar si el nombre de la pelicula es diferente de Disponible.
+    printf("posicion: %i", posicion);
 
     system("pause>null");
+
+    //llenado del vector con las salas
+    // TODO: igual, como voy a tener una estructura necesito validar != disponible. OSea que ya tienen una pelicula asignada
+    // FILE *file;
+    // file = fopen(ARCHIVO_SALAS, "r");
+    // int contador = 0;
+    // while (fread(&Sala, sizeof(Sala), 1, file))
+    // {
+    //     *opciones[contador] = Sala.pelicula;
+    // }
+    // fclose(file);
+
+    // for (int i = 0; i < noSalas; i++)
+    // {
+    //     printf("Pelicula: %s\n", opciones[i]);
+    // }
 
     printf("\nSeleccionar horario\n");
     printf("\nCheckear disponibilidad del horario\n");
@@ -971,8 +982,11 @@ int getNoSalas()
     file = fopen(ARCHIVO_SALAS, "r");
     while (fread(&Sala, sizeof(Sala), 1, file))
     {
-        // TODO: porque necesitare cargar un archivo con la estructura, necesito validar si la iteracion no sea disponible. Osea que tenga asignada una pelicula
-        noSalas++;
+        if (strcmp(Sala.pelicula, SALA_DISPONIBLE) != 0)
+        {
+            // TODO: porque necesitare cargar un archivo con la estructura, necesito validar si la iteracion no sea disponible. Osea que tenga asignada una pelicula
+            noSalas++;
+        }
     }
     fclose(file);
 
@@ -1232,5 +1246,12 @@ void cabeceraMenuSalas()
 {
     puts("|------------------------------------------------------|");
     puts("|                  Administrar Salas                   |");
+    puts("|------------------------------------------------------|");
+}
+
+void cabeceraComprarTicket()
+{
+    puts("|------------------------------------------------------|");
+    puts("|                  Escoge tu pelicula                  |");
     puts("|------------------------------------------------------|");
 }
