@@ -9,6 +9,7 @@
 // General
 #define LEN 80
 #define NUM_SALAS 10
+#define DISPONIBILIDAD_SALA 5
 #define SALA_DISPONIBLE "Disponible"
 #define HORARIO1 "10:00 AM"
 #define HORARIO2 "1:00 PM"
@@ -36,10 +37,12 @@
 #define USUARIO "USUARIO"
 #define PELICULA "PELICULA"
 #define SALA "SALA"
+#define FUNCION "FUNCION"
 // Archivos
 #define ARCHIVO_USUARIOS "Usuarios"
 #define ARCHIVO_PELICULAS "Peliculas"
 #define ARCHIVO_SALAS "Salas"
+#define ARCHIVO_FUNCIONES "Funciones"
 #define ARCHIVO_TMP "Tmp"
 //modelos
 typedef enum
@@ -77,16 +80,18 @@ struct
 {
     int id;
     char horario[LEN];
-    int day;
-    int month;
-    int year;
+    char fecha[11];
+    char pelicula[LEN];
+    // int day;
+    // int month;
+    // int year;
     int disponibilidad;
 } Funcion;
 
 struct
 {
     int id;
-    char fecha;
+    char fecha[11];
     char horario[LEN];
     int usuario;
     int pelicula;
@@ -276,6 +281,18 @@ int setId(char *registro)
         while (fread(&Sala, sizeof(Sala), 1, file))
         {
             id = Sala.id;
+        }
+        fclose(file);
+    }
+
+    if (strcmp(registro, FUNCION) == 0)
+    {
+        FILE *file;
+        file = fopen(ARCHIVO_FUNCIONES, "r");
+
+        while (fread(&Funcion, sizeof(Funcion), 1, file))
+        {
+            id = Funcion.id;
         }
         fclose(file);
     }
@@ -853,8 +870,60 @@ void actualizarRegistro(char *registro)
         fclose(tmpfile);
 
         // Creando el archivo de las funciones por pelicula
-        
-        printf("\nSala actualizado.");
+        FILE *fileFunciones;
+        fileFunciones = fopen(ARCHIVO_FUNCIONES, "a");
+        SYSTEMTIME Date;
+        GetLocalTime(&Date);
+        char fecha[11];
+
+        // Parseando la fecha DD/MM/AAAA
+        sprintf(fecha, "%i/%i/%i", Date.wDay, Date.wMonth, Date.wYear);
+
+        Funcion.id = (setId(FUNCION) + 1);
+        // asignando la fecha a la estructura de funcion
+        strcpy(Funcion.pelicula, pelicula);
+        strcpy(Funcion.fecha, fecha);
+        Funcion.disponibilidad = DISPONIBILIDAD_SALA;
+
+        // iteracion porque quiero crear i registros uno por cada funcion
+        for (i = 0; i < 5; i++)
+        {
+            // Asignacion de los horarios
+            switch (i)
+            {
+            case 0:
+                strcpy(Funcion.horario, HORARIO1);
+                break;
+            case 1:
+                strcpy(Funcion.horario, HORARIO2);
+                break;
+            case 2:
+                strcpy(Funcion.horario, HORARIO3);
+                break;
+            case 3:
+                strcpy(Funcion.horario, HORARIO4);
+                break;
+            case 4:
+                strcpy(Funcion.horario, HORARIO5);
+                break;
+            }
+
+            fwrite(&Funcion, sizeof(Funcion), 1, fileFunciones);
+        }
+        fclose(fileFunciones);
+
+        // FILE *FILEFunciones;
+        // FILEFunciones = fopen(ARCHIVO_FUNCIONES, "r");
+        // printf("\nid\t\thorario\t\tfecha\t\tpelicula\t\tdisponibilidad\n\n");
+        // while (fread(&Funcion, sizeof(Funcion), 1, FILEFunciones))
+        // {
+        //     // printf("%i\t\t%s\t\t%s\t\t%s\t\t%i\n", Usuario.id, Usuario.nombre, Usuario.correo, Usuario.pass, Usuario.acceso);
+        //     printf("%i\t\t%s\t\t%s\t\t%s\t\t%i\n", Funcion.id, Funcion.horario, Funcion.fecha, Funcion.pelicula, Funcion.disponibilidad);
+        // }
+        // fclose(FILEFunciones);
+        // system("pause>null");
+
+        printf("\nSala actualizada.");
         system("pause>null");
     }
 }
@@ -1104,7 +1173,7 @@ void comprarEntradas(int usuario)
     }
 
     // Asignar el horario al ticket
-    Ticket.horario;
+    // Ticket.horario;
 
     printf("\nCheckear disponibilidad del horario\n");
     printf("\nRegistrar venta\n");
