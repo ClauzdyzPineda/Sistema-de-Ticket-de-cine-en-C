@@ -949,6 +949,7 @@ void comprarEntradas(int usuario)
     int i = 0;
     int posicion = 1;
     int tecla = 0;
+    char pelicula[LEN];
     char peliculas[NUM_SALAS][LEN];
     // printf("\nNumero de salas: %i\n", getNoSalas());
     // leear sala y mostrar pelicula
@@ -969,7 +970,9 @@ void comprarEntradas(int usuario)
         }
         i++;
     }
+    fclose(fileSalas);
 
+    // menu flecha
     while (tecla != ENTER)
     {
         titulo();
@@ -1016,8 +1019,21 @@ void comprarEntradas(int usuario)
     }
 
     // obtener pelicula por su numero de sala asignado
+    FILE *fileSala;
+    fileSala = fopen(ARCHIVO_SALAS, "r");
+
+    //
+    while (fread(&Sala, sizeof(Sala), 1, fileSala))
+    {
+        if (Sala.id == posicion)
+        {
+            strcpy(pelicula, Sala.pelicula);
+        }
+    }
+    fclose(fileSala);
+
     // Validar si el nombre de la pelicula es diferente de Disponible.
-    printf("posicion: %i", posicion);
+    printf("Validacion: %s", pelicula);
 
     system("pause>null");
 
@@ -1036,8 +1052,6 @@ void comprarEntradas(int usuario)
     // {
     //     printf("Pelicula: %s\n", opciones[i]);
     // }
-
-    fclose(fileSalas);
     printf("\nSeleccionar horario\n");
     printf("\nCheckear disponibilidad del horario\n");
     printf("\nRegistrar venta\n");
