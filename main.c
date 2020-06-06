@@ -10,6 +10,11 @@
 #define LEN 80
 #define NUM_SALAS 10
 #define SALA_DISPONIBLE "Disponible"
+#define HORARIO1 "10:00 AM"
+#define HORARIO2 "1:00 PM"
+#define HORARIO3 "4:00 PM"
+#define HORARIO4 "7:00 PM"
+#define HORARIO5 "10:00 PM"
 // Informacion del super administrador
 #define SUPER_ADMIN_USER "c"
 #define SUPER_ADMIN_PASS "med"
@@ -82,6 +87,7 @@ struct
 {
     int id;
     char fecha;
+    char horario[LEN];
     int usuario;
     int pelicula;
     int cantidadTickets;
@@ -763,7 +769,6 @@ void actualizarRegistro(char *registro)
             }
         } while (numeroSalaValido == 0);
 
-        //TODO: Seleccionar la pelicula
         filePeliculas = fopen(ARCHIVO_PELICULAS, "r");
         while (fread(&Pelicula, sizeof(Pelicula), 1, filePeliculas))
         {
@@ -846,6 +851,9 @@ void actualizarRegistro(char *registro)
         }
         fclose(file);
         fclose(tmpfile);
+
+        // Creando el archivo de las funciones por pelicula
+        
         printf("\nSala actualizado.");
         system("pause>null");
     }
@@ -1021,8 +1029,6 @@ void comprarEntradas(int usuario)
     // obtener pelicula por su numero de sala asignado
     FILE *fileSala;
     fileSala = fopen(ARCHIVO_SALAS, "r");
-
-    //
     while (fread(&Sala, sizeof(Sala), 1, fileSala))
     {
         if (Sala.id == posicion)
@@ -1033,26 +1039,73 @@ void comprarEntradas(int usuario)
     fclose(fileSala);
 
     // Validar si el nombre de la pelicula es diferente de Disponible.
-    printf("Validacion: %s", pelicula);
+    if (strcmp(pelicula, SALA_DISPONIBLE) == 0)
+    {
+        printf("No hay ningnua pelicula disponible en esta sala\n");
+        system("pause>null");
+        return;
+    }
 
-    system("pause>null");
+    // Asignando la pelicula al ticket
+    Ticket.pelicula = pelicula;
 
-    //llenado del vector con las salas
-    // TODO: igual, como voy a tener una estructura necesito validar != disponible. OSea que ya tienen una pelicula asignada
-    // FILE *file;
-    // file = fopen(ARCHIVO_SALAS, "r");
-    // int contador = 0;
-    // while (fread(&Sala, sizeof(Sala), 1, file))
-    // {
-    //     *opciones[contador] = Sala.pelicula;
-    // }
-    // fclose(file);
+    // SELECCION DE HORARIOS
+    posicion = 1;
+    tecla = 0;
 
-    // for (int i = 0; i < noSalas; i++)
-    // {
-    //     printf("Pelicula: %s\n", opciones[i]);
-    // }
-    printf("\nSeleccionar horario\n");
+    // menu flecha
+    while (tecla != ENTER)
+    {
+        titulo();
+        cabeceraComprarTicket();
+
+        // Horarios
+        selector(1, posicion);
+        printf("%s\n", HORARIO1);
+        selector(2, posicion);
+        printf("%s\n", HORARIO2);
+        selector(3, posicion);
+        printf("%s\n", HORARIO3);
+        selector(4, posicion);
+        printf("%s\n", HORARIO4);
+        selector(5, posicion);
+        printf("%s\n", HORARIO5);
+        selector(6, posicion);
+        printf("Regresar");
+        // escuchando tecla
+        tecla = getch();
+
+        if (tecla == ARRIBA && posicion != 6)
+        {
+            posicion++;
+        }
+        else if (tecla == ARRIBA && posicion == 6)
+        {
+            posicion = 1;
+        }
+        else if (tecla == ABAJO && posicion == 1)
+        {
+            posicion = 6;
+        }
+        else if (tecla == ABAJO && posicion != 1)
+        {
+            posicion--;
+        }
+        else
+        {
+            posicion = posicion;
+        }
+    }
+    fflush(stdin);
+
+    if (posicion == 6)
+    {
+        return;
+    }
+
+    // Asignar el horario al ticket
+    Ticket.horario;
+
     printf("\nCheckear disponibilidad del horario\n");
     printf("\nRegistrar venta\n");
     system("pause>null");
