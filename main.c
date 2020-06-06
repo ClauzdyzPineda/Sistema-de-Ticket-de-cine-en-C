@@ -114,6 +114,7 @@ void actualizarRegistro(char *registro);
 void eliminarRegistro(char *registro);
 void comprarEntradas(int usuario);
 int getNoSalas();
+int getNoPeliculas();
 // Cabeceras
 void titulo();
 void cabeceraMenuPrincipal();
@@ -717,11 +718,18 @@ void actualizarRegistro(char *registro)
     if (strcmp(registro, SALA) == 0)
     {
         FILE *file;
+        FILE *filePeliculas;
         FILE *tmpfile;
         int salaId;
         int SalaID;
         int numeroSalaValido = 0;
+        int i = 0;
+        int posicion = 1;
+        int tecla = 0;
         char pelicula[LEN];
+        int noPeliculas = getNoPeliculas();
+        char peliculas[noPeliculas + 1][LEN];
+
         // int existe;
         // int opcion;
         // char *Titulo;
@@ -756,9 +764,61 @@ void actualizarRegistro(char *registro)
         } while (numeroSalaValido == 0);
 
         //TODO: Seleccionar la pelicula
+        filePeliculas = fopen(ARCHIVO_PELICULAS, "r");
+        while (fread(&Pelicula, sizeof(Pelicula), 1, filePeliculas))
+        {
+            strcpy(peliculas[i], Pelicula.titulo);
+            i++;
+        }
+        fclose(filePeliculas);
 
-        printf("Pelicula: ");
-        scanf("\n%[^\n]", pelicula);
+        while (tecla != ENTER)
+        {
+            titulo();
+            cabeceraMenuSalas();
+
+            for (i = 1; i <= noPeliculas; i++)
+            {
+                selector(i, posicion);
+                printf("Pelicula: %s\n", peliculas[i - 1]);
+            }
+
+            selector(i, posicion);
+            printf("Regresar");
+
+            // escuchando tecla
+            tecla = getch();
+
+            if (tecla == ARRIBA && posicion != (noPeliculas + 1))
+            {
+                posicion++;
+            }
+            else if (tecla == ARRIBA && posicion == (noPeliculas + 1))
+            {
+                posicion = 1;
+            }
+            else if (tecla == ABAJO && posicion == 1)
+            {
+                posicion = (noPeliculas + 1);
+            }
+            else if (tecla == ABAJO && posicion != 1)
+            {
+                posicion--;
+            }
+            else
+            {
+                posicion = posicion;
+            }
+        }
+        fflush(stdin);
+
+        // opcion para regresar al menu anterior
+        if (posicion == noPeliculas + 1)
+        {
+            return;
+        }
+
+        strcpy(pelicula, peliculas[posicion - 1]);
 
         file = fopen(ARCHIVO_SALAS, "r");
         tmpfile = fopen(ARCHIVO_TMP, "w");
@@ -786,7 +846,7 @@ void actualizarRegistro(char *registro)
         }
         fclose(file);
         fclose(tmpfile);
-        printf("Sala actualizado.");
+        printf("\nSala actualizado.");
         system("pause>null");
     }
 }
@@ -893,23 +953,22 @@ void comprarEntradas(int usuario)
     // printf("\nNumero de salas: %i\n", getNoSalas());
     // leear sala y mostrar pelicula
     // sala: X pelicula Y
-    FILE *file;
-    file = fopen(ARCHIVO_SALAS, "r");
-    while (fread(&Sala, sizeof(Sala), 1, file))
+    FILE *fileSalas;
+    fileSalas = fopen(ARCHIVO_SALAS, "r");
+
+    // Llenado del vector peliculas
+    while (fread(&Sala, sizeof(Sala), 1, fileSalas))
     {
         if (strcmp(Sala.pelicula, SALA_DISPONIBLE) == 0)
         {
-            // printf("Sala no disponible\n");
             strcpy(peliculas[i], "No disponible");
         }
         else
         {
-            // printf("%s\n", Sala.pelicula);
             strcpy(peliculas[i], Sala.pelicula);
         }
         i++;
     }
-    fclose(file);
 
     while (tecla != ENTER)
     {
@@ -921,20 +980,24 @@ void comprarEntradas(int usuario)
             selector(i, posicion);
             printf("Sala %i: %s\n", i, peliculas[i - 1]);
         }
+
+        selector(i, posicion);
+        printf("Regresar\n");
+
         // escuchando tecla
         tecla = getch();
 
-        if (tecla == ARRIBA && posicion != NUM_SALAS)
+        if (tecla == ARRIBA && posicion != (NUM_SALAS + 1))
         {
             posicion++;
         }
-        else if (tecla == ARRIBA && posicion == NUM_SALAS)
+        else if (tecla == ARRIBA && posicion == (NUM_SALAS + 1))
         {
             posicion = 1;
         }
         else if (tecla == ABAJO && posicion == 1)
         {
-            posicion = NUM_SALAS;
+            posicion = (NUM_SALAS + 1);
         }
         else if (tecla == ABAJO && posicion != 1)
         {
@@ -946,6 +1009,11 @@ void comprarEntradas(int usuario)
         }
     }
     fflush(stdin);
+
+    if (posicion == (NUM_SALAS + 1))
+    {
+        return;
+    }
 
     // obtener pelicula por su numero de sala asignado
     // Validar si el nombre de la pelicula es diferente de Disponible.
@@ -969,6 +1037,7 @@ void comprarEntradas(int usuario)
     //     printf("Pelicula: %s\n", opciones[i]);
     // }
 
+    fclose(fileSalas);
     printf("\nSeleccionar horario\n");
     printf("\nCheckear disponibilidad del horario\n");
     printf("\nRegistrar venta\n");
@@ -991,6 +1060,20 @@ int getNoSalas()
     fclose(file);
 
     return noSalas;
+}
+
+int getNoPeliculas()
+{
+    int noPeliculas = 0;
+    FILE *file;
+    file = fopen(ARCHIVO_PELICULAS, "r");
+    while (fread(&Pelicula, sizeof(Pelicula), 1, file))
+    {
+        noPeliculas++;
+    }
+    fclose(file);
+
+    return noPeliculas;
 }
 
 // -------------------------------------------------------------------------------- Menus
