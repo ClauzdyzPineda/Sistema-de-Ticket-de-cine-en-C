@@ -38,11 +38,13 @@
 #define PELICULA "PELICULA"
 #define SALA "SALA"
 #define FUNCION "FUNCION"
+#define TICKET "TICKET"
 // Archivos
 #define ARCHIVO_USUARIOS "Usuarios"
 #define ARCHIVO_PELICULAS "Peliculas"
 #define ARCHIVO_SALAS "Salas"
 #define ARCHIVO_FUNCIONES "Funciones"
+#define ARCHIVO_TICKETS "Tickets"
 #define ARCHIVO_TMP "Tmp"
 //modelos
 typedef enum
@@ -65,15 +67,12 @@ struct
     int id;
     char titulo[LEN];
     char genero[LEN];
-    // DATE horarios
 } Pelicula;
 
 struct
 {
     int id;
-    // TODO: cambiar esto a int
     char pelicula[LEN];
-    // int disponibilidad;
 } Sala;
 
 struct
@@ -82,9 +81,6 @@ struct
     char horario[LEN];
     char fecha[11];
     char pelicula[LEN];
-    // int day;
-    // int month;
-    // int year;
     int disponibilidad;
 } Funcion;
 
@@ -293,6 +289,18 @@ int setId(char *registro)
         while (fread(&Funcion, sizeof(Funcion), 1, file))
         {
             id = Funcion.id;
+        }
+        fclose(file);
+    }
+
+    if (strcmp(registro, TICKET) == 0)
+    {
+        FILE *file;
+        file = fopen(ARCHIVO_TICKETS, "r");
+
+        while (fread(&Ticket, sizeof(Ticket), 1, file))
+        {
+            id = Ticket.id;
         }
         fclose(file);
     }
@@ -1173,10 +1181,86 @@ void comprarEntradas(int usuario)
     }
 
     // Asignar el horario al ticket
-    // Ticket.horario;
+    switch (posicion)
+    {
+    case 1:
+        strcpy(Ticket.horario, HORARIO1);
+        break;
+    case 2:
+        strcpy(Ticket.horario, HORARIO2);
+        break;
+    case 3:
+        strcpy(Ticket.horario, HORARIO3);
+        break;
+    case 4:
+        strcpy(Ticket.horario, HORARIO4);
+        break;
+    case 5:
+        strcpy(Ticket.horario, HORARIO5);
+        break;
+    }
 
-    printf("\nCheckear disponibilidad del horario\n");
-    printf("\nRegistrar venta\n");
+    /****************************************************************************************/
+    // // Checkear disponibilidad de la sala, horario, pelicula
+    // // Abrir tickets,
+    // FILE *fileTickets;
+    // // esta variable verificara cuantos tickets fueron comprados ya para esa funcion a esa hora.
+    // int ticketsRegistrados = 0;
+    // fileTickets = fopen(ARCHIVO_TICKETS, "r");
+    // while (fread(&Ticket, sizeof(Ticket), 1, fileTickets))
+    // {
+
+    //     // printf("%i\t\t%s\t\t%s\t\t%s\t\t%i\n", Usuario.id, Usuario.nombre, Usuario.correo, Usuario.pass, Usuario.acceso);
+    //     printf("%i\t\t%s\t\t%s\t\t%s\t\t%i\n", Funcion.id, Funcion.horario, Funcion.fecha, Funcion.pelicula, Funcion.disponibilidad);
+    // }
+    // fclose(fileTickets);
+    // system("pause>null");
+    // // Leer pelicula y la linea concuerda con la pelicula
+    // // Si concuerda, verificar si la fecha es ahora
+    // // contar tickets
+    /****************************************************************************************/
+
+    // Registrar venta
+    FILE *fileRegTicket;
+    fileRegTicket = fopen(ARCHIVO_TICKETS, "a");
+    SYSTEMTIME Date;
+    GetLocalTime(&Date);
+    char fecha[11];
+
+    Ticket.id = (setId(TICKET) + 1);
+    // Parseando la fecha DD/MM/AAAA
+    sprintf(fecha, "%i/%i/%i", Date.wDay, Date.wMonth, Date.wYear);
+    strcpy(Ticket.fecha, fecha);
+    // strcpy(Ticket.pelicula, pelicula);
+    Ticket.usuario = usuario;
+
+    // validar si la cantidad esta disponible
+    printf("\n\nCuantos tickets desea comprar: ");
+    scanf("%i", &Ticket.cantidadTickets);
+    // scanf("\n%[^\n]", Ticket.cantidadTickets);
+    printf("id: %i\n", Ticket.id);
+    printf("fecha: %s\n", Ticket.fecha);
+    printf("horario: %s\n", Ticket.horario);
+    printf("usuario: %i\n", Ticket.usuario);
+    printf("pelicula: %s\n", Ticket.pelicula);
+    printf("cantidad tickets: %i\n", Ticket.cantidadTickets);
+
+    fwrite(&Ticket, sizeof(Ticket), 1, fileRegTicket);
+    fclose(fileRegTicket);
+
+    printf("\nUsuario registrado correctamente\n");
+
+    FILE *FILETICKETS;
+    FILETICKETS = fopen(ARCHIVO_TICKETS, "r");
+    int contador = 0;
+    while (fread(&Funcion, sizeof(Funcion), 1, FILETICKETS))
+    {
+        contador++;
+    }
+    fclose(FILETICKETS);
+
+    printf("Contador: %i", contador);
+
     system("pause>null");
 }
 
