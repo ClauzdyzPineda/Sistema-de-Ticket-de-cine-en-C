@@ -11,6 +11,7 @@
 #define NUM_SALAS 10
 #define DISPONIBILIDAD_SALA 5
 #define SALA_DISPONIBLE "Disponible"
+#define TICKET_PRECIO 3.00
 // #define HORARIO1 "10:00 AM"
 // #define HORARIO2 "1:00 PM"
 // #define HORARIO3 "4:00 PM"
@@ -123,6 +124,7 @@ void eliminarRegistro(char *registro);
 void comprarEntradas(int usuario);
 int getNoSalas();
 int getNoPeliculas();
+void mostrarReportes();
 // Cabeceras
 void titulo();
 void cabeceraMenuPrincipal();
@@ -544,17 +546,73 @@ void crearRegistro(char *registro)
     }
 }
 
+// void mostrarRegistros(char *registro)
+// {
+//     if (strcmp(registro, USUARIO) == 0)
+//     {
+//         FILE *file;
+//         file = fopen(ARCHIVO_USUARIOS, "r");
+//         printf("\nid\t\tNombre\t\tCorreo\t\tPassword\t\tAcceso\n\n");
+//         while (fread(&Usuario, sizeof(Usuario), 1, file))
+//         {
+//             printf("  %i\t\t%s\t\t%s\t\t%s\t\t%i\n", Usuario.id, Usuario.nombre, Usuario.correo, Usuario.pass, Usuario.acceso);
+//         }
+//         fclose(file);
+//         system("pause>null");
+//     }
+
+//     if (strcmp(registro, PELICULA) == 0)
+//     {
+//         FILE *file;
+//         file = fopen(ARCHIVO_PELICULAS, "r");
+//         printf("\nid\t\tTitulo\t\tGenero\n\n");
+//         while (fread(&Pelicula, sizeof(Pelicula), 1, file))
+//         {
+//             printf("  %i\t\t%s\t\t%s\n", Pelicula.id, Pelicula.titulo, Pelicula.genero);
+//         }
+//         fclose(file);
+//         system("pause>null");
+//     }
+
+//     if (strcmp(registro, SALA) == 0)
+//     {
+//         FILE *file;
+//         file = fopen(ARCHIVO_SALAS, "r");
+//         printf("\nid\t\tPelicula\n");
+//         while (fread(&Sala, sizeof(Sala), 1, file))
+//         {
+//             printf("%i\t\t%s\n", Sala.id, Sala.pelicula);
+//         }
+//         fclose(file);
+//         system("pause>null");
+//     }
+// }
 void mostrarRegistros(char *registro)
 {
     if (strcmp(registro, USUARIO) == 0)
     {
         FILE *file;
         file = fopen(ARCHIVO_USUARIOS, "r");
-        printf("\nid\t\tNombre\t\tCorreo\t\tPassword\t\tAcceso\n\n");
+        printf("\n\t\t\tREGISTROS DE USUARIOS EN EL SISTEMA\n");
+        printf("\n");
+        printf("*----------------------------------------------------------------------*\n");
+        printf("|   ID   |       Nombre      |        Correo               |   acceso  |\n");
+        printf("*----------------------------------------------------------------------*\n");
         while (fread(&Usuario, sizeof(Usuario), 1, file))
         {
-            printf("  %i\t\t%s\t\t%s\t\t%s\t\t%i\n", Usuario.id, Usuario.nombre, Usuario.correo, Usuario.pass, Usuario.acceso);
+            printf("\n| %i", Usuario.id);
+            printf(" ");
+            printf("\t | %s", Usuario.nombre);
+            printf(" ");
+            printf("\t     | %s", Usuario.correo);
+            printf(" ");
+            printf("\t           | %i", Usuario.acceso);
+
+            printf(" ");
+            printf("\t       |");
         }
+
+        printf("\n*----------------------------------------------------------------------*\n");
         fclose(file);
         system("pause>null");
     }
@@ -563,11 +621,25 @@ void mostrarRegistros(char *registro)
     {
         FILE *file;
         file = fopen(ARCHIVO_PELICULAS, "r");
-        printf("\nid\t\tTitulo\t\tGenero\n\n");
+
+        printf("\n\t         REGISTROS DE PELICULAS EN EL SISTEMA\n");
+        printf("\n");
+        printf("*-----------------------------------------------------------------*\n");
+        printf("|   ID   |               Titulo                 |        Genero   |\n");
+        printf("*-----------------------------------------------------------------*\n");
+
         while (fread(&Pelicula, sizeof(Pelicula), 1, file))
         {
-            printf("  %i\t\t%s\t\t%s\n", Pelicula.id, Pelicula.titulo, Pelicula.genero);
+            printf("\n| %i", Pelicula.id);
+            printf(" ");
+            printf("\t |   %s", Pelicula.titulo);
+            printf(" ");
+            printf("\t\t\t\t|%s", Pelicula.genero);
+            printf(" ");
+            printf("\t  |");
         }
+
+        printf("\n*-----------------------------------------------------------------*\n");
         fclose(file);
         system("pause>null");
     }
@@ -576,11 +648,18 @@ void mostrarRegistros(char *registro)
     {
         FILE *file;
         file = fopen(ARCHIVO_SALAS, "r");
-        printf("\nid\t\tPelicula\n");
+
+        printf("\n\t         REGISTROS DE SALAS EN EL SISTEMA\n");
+        printf("\n");
+        printf("\t*---------------------------------------------*\n");
+        printf("\t|    ID        |           Titulo             |\n");
+        printf("\t*---------------------------------------------*\n");
+
         while (fread(&Sala, sizeof(Sala), 1, file))
         {
-            printf("%i\t\t%s\n", Sala.id, Sala.pelicula);
+            printf("\t\t%i\t\t%s\n", Sala.id, Sala.pelicula);
         }
+        printf("\t*---------------------------------------------*\n");
         fclose(file);
         system("pause>null");
     }
@@ -1339,6 +1418,67 @@ int getNoPeliculas()
     return noPeliculas;
 }
 
+void mostrarReportes()
+{
+    char fecha[11] = "";
+    char fechas[LEN][LEN];
+    int cantidadTicketsPorFechas[LEN] = {0};
+    int cantidadTickets;
+    int i = 0;
+    int cont = 0;
+    // Mostrar tickets
+    FILE *filetickets;
+    filetickets = fopen(ARCHIVO_TICKETS, "r");
+    printf("\nfecha\t\tcantidadTickets\n\n");
+    // obteniendo las fechas disponibles que estan en el reporte
+    while (fread(&Ticket, sizeof(Ticket), 1, filetickets))
+    {
+        //comparando si la fecha es diferente o igual
+        if (strcmp(fecha, Ticket.fecha) != 0)
+        {
+            strcpy(fecha, Ticket.fecha);
+            strcpy(fechas[i], fecha);
+            i++;
+        }
+        // // teniendo la cantidad total de tickets vendidos
+        // cantidadTickets += Ticket.cantidadTickets;
+    }
+    fclose(filetickets);
+
+    FILE *filetickets2;
+    filetickets2 = fopen(ARCHIVO_TICKETS, "r");
+    // recorriendo cada linea y comprara y obtener el total de tickets por fecha
+    while (fread(&Ticket, sizeof(Ticket), 1, filetickets2))
+    {
+        //comparando si la fecha es diferente o igual
+        if (strcmp(fechas[cont], Ticket.fecha) == 0)
+        {
+            cantidadTicketsPorFechas[cont] += Ticket.cantidadTickets;
+        }
+        else
+        {
+            cont++;
+            cantidadTicketsPorFechas[cont] += Ticket.cantidadTickets;
+        }
+        // // teniendo la cantidad total de tickets vendidos
+        // cantidadTickets += Ticket.cantidadTickets;
+    }
+    fclose(filetickets2);
+
+    // printf("Total tickets: %i\n", cantidadTickets);
+    // printf("Fechas: %s", fechas[0]);
+    // printf("cantidad Tickets: %i", cantidadTicketsPorFechas[0]);
+    // system("pause>null");
+
+    printf("\nFecha\t\t\tTickets vendidos\t\tDinero\n");
+    for (i = 0; i <= cont; i++)
+    {
+        printf("\n%s\t\t\t%i\t\t\t%.2lf", fechas[i], cantidadTicketsPorFechas[i], (cantidadTicketsPorFechas[i] * TICKET_PRECIO));
+    }
+
+    system("pause>null");
+}
+
 // -------------------------------------------------------------------------------- Menus
 void menuPrincipal()
 {
@@ -1511,8 +1651,7 @@ void menuPerfilAdmin()
             menuSalas();
             break;
         case 4:
-            printf("Reportes");
-            system("pause>null");
+            mostrarReportes();
             break;
         }
     } while (opcion != 5);
