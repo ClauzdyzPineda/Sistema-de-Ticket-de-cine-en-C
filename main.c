@@ -11,11 +11,11 @@
 #define NUM_SALAS 10
 #define DISPONIBILIDAD_SALA 5
 #define SALA_DISPONIBLE "Disponible"
-#define HORARIO1 "10:00 AM"
-#define HORARIO2 "1:00 PM"
-#define HORARIO3 "4:00 PM"
-#define HORARIO4 "7:00 PM"
-#define HORARIO5 "10:00 PM"
+// #define HORARIO1 "10:00 AM"
+// #define HORARIO2 "1:00 PM"
+// #define HORARIO3 "4:00 PM"
+// #define HORARIO4 "7:00 PM"
+// #define HORARIO5 "10:00 PM"
 // Informacion del super administrador
 #define SUPER_ADMIN_USER "c"
 #define SUPER_ADMIN_PASS "med"
@@ -88,9 +88,10 @@ struct
 {
     int id;
     char fecha[11];
-    char horario[LEN];
+    // char horario[LEN];
     int usuario;
-    int pelicula;
+    // int pelicula;
+    char pelicula[LEN];
     int cantidadTickets;
 } Ticket;
 
@@ -893,31 +894,30 @@ void actualizarRegistro(char *registro)
         strcpy(Funcion.fecha, fecha);
         Funcion.disponibilidad = DISPONIBILIDAD_SALA;
 
-        // iteracion porque quiero crear i registros uno por cada funcion
-        for (i = 0; i < 5; i++)
-        {
-            // Asignacion de los horarios
-            switch (i)
-            {
-            case 0:
-                strcpy(Funcion.horario, HORARIO1);
-                break;
-            case 1:
-                strcpy(Funcion.horario, HORARIO2);
-                break;
-            case 2:
-                strcpy(Funcion.horario, HORARIO3);
-                break;
-            case 3:
-                strcpy(Funcion.horario, HORARIO4);
-                break;
-            case 4:
-                strcpy(Funcion.horario, HORARIO5);
-                break;
-            }
-
-            fwrite(&Funcion, sizeof(Funcion), 1, fileFunciones);
-        }
+        fwrite(&Funcion, sizeof(Funcion), 1, fileFunciones);
+        // // iteracion porque quiero crear i registros uno por cada funcion
+        // for (i = 0; i < 5; i++)
+        // {
+        //     // Asignacion de los horarios
+        //     switch (i)
+        //     {
+        //     case 0:
+        //         strcpy(Funcion.horario, HORARIO1);
+        //         break;
+        //     case 1:
+        //         strcpy(Funcion.horario, HORARIO2);
+        //         break;
+        //     case 2:
+        //         strcpy(Funcion.horario, HORARIO3);
+        //         break;
+        //     case 3:
+        //         strcpy(Funcion.horario, HORARIO4);
+        //         break;
+        //     case 4:
+        //         strcpy(Funcion.horario, HORARIO5);
+        //         break;
+        //     }
+        // }
         fclose(fileFunciones);
 
         // FILE *FILEFunciones;
@@ -1034,11 +1034,15 @@ void comprarEntradas(int usuario)
     int i = 0;
     int posicion = 1;
     int tecla = 0;
+    // char horarios[LEN][LEN] = {
+    //     "10:00 AM",
+    //     "1:00 PM",
+    //     "4:00 PM",
+    //     "7:00 PM",
+    //     "10:00 PM",
+    // };
     char pelicula[LEN];
     char peliculas[NUM_SALAS][LEN];
-    // printf("\nNumero de salas: %i\n", getNoSalas());
-    // leear sala y mostrar pelicula
-    // sala: X pelicula Y
     FILE *fileSalas;
     fileSalas = fopen(ARCHIVO_SALAS, "r");
 
@@ -1124,81 +1128,85 @@ void comprarEntradas(int usuario)
     }
 
     // Asignando la pelicula al ticket
-    Ticket.pelicula = pelicula;
+    // Ticket.pelicula = pelicula;
+    strcpy(Ticket.pelicula, pelicula);
 
     // SELECCION DE HORARIOS
     posicion = 1;
     tecla = 0;
 
     // menu flecha
-    while (tecla != ENTER)
-    {
-        titulo();
-        cabeceraComprarTicket();
+    // while (tecla != ENTER)
+    // {
+    //     titulo();
+    //     cabeceraComprarTicket();
 
-        // Horarios
-        selector(1, posicion);
-        printf("%s\n", HORARIO1);
-        selector(2, posicion);
-        printf("%s\n", HORARIO2);
-        selector(3, posicion);
-        printf("%s\n", HORARIO3);
-        selector(4, posicion);
-        printf("%s\n", HORARIO4);
-        selector(5, posicion);
-        printf("%s\n", HORARIO5);
-        selector(6, posicion);
-        printf("Regresar");
-        // escuchando tecla
-        tecla = getch();
+    //     // Horarios
+    //     selector(1, posicion);
+    //     printf("%s\n", HORARIO1);
+    //     selector(2, posicion);
+    //     printf("%s\n", HORARIO2);
+    //     selector(3, posicion);
+    //     printf("%s\n", HORARIO3);
+    //     selector(4, posicion);
+    //     printf("%s\n", HORARIO4);
+    //     selector(5, posicion);
+    //     printf("%s\n", HORARIO5);
+    //     selector(6, posicion);
+    //     printf("Regresar");
+    //     // escuchando tecla
+    //     tecla = getch();
 
-        if (tecla == ARRIBA && posicion != 6)
-        {
-            posicion++;
-        }
-        else if (tecla == ARRIBA && posicion == 6)
-        {
-            posicion = 1;
-        }
-        else if (tecla == ABAJO && posicion == 1)
-        {
-            posicion = 6;
-        }
-        else if (tecla == ABAJO && posicion != 1)
-        {
-            posicion--;
-        }
-        else
-        {
-            posicion = posicion;
-        }
-    }
-    fflush(stdin);
+    //     if (tecla == ARRIBA && posicion != 6)
+    //     {
+    //         posicion++;
+    //     }
+    //     else if (tecla == ARRIBA && posicion == 6)
+    //     {
+    //         posicion = 1;
+    //     }
+    //     else if (tecla == ABAJO && posicion == 1)
+    //     {
+    //         posicion = 6;
+    //     }
+    //     else if (tecla == ABAJO && posicion != 1)
+    //     {
+    //         posicion--;
+    //     }
+    //     else
+    //     {
+    //         posicion = posicion;
+    //     }
+    // }
+    // fflush(stdin);
 
-    if (posicion == 6)
-    {
-        return;
-    }
+    // if (posicion == 6)
+    // {
+    //     return;
+    // }
 
     // Asignar el horario al ticket
-    switch (posicion)
-    {
-    case 1:
-        strcpy(Ticket.horario, HORARIO1);
-        break;
-    case 2:
-        strcpy(Ticket.horario, HORARIO2);
-        break;
-    case 3:
-        strcpy(Ticket.horario, HORARIO3);
-        break;
-    case 4:
-        strcpy(Ticket.horario, HORARIO4);
-        break;
-    case 5:
-        strcpy(Ticket.horario, HORARIO5);
-        break;
-    }
+    // switch (posicion)
+    // {
+    // case 1:
+    //     strcpy(Ticket.horario, horarios[0]);
+    //     break;
+    // case 2:
+    //     strcpy(Ticket.horario, horarios[1]);
+    //     break;
+    // case 3:
+    //     strcpy(Ticket.horario, horarios[2]);
+    //     break;
+    // case 4:
+    //     strcpy(Ticket.horario, horarios[3]);
+    //     break;
+    // case 5:
+    //     strcpy(Ticket.horario, horarios[5]);
+    //     break;
+    // }
+
+    // printf("Horario: %s", Ticket.horario);
+    // system("pause>null");
 
     /****************************************************************************************/
     // // Checkear disponibilidad de la sala, horario, pelicula
@@ -1240,7 +1248,7 @@ void comprarEntradas(int usuario)
     // scanf("\n%[^\n]", Ticket.cantidadTickets);
     printf("id: %i\n", Ticket.id);
     printf("fecha: %s\n", Ticket.fecha);
-    printf("horario: %s\n", Ticket.horario);
+    // printf("horario: %s\n", Ticket.horario);
     printf("usuario: %i\n", Ticket.usuario);
     printf("pelicula: %s\n", Ticket.pelicula);
     printf("cantidad tickets: %i\n", Ticket.cantidadTickets);
@@ -1248,19 +1256,54 @@ void comprarEntradas(int usuario)
     fwrite(&Ticket, sizeof(Ticket), 1, fileRegTicket);
     fclose(fileRegTicket);
 
-    printf("\nUsuario registrado correctamente\n");
+    printf("\nCompra registrada correctamente\n");
 
-    FILE *FILETICKETS;
-    FILETICKETS = fopen(ARCHIVO_TICKETS, "r");
-    int contador = 0;
-    while (fread(&Funcion, sizeof(Funcion), 1, FILETICKETS))
+    // Mostrar tickets
+    FILE *FILETICKET;
+    FILETICKET = fopen(ARCHIVO_TICKETS, "r");
+    printf("\nid\tfecha\t\t\tusuario\t\t\tPelicula\t\t\tcantidadTickets\n\n");
+    while (fread(&Ticket, sizeof(Ticket), 1, FILETICKET))
     {
-        contador++;
+        printf("%i\t%s\t\t%i\t\t%s\t\t\t%i\n", Ticket.id, Ticket.fecha, Ticket.usuario, Ticket.pelicula, Ticket.cantidadTickets);
     }
-    fclose(FILETICKETS);
+    fclose(FILETICKET);
+    system("pause>null");
+    // Mostrar tickets
 
-    printf("Contador: %i", contador);
+    // printf("Contador: %i", contador);
 
+    system("pause>null");
+}
+
+void _comprarEntradas(int usuario)
+{
+    // printf("Usuario: %i", usuario);
+    FILE *filetickets;
+    filetickets = fopen(ARCHIVO_TICKETS, "a");
+    Ticket.id = 1;
+    // Ticket.fecha = "Fecha";
+    strcpy(Ticket.fecha, "Fecha");
+    // Ticket.horario = "Horario";
+    // strcpy(Ticket.horario, "horario");
+    Ticket.usuario = usuario;
+    // Ticket.pelicula = "Diario de una pasion";
+    Ticket.cantidadTickets = 3;
+
+    // Usuario.id = (setId(TICKET) + 1);
+    // Usuario.acceso = metodoAcceso;
+    // printf("Nombre: ");
+    // scanf("\n%[^\n]", Usuario.nombre);
+    // printf("Correo: ");
+    // scanf("\n%[^\n]", Usuario.correo);
+    // printf("Contrasenya: ");
+    // scanf("\n%[^\n]", Usuario.pass);
+
+    // TODO: logica para validar si usuario con ese correo existe.
+
+    fwrite(&Ticket, sizeof(Ticket), 1, filetickets);
+    fclose(filetickets);
+
+    printf("\nTu compra fue exitosa\n");
     system("pause>null");
 }
 
@@ -1492,6 +1535,7 @@ void menuPerfilUsuario(int usuario)
         {
         case 1:
             comprarEntradas(usuario);
+            // _comprarEntradas(usuario);
             break;
         case 2:
             printf("Actualizar mi perfil");
