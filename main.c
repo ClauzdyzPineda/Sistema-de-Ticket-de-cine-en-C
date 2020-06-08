@@ -1287,26 +1287,6 @@ void comprarEntradas(int usuario)
     // printf("Horario: %s", Ticket.horario);
     // system("pause>null");
 
-    /****************************************************************************************/
-    // // Checkear disponibilidad de la sala, horario, pelicula
-    // // Abrir tickets,
-    // FILE *fileTickets;
-    // // esta variable verificara cuantos tickets fueron comprados ya para esa funcion a esa hora.
-    // int ticketsRegistrados = 0;
-    // fileTickets = fopen(ARCHIVO_TICKETS, "r");
-    // while (fread(&Ticket, sizeof(Ticket), 1, fileTickets))
-    // {
-
-    //     // printf("%i\t\t%s\t\t%s\t\t%s\t\t%i\n", Usuario.id, Usuario.nombre, Usuario.correo, Usuario.pass, Usuario.acceso);
-    //     printf("%i\t\t%s\t\t%s\t\t%s\t\t%i\n", Funcion.id, Funcion.horario, Funcion.fecha, Funcion.pelicula, Funcion.disponibilidad);
-    // }
-    // fclose(fileTickets);
-    // system("pause>null");
-    // // Leer pelicula y la linea concuerda con la pelicula
-    // // Si concuerda, verificar si la fecha es ahora
-    // // contar tickets
-    /****************************************************************************************/
-
     // Registrar venta
     FILE *fileRegTicket;
     fileRegTicket = fopen(ARCHIVO_TICKETS, "a");
@@ -1321,16 +1301,56 @@ void comprarEntradas(int usuario)
     // strcpy(Ticket.pelicula, pelicula);
     Ticket.usuario = usuario;
 
+    int cantidadTicketsAComprar = 0;
     // validar si la cantidad esta disponible
     printf("\n\nCuantos tickets desea comprar: ");
-    scanf("%i", &Ticket.cantidadTickets);
+    scanf("%i", &cantidadTicketsAComprar);
+
+    /****************************************************************************************/
+    // Checkear disponibilidad de la sala, horario, pelicula
+    // Abrir tickets,
+    FILE *FILETICKETS;
+    SYSTEMTIME Today;
+    GetLocalTime(&Today);
+    char Hoy[11];
+    sprintf(Hoy, "%i/%i/%i", Today.wDay, Today.wMonth, Today.wYear);
+    // esta variable verificara cuantos tickets fueron comprados ya para esa funcion a esa hora.
+    int ticketsRegistrados = 0;
+    FILETICKETS = fopen(ARCHIVO_TICKETS, "r");
+    while (fread(&Ticket, sizeof(Ticket), 1, FILETICKETS))
+    {
+        if (strcmp(Ticket.fecha, Hoy) == 0)
+        {
+            if (strcmp(Ticket.pelicula, pelicula) == 0)
+            {
+                ticketsRegistrados += Ticket.cantidadTickets;
+            }
+        }
+    }
+    fclose(FILETICKETS);
+
+    if (ticketsRegistrados + cantidadTicketsAComprar > DISPONIBILIDAD_SALA)
+    {
+        printf("\nNo es posible realizar esta transaccion");
+        system("pause>null");
+        return;
+    }
+
+    Ticket.cantidadTickets = cantidadTicketsAComprar;
+
+    // Leer pelicula y la linea concuerda con la pelicula
+    // Si concuerda, verificar si la fecha es ahora
+    // contar tickets
+    /****************************************************************************************/
+
+    // scanf("%i", &Ticket.cantidadTickets);
     // scanf("\n%[^\n]", Ticket.cantidadTickets);
-    printf("id: %i\n", Ticket.id);
-    printf("fecha: %s\n", Ticket.fecha);
-    // printf("horario: %s\n", Ticket.horario);
-    printf("usuario: %i\n", Ticket.usuario);
-    printf("pelicula: %s\n", Ticket.pelicula);
-    printf("cantidad tickets: %i\n", Ticket.cantidadTickets);
+    // printf("id: %i\n", Ticket.id);
+    // printf("fecha: %s\n", Ticket.fecha);
+    // // printf("horario: %s\n", Ticket.horario);
+    // printf("usuario: %i\n", Ticket.usuario);
+    // printf("pelicula: %s\n", Ticket.pelicula);
+    // printf("cantidad tickets: %i\n", Ticket.cantidadTickets);
 
     fwrite(&Ticket, sizeof(Ticket), 1, fileRegTicket);
     fclose(fileRegTicket);
@@ -1338,51 +1358,19 @@ void comprarEntradas(int usuario)
     printf("\nCompra registrada correctamente\n");
 
     // Mostrar tickets
-    FILE *FILETICKET;
-    FILETICKET = fopen(ARCHIVO_TICKETS, "r");
-    printf("\nid\tfecha\t\t\tusuario\t\t\tPelicula\t\t\tcantidadTickets\n\n");
-    while (fread(&Ticket, sizeof(Ticket), 1, FILETICKET))
-    {
-        printf("%i\t%s\t\t%i\t\t%s\t\t\t%i\n", Ticket.id, Ticket.fecha, Ticket.usuario, Ticket.pelicula, Ticket.cantidadTickets);
-    }
-    fclose(FILETICKET);
-    system("pause>null");
+    // FILE *FILETICKET;
+    // FILETICKET = fopen(ARCHIVO_TICKETS, "r");
+    // printf("\nid\tfecha\t\t\tusuario\t\t\tPelicula\t\t\tcantidadTickets\n\n");
+    // while (fread(&Ticket, sizeof(Ticket), 1, FILETICKET))
+    // {
+    //     printf("%i\t%s\t\t%i\t\t%s\t\t\t%i\n", Ticket.id, Ticket.fecha, Ticket.usuario, Ticket.pelicula, Ticket.cantidadTickets);
+    // }
+    // fclose(FILETICKET);
+    // system("pause>null");
     // Mostrar tickets
 
     // printf("Contador: %i", contador);
 
-    system("pause>null");
-}
-
-void _comprarEntradas(int usuario)
-{
-    // printf("Usuario: %i", usuario);
-    FILE *filetickets;
-    filetickets = fopen(ARCHIVO_TICKETS, "a");
-    Ticket.id = 1;
-    // Ticket.fecha = "Fecha";
-    strcpy(Ticket.fecha, "Fecha");
-    // Ticket.horario = "Horario";
-    // strcpy(Ticket.horario, "horario");
-    Ticket.usuario = usuario;
-    // Ticket.pelicula = "Diario de una pasion";
-    Ticket.cantidadTickets = 3;
-
-    // Usuario.id = (setId(TICKET) + 1);
-    // Usuario.acceso = metodoAcceso;
-    // printf("Nombre: ");
-    // scanf("\n%[^\n]", Usuario.nombre);
-    // printf("Correo: ");
-    // scanf("\n%[^\n]", Usuario.correo);
-    // printf("Contrasenya: ");
-    // scanf("\n%[^\n]", Usuario.pass);
-
-    // TODO: logica para validar si usuario con ese correo existe.
-
-    fwrite(&Ticket, sizeof(Ticket), 1, filetickets);
-    fclose(filetickets);
-
-    printf("\nTu compra fue exitosa\n");
     system("pause>null");
 }
 
