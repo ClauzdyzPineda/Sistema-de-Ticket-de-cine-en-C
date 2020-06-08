@@ -1296,8 +1296,8 @@ void comprarEntradas(int usuario)
 
     Ticket.id = (setId(TICKET) + 1);
     // Parseando la fecha DD/MM/AAAA
-    sprintf(fecha, "%i/%i/%i", Date.wDay, Date.wMonth, Date.wYear);
-    strcpy(Ticket.fecha, fecha);
+    // sprintf(fecha, "%i/%i/%i", Date.wDay, Date.wMonth, Date.wYear);
+    // strcpy(Ticket.fecha, fecha);
     // strcpy(Ticket.pelicula, pelicula);
     Ticket.usuario = usuario;
 
@@ -1335,6 +1335,9 @@ void comprarEntradas(int usuario)
         system("pause>null");
         return;
     }
+
+    sprintf(fecha, "%i/%i/%i", Date.wDay, Date.wMonth, Date.wYear);
+    strcpy(Ticket.fecha, fecha);
 
     Ticket.cantidadTickets = cantidadTicketsAComprar;
 
@@ -1408,6 +1411,7 @@ int getNoPeliculas()
 
 void mostrarReportes()
 {
+    // reportes();
     char fecha[11] = "";
     char fechas[LEN][LEN];
     int cantidadTicketsPorFechas[LEN] = {0};
