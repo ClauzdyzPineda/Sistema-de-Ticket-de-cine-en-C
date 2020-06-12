@@ -324,12 +324,12 @@ int validarUsuario(char *correo, char *password)
             // Se encontro el correo electronico
             if (strcmp(password, Usuario.pass) == 0)
             {
-                // La contrase�a concuerda con el usuario
+                // La contraseña concuerda con el usuario
                 fclose(file);
                 return 0;
             }
 
-            // El correo existe pero la contrase�a no
+            // El correo existe pero la contraseña no
             fclose(file);
             return 1;
         }
@@ -544,10 +544,10 @@ void crearRegistro(char *registro)
 		printf("\n\t--------------------------------------------\n");
         printf("\tTitulo: ");
         scanf("\n%[^\n]", Pelicula.titulo);
-        printf("\n\t--------------------------------------------\n");
+         printf("\n\t--------------------------------------------\n");
         printf("\tGenero: ");
         scanf("\n%[^\n]", Pelicula.genero);
-        printf("\n\t--------------------------------------------\n");
+         printf("\n\t--------------------------------------------\n");
 
         fwrite(&Pelicula, sizeof(Pelicula), 1, file);
         fclose(file);
@@ -761,19 +761,25 @@ void actualizarRegistro(char *registro)
                         case 1:
                             printf("Nombre: ");
                             scanf("\n%[^\n]", Usuario.nombre);
+                            printf("\n\t******Usuario actualizado******");
+            				system("pause>null");
                             break;
                         case 2:
                             printf("Correo: ");
                             scanf("\n%[^\n]", Usuario.correo);
+                            printf("\n\t******Usuario actualizado******");
+            				system("pause>null");
                             break;
                         case 3:
                             printf("Password: ");
                             scanf("\n%[^\n]", Usuario.pass);
+                            printf("\n\t******Usuario actualizado******");
+            				system("pause>null");
                             break;
                         case 4:
-                            // printf("Acceso: ");
-                            // system("pause>null");
-                            Usuario.acceso = 1;
+                            Usuario.acceso = getAcceso(correo) == 1 ? 0 : 1;
+                            printf("\n\t******Usuario actualizado******");
+            				system("pause>null");
                             break;
                         }
                     } while (opcion != 5);
@@ -791,8 +797,6 @@ void actualizarRegistro(char *registro)
             }
             fclose(file);
             fclose(tmpfile);
-            printf("\n\t******Usuario actualizado******");
-            system("pause>null");
         }
     }
 
@@ -1538,8 +1542,7 @@ void menuPrincipal()
         switch (opcion)
         {
         case 1:
-            printf("\nSection ver cartelera\n");
-            system("pause>null"); // Si se borra, porfavor, eliminar windows
+            mostrarRegistros(PELICULA);
             break;
         case 2:
             crearRegistro(USUARIO);

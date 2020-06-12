@@ -324,12 +324,12 @@ int validarUsuario(char *correo, char *password)
             // Se encontro el correo electronico
             if (strcmp(password, Usuario.pass) == 0)
             {
-                // La contraseña concuerda con el usuario
+                // La contraseï¿½a concuerda con el usuario
                 fclose(file);
                 return 0;
             }
 
-            // El correo existe pero la contraseña no
+            // El correo existe pero la contraseï¿½a no
             fclose(file);
             return 1;
         }
@@ -544,10 +544,10 @@ void crearRegistro(char *registro)
 		printf("\n\t--------------------------------------------\n");
         printf("\tTitulo: ");
         scanf("\n%[^\n]", Pelicula.titulo);
-         printf("\n\t--------------------------------------------\n");
+        printf("\n\t--------------------------------------------\n");
         printf("\tGenero: ");
         scanf("\n%[^\n]", Pelicula.genero);
-         printf("\n\t--------------------------------------------\n");
+        printf("\n\t--------------------------------------------\n");
 
         fwrite(&Pelicula, sizeof(Pelicula), 1, file);
         fclose(file);
