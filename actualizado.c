@@ -96,6 +96,13 @@ struct
     int cantidadTickets;
 } Ticket;
 
+struct
+{
+    char fecha[11];
+    int ticketsVendidos;
+    float dinero;
+} Reporte;
+
 // -------------------------------------------------------------------------------- Prototipos
 // General
 int getch();
@@ -164,6 +171,8 @@ void crearArchivos()
 
         fclose(file);
     }
+
+    // Si archivo Reporte no existe entones crearlo
 }
 
 int seleccion(char *menu, char opcs[][LEN], int nOpcs)
@@ -589,7 +598,6 @@ void mostrarRegistros(char *registro)
 {
     if (strcmp(registro, USUARIO) == 0)
     {
-        // Si archivo Salas no existe entones crearlo
         if (access(ARCHIVO_USUARIOS, F_OK) == -1)
         {
             printf("\n\t\t\t   No Hay usuarios que mostrar\n");
@@ -653,6 +661,28 @@ void mostrarRegistros(char *registro)
 
     if (strcmp(registro, PELICULA) == 0)
     {
+        if (access(ARCHIVO_PELICULAS, F_OK) == -1)
+        {
+            printf("\n\t\t\t   No Hay Peliculas que mostrar\n");
+            system("pause>null");
+            return;
+        }
+
+        FILE *ceroPeliculas;
+        ceroPeliculas = fopen(ARCHIVO_PELICULAS, "r");
+        int count = 0;
+        while (fread(&Pelicula, sizeof(Pelicula), 1, ceroPeliculas))
+        {
+            count++;
+        }
+        if (count == 0)
+        {
+            printf("\n\t\t\t   No Hay Peliculas que mostrar\n");
+            system("pause>null");
+            return;
+        }
+        fclose(ceroPeliculas);
+
         FILE *file;
         file = fopen(ARCHIVO_PELICULAS, "r");
 
@@ -1141,6 +1171,7 @@ void eliminarRegistro(char *registro)
         if (existe == 0)
         {
             printf("\t***No se encontraron registros para el titulo:*** %s", titulo);
+            system("pause>null");
         }
         else
         {
@@ -1741,34 +1772,24 @@ void menuSalas()
 {
     int opcion;
     char opciones[][LEN] = {
-        "Establecer numero de salas",
         "Mostrar salas",
         "Agregar pelicula a sala",
-        "Remover pelicula de sala",
         "Regresar",
     };
 
     do
     {
-        opcion = seleccion(MENU_ADMINISTRAR_SALAS, opciones, 5);
+        opcion = seleccion(MENU_ADMINISTRAR_SALAS, opciones, 3);
         switch (opcion)
         {
         case 1:
-            printf("Establecer numero de salas");
-            system("pause>null");
-            break;
-        case 2:
             mostrarRegistros(SALA);
             break;
-        case 3:
+        case 2:
             actualizarRegistro(SALA);
             break;
-        case 4:
-            printf("Remover pelicula de sala");
-            system("pause>null");
-            break;
         }
-    } while (opcion != 5);
+    } while (opcion != 3);
 }
 
 void menuPerfilAdmin()
