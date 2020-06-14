@@ -504,12 +504,48 @@ int inicioSesion()
     return 0;
 }
 
+int test(char test[])
+{
+    int valid = 0;
+    int i;
+    char *pos1, *pos2;
+    char *ch;
+
+    for (i = 0, ch = test; *ch; *ch++)
+    {
+        if (*ch == '@')
+        {
+            pos1 = ch; 
+            i++;
+        }
+    }
+    pos2 = ch; 
+
+    if (i == 1)
+    {
+
+        while (pos1 - test && ch - pos1 > 1)
+        {
+
+            if ((pos2 - ch) > 2 && *ch == '.')
+            {
+                valid = 1;
+            }
+            ch--;
+        }
+    }
+
+    return valid;
+}
+
 void crearRegistro(char *registro)
 {
     if (strcmp(registro, USUARIO) == 0)
     {
         FILE *file;
         Role metodoAcceso = NORMAL;
+        char correoTmp[LEN];
+        int existe;
         file = fopen(ARCHIVO_USUARIOS, "a");
         Usuario.id = (setId(USUARIO) + 1);
         Usuario.acceso = metodoAcceso;
@@ -519,19 +555,37 @@ void crearRegistro(char *registro)
         scanf("\n%[^\n]", Usuario.nombre);
         printf("\n\t--------------------------------------------\n");
         printf("\tCorreo: ");
-        scanf("\n%[^\n]", Usuario.correo);
+        scanf("\n%[^\n]", &correoTmp);
         printf("\n\t--------------------------------------------\n");
         printf("\tPassword: ");
         scanf("\n%[^\n]", Usuario.pass);
         printf("\n\t--------------------------------------------\n");
 
-        // TODO: logica para validar si usuario con ese correo existe.
 
-        fwrite(&Usuario, sizeof(Usuario), 1, file);
-        fclose(file);
+        if (test(correoTmp) == 0) {
+            printf("Correo no valido");
+            system("pause>null");
+            return;
+        }
 
-        printf("\n\t*****Usuario registrado correctamente******\n");
-        system("pause>null");
+        existe = getRegistro(USUARIO, correoTmp);
+
+        if (existe == 1)
+        {
+            printf("\n\t[Error] Ya existe un usuario con este correo: %s", correoTmp);
+            system("pause>null");
+            return;
+        }
+        else
+        {
+            strcpy(Usuario.correo, correoTmp);
+
+            fwrite(&Usuario, sizeof(Usuario), 1, file);
+            fclose(file);
+
+            printf("\n\t*****Usuario registrado correctamente******\n");
+            system("pause>null");
+        }
     }
 
     if (strcmp(registro, PELICULA) == 0)
@@ -540,14 +594,14 @@ void crearRegistro(char *registro)
         file = fopen(ARCHIVO_PELICULAS, "a");
         Pelicula.id = (setId(PELICULA) + 1);
 
-		printf("\n\t\tREGISTRO DE PELICULAS\n");
-		printf("\n\t--------------------------------------------\n");
+        printf("\n\t\tREGISTRO DE PELICULAS\n");
+        printf("\n\t--------------------------------------------\n");
         printf("\tTitulo: ");
         scanf("\n%[^\n]", Pelicula.titulo);
-         printf("\n\t--------------------------------------------\n");
+        printf("\n\t--------------------------------------------\n");
         printf("\tGenero: ");
         scanf("\n%[^\n]", Pelicula.genero);
-         printf("\n\t--------------------------------------------\n");
+        printf("\n\t--------------------------------------------\n");
 
         fwrite(&Pelicula, sizeof(Pelicula), 1, file);
         fclose(file);
@@ -556,49 +610,6 @@ void crearRegistro(char *registro)
         system("pause>null");
     }
 }
-
-// void mostrarRegistros(char *registro)
-// {
-//     if (strcmp(registro, USUARIO) == 0)
-//     {
-//         FILE *file;
-//         file = fopen(ARCHIVO_USUARIOS, "r");
-//         printf("\nid\t\tNombre\t\tCorreo\t\tPassword\t\tAcceso\n\n");
-//         while (fread(&Usuario, sizeof(Usuario), 1, file))
-//         {
-//             printf("  %i\t\t%s\t\t%s\t\t%s\t\t%i\n", Usuario.id, Usuario.nombre, Usuario.correo, Usuario.pass, Usuario.acceso);
-//         }
-//         fclose(file);
-//         system("pause>null");
-//     }
-
-//     if (strcmp(registro, PELICULA) == 0)
-//     {
-//         FILE *file;
-//         file = fopen(ARCHIVO_PELICULAS, "r");
-//         printf("\nid\t\tTitulo\t\tGenero\n\n");
-//         while (fread(&Pelicula, sizeof(Pelicula), 1, file))
-//         {
-//             printf("  %i\t\t%s\t\t%s\n", Pelicula.id, Pelicula.titulo, Pelicula.genero);
-//         }
-//         fclose(file);
-//         system("pause>null");
-//     }
-
-//     if (strcmp(registro, SALA) == 0)
-//     {
-//         FILE *file;
-//         file = fopen(ARCHIVO_SALAS, "r");
-//         printf("\nid\t\tPelicula\n");
-//         while (fread(&Sala, sizeof(Sala), 1, file))
-//         {
-//             printf("%i\t\t%s\n", Sala.id, Sala.pelicula);
-//         }
-//         fclose(file);
-//         system("pause>null");
-//     }
-// }
-
 
 void mostrarRegistros(char *registro)
 {
@@ -718,8 +729,8 @@ void actualizarRegistro(char *registro)
         char correo[LEN];
         char *Correo;
 
-		printf("\n\tACTUALIZACION DE DATOS DE USUARIO\n");
-		printf("\n--------------------------------------------------\n");
+        printf("\n\tACTUALIZACION DE DATOS DE USUARIO\n");
+        printf("\n--------------------------------------------------\n");
         printf("\tDigite correo: ");
         scanf("\n%[^\n]", correo);
 
@@ -762,24 +773,24 @@ void actualizarRegistro(char *registro)
                             printf("Nombre: ");
                             scanf("\n%[^\n]", Usuario.nombre);
                             printf("\n\t******Usuario actualizado******");
-            				system("pause>null");
+                            system("pause>null");
                             break;
                         case 2:
                             printf("Correo: ");
                             scanf("\n%[^\n]", Usuario.correo);
                             printf("\n\t******Usuario actualizado******");
-            				system("pause>null");
+                            system("pause>null");
                             break;
                         case 3:
                             printf("Password: ");
                             scanf("\n%[^\n]", Usuario.pass);
                             printf("\n\t******Usuario actualizado******");
-            				system("pause>null");
+                            system("pause>null");
                             break;
                         case 4:
                             Usuario.acceso = getAcceso(correo) == 1 ? 0 : 1;
                             printf("\n\t******Usuario actualizado******");
-            				system("pause>null");
+                            system("pause>null");
                             break;
                         }
                     } while (opcion != 5);
@@ -809,8 +820,8 @@ void actualizarRegistro(char *registro)
         char titulo[LEN];
         char *Titulo;
 
-		printf("\n\tACTUALIZAR DATOS DE PELICULAS\n");
-		printf("\n------------------------------------------------------\n");
+        printf("\n\tACTUALIZAR DATOS DE PELICULAS\n");
+        printf("\n------------------------------------------------------\n");
         printf("\tDigite titulo: ");
         scanf("\n%[^\n]", titulo);
 
@@ -1076,8 +1087,8 @@ void eliminarRegistro(char *registro)
         char *UCorreo;
         int existe;
 
-		printf("\n\tELIMINAR REGISTROS DE USUARIOS\n");
-		printf("\n------------------------------------------------------\n");
+        printf("\n\tELIMINAR REGISTROS DE USUARIOS\n");
+        printf("\n------------------------------------------------------\n");
         printf("\tDigite correo: ");
         scanf("\n%[^\n]", correo);
 
@@ -1123,8 +1134,8 @@ void eliminarRegistro(char *registro)
         char *Titulo;
         int existe;
 
-		printf("\n\tELIMINAR REGISTROS DE PELICULAS");
-		printf("\n------------------------------------------------------\n");
+        printf("\n\tELIMINAR REGISTROS DE PELICULAS");
+        printf("\n------------------------------------------------------\n");
         printf("\n\tDigite titulo: ");
         scanf("\n%[^\n]", titulo);
 
@@ -1659,8 +1670,6 @@ void menuSalas()
             break;
         case 3:
             actualizarRegistro(SALA);
-            // printf("Agregar pelicula a sala");
-            // system("pause>null");
             break;
         case 4:
             printf("Remover pelicula de sala");
@@ -1708,25 +1717,19 @@ void menuPerfilUsuario(int usuario)
     int opcion;
     char opciones[][LEN] = {
         "Comprar entradas",
-        "Mi perfil",
         "Regresar",
     };
 
     do
     {
-        opcion = seleccion(MENU_PERFIL, opciones, 3);
+        opcion = seleccion(MENU_PERFIL, opciones, 2);
         switch (opcion)
         {
         case 1:
             comprarEntradas(usuario);
-            // _comprarEntradas(usuario);
-            break;
-        case 2:
-            printf("Actualizar mi perfil");
-            system("pause>null");
             break;
         }
-    } while (opcion != 3);
+    } while (opcion != 2);
 }
 
 // -------------------------------------------------------------------------------- Cabeceras
@@ -1785,4 +1788,4 @@ void cabeceraComprarTicket()
     puts("|------------------------------------------------------|");
     puts("|                  Escoge tu pelicula                  |");
     puts("|------------------------------------------------------|");
-} 
+}
