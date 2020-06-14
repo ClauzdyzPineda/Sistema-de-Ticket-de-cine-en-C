@@ -125,6 +125,8 @@ void comprarEntradas(int usuario);
 int getNoSalas();
 int getNoPeliculas();
 void mostrarReportes();
+int validarCorreo(char test[]);
+void generarReportes();
 // Cabeceras
 void titulo();
 void cabeceraMenuPrincipal();
@@ -436,7 +438,7 @@ int inicioSesion()
 {
     char correo[LEN];
     char password[LEN];
-    int intento = 0;
+    // int intento = 0;
     int loginOk = 0;
     char caracter;
     int i = 0;
@@ -485,11 +487,11 @@ int inicioSesion()
         else
         {
             printf("\n\tCorreo y/o contrasenya son incorrectos\n");
-            intento++;
-            getchar();
+            system("pause>null");
+            return;
         }
 
-    } while (intento < 3 && loginOk == 0);
+    } while (loginOk == 0);
 
     if (loginOk == 1)
     {
@@ -502,40 +504,6 @@ int inicioSesion()
     }
 
     return 0;
-}
-
-int test(char test[])
-{
-    int valid = 0;
-    int i;
-    char *pos1, *pos2;
-    char *ch;
-
-    for (i = 0, ch = test; *ch; *ch++)
-    {
-        if (*ch == '@')
-        {
-            pos1 = ch; 
-            i++;
-        }
-    }
-    pos2 = ch; 
-
-    if (i == 1)
-    {
-
-        while (pos1 - test && ch - pos1 > 1)
-        {
-
-            if ((pos2 - ch) > 2 && *ch == '.')
-            {
-                valid = 1;
-            }
-            ch--;
-        }
-    }
-
-    return valid;
 }
 
 void crearRegistro(char *registro)
@@ -561,8 +529,8 @@ void crearRegistro(char *registro)
         scanf("\n%[^\n]", Usuario.pass);
         printf("\n\t--------------------------------------------\n");
 
-
-        if (test(correoTmp) == 0) {
+        if (validarCorreo(correoTmp) == 0)
+        {
             printf("Correo no valido");
             system("pause>null");
             return;
@@ -1536,6 +1504,46 @@ void mostrarReportes()
     system("pause>null");
 }
 
+int validarCorreo(char test[])
+{
+    int valid = 0;
+    int i;
+    char *pos1, *pos2;
+    char *ch;
+
+    for (i = 0, ch = test; *ch; *ch++)
+    {
+        if (*ch == '@')
+        {
+            pos1 = ch;
+            i++;
+        }
+    }
+    pos2 = ch;
+
+    if (i == 1)
+    {
+
+        while (pos1 - test && ch - pos1 > 1)
+        {
+
+            if ((pos2 - ch) > 2 && *ch == '.')
+            {
+                valid = 1;
+            }
+            ch--;
+        }
+    }
+
+    return valid;
+}
+
+void generarReportes()
+{
+    printf("generar reportes");
+    system("pause>null");
+}
+
 // -------------------------------------------------------------------------------- Menus
 void menuPrincipal()
 {
@@ -1687,12 +1695,13 @@ void menuPerfilAdmin()
         "Administrar Peliculas",
         "Administrar Salas",
         "Reporte",
+        "Generar Reporte",
         "Regresar",
     };
 
     do
     {
-        opcion = seleccion(MENU_PERFIL_ADMIN, opciones, 5);
+        opcion = seleccion(MENU_PERFIL_ADMIN, opciones, 6);
         switch (opcion)
         {
         case 1:
@@ -1707,8 +1716,11 @@ void menuPerfilAdmin()
         case 4:
             mostrarReportes();
             break;
+        case 5:
+            generarReportes();
+            break;
         }
-    } while (opcion != 5);
+    } while (opcion != 6);
 }
 
 void menuPerfilUsuario(int usuario)
