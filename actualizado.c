@@ -589,6 +589,29 @@ void mostrarRegistros(char *registro)
 {
     if (strcmp(registro, USUARIO) == 0)
     {
+        // Si archivo Salas no existe entones crearlo
+        if (access(ARCHIVO_USUARIOS, F_OK) == -1)
+        {
+            printf("\n\t\t\t   No Hay usuarios que mostrar\n");
+            system("pause>null");
+            return;
+        }
+
+        FILE *ceroUsuarios;
+        ceroUsuarios = fopen(ARCHIVO_USUARIOS, "r");
+        int count = 0;
+        while (fread(&Usuario, sizeof(Usuario), 1, ceroUsuarios))
+        {
+            count++;
+        }
+        if (count == 0)
+        {
+            printf("\n\t\t\t   No Hay usuarios que mostrar\n");
+            system("pause>null");
+            return;
+        }
+        fclose(ceroUsuarios);
+
         FILE *file;
         file = fopen(ARCHIVO_USUARIOS, "r");
         printf("\n\t\t\t   REGISTROS DE USUARIOS EN EL SISTEMA\n");
