@@ -150,7 +150,7 @@ int main()
 void crearArchivos()
 {
     // Si archivo Salas no existe entones crearlo
-    if (access("Salas", F_OK) == -1)
+    if (access(ARCHIVO_SALAS, F_OK) == -1)
     {
         FILE *file;
         file = fopen(ARCHIVO_SALAS, "a");
@@ -315,6 +315,12 @@ int setId(char *registro)
 
 int validarUsuario(char *correo, char *password)
 {
+    // Si archivo Salas no existe entones crearlo
+    if (access(ARCHIVO_USUARIOS, F_OK) == -1)
+    {
+        return 1;
+    }
+
     FILE *file;
     file = fopen(ARCHIVO_USUARIOS, "r");
     while (!feof(file))
@@ -486,7 +492,7 @@ int inicioSesion()
         }
         else
         {
-            printf("\n\tCorreo y/o contrasenya son incorrectos\n");
+            printf("\n\n\tCorreo y/o contrasenya son incorrectos\n");
             system("pause>null");
             return;
         }
@@ -1540,7 +1546,62 @@ int validarCorreo(char test[])
 
 void generarReportes()
 {
-    printf("generar reportes");
+    char fecha[11] = "";
+    char fechas[LEN][LEN];
+    int cantidadTicketsPorFechas[LEN] = {0};
+    int cantidadTickets;
+    int i = 0;
+    int cont = 0;
+    FILE *filetickets;
+    filetickets = fopen(ARCHIVO_TICKETS, "r");
+    while (fread(&Ticket, sizeof(Ticket), 1, filetickets))
+    {
+        if (strcmp(fecha, Ticket.fecha) != 0)
+        {
+            strcpy(fecha, Ticket.fecha);
+            strcpy(fechas[i], fecha);
+            i++;
+        }
+    }
+    fclose(filetickets);
+
+    FILE *filetickets2;
+    filetickets2 = fopen(ARCHIVO_TICKETS, "r");
+    while (fread(&Ticket, sizeof(Ticket), 1, filetickets2))
+    {
+        if (strcmp(fechas[cont], Ticket.fecha) == 0)
+        {
+            cantidadTicketsPorFechas[cont] += Ticket.cantidadTickets;
+        }
+        else
+        {
+            cont++;
+            cantidadTicketsPorFechas[cont] += Ticket.cantidadTickets;
+        }
+    }
+    fclose(filetickets2);
+
+    // FILE *reportes;
+    // reportes = fopen("Reportes.txt", "a");
+    // char str[LEN] = "Testing";
+    // fwrite(str, sizeof(str), 1, reportes);
+    // fclose(reportes);
+    FILE *fp;
+    char str[] = "hola a todos";
+    fp = fopen("Reporte.txt", "a");
+
+    // convertir int en string
+    // sprintf(fecha, "%i/%i/%i", Date.wDay, Date.wMonth, Date.wYear);
+
+    // printf("\nFecha\t\t\tTickets vendidos\t\tDinero\n");
+    // for (i = 0; i <= cont; i++)
+    // {
+    //     printf("\n%s\t\t\t%i\t\t\t$%.2lf", fechas[i], cantidadTicketsPorFechas[i], (cantidadTicketsPorFechas[i] * TICKET_PRECIO));
+    // }
+
+    printf("\n\t*****Reporte generado correctamente******\n");
+    fwrite(str, 1, sizeof(str), fp);
+    fclose(fp);
     system("pause>null");
 }
 
